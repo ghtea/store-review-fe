@@ -9,13 +9,13 @@ import { Signup } from './components/pages/Singup';
 
 const App: React.FunctionComponent = () => {
   return (
-      <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/signup" element={<Signup />}/>
-        <Route path="/map" element={<Map />}/>
-        <Route path="/*" element={<Error />}/>
-      </Routes> 
+	<Routes>
+		<Route path="/" element={<Home/>}/>
+		<Route path="/login" element={<Login />}/>
+		<Route path="/signup" element={<Signup />}/>
+		<Route path="/map" element={<Map />}/>
+		<Route path="/*" element={<Error />}/>
+	</Routes> 
   );
 }
 

@@ -28,7 +28,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "react/jsx-indent": [2, "tab"]
+    }
   },
   "browserslist": {
     "production": [
