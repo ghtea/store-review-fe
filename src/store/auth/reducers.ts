@@ -11,7 +11,7 @@ const stateInitial = {
   // member: null as types.auth.Member | null,
 };
 
-const authReducer = handleActions<State, any>(
+export const authReducer = handleActions<State, any>(
   {
     // [actions.auth.name__REPLACE]: (previousState, action: actions.auth.type__REPLACE) => {
     //   return produce(previousState, (newState) => {
@@ -31,6 +31,3 @@ const authReducer = handleActions<State, any>(
   },
   stateInitial,
 );
-
-
-export default authReducer;

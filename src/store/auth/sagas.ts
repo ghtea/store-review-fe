@@ -1,4 +1,4 @@
 
-export default function* authSaga() {
+export function* authSaga() {
   
 }
