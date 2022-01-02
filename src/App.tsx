@@ -1,7 +1,6 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes } from 'react-router-dom';
 
-import './App.css';
 import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
 import { Map } from './components/pages/Map';
@@ -10,13 +9,13 @@ import { Signup } from './components/pages/Singup';
 
 const App: React.FunctionComponent = () => {
   return (
-    <Routes>
-      <Route path="/home" element={<Home/>}/>
-      <Route path="/login" element={<Login />}/>
-      <Route path="/signup" element={<Signup />}/>
-      <Route path="/map" element={<Map />}/>
-      <Route path="/*" element={<Error />}/>
-    </Routes> 
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/map" element={<Map />}/>
+        <Route path="/*" element={<Error />}/>
+      </Routes> 
   );
 }
 
