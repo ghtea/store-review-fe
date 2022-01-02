@@ -6,7 +6,7 @@ import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
 import { Map } from './components/pages/Map';
 import { Error } from './components/pages/Error';
-import { Signup } from './components/pages/SingUp';
+import { Signup } from './components/pages/Singup';
 
 const App: React.FunctionComponent = () => {
   return (

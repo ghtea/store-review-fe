@@ -1,12 +1,13 @@
 import React from 'react';
+import { TemplateFull } from '../templates/TemplateFull';
 
 export type LoginProps = {
 }
 
 export const Login:React.FunctionComponent<LoginProps> = () => {
 	return (
-		<>
-			Login 페이지
-		</>
+		<TemplateFull>
+			Login
+		</TemplateFull>
 	)
 }
