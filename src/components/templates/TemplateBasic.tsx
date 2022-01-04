@@ -6,7 +6,7 @@ export type TemplateBasicProps = {
 
 const MENU_HEIGHT_PX = 60
 
-const RootDiv = styled.div`
+const TemplateBasicDiv = styled.div`
 	width: 100vw;
 	height: 100vh;
 `;
@@ -37,7 +37,7 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 }) => {
 
 	return (
-		<RootDiv>
+		<TemplateBasicDiv>
 			<MenuWrapper>
 				<MenuDiv>
 					<div>
@@ -56,6 +56,6 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 			<ContentWrapper>
 				{children}
 			</ContentWrapper>
-		</RootDiv>
+		</TemplateBasicDiv>
 	)
 }
