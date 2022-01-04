@@ -1,13 +1,13 @@
 import React from 'react';
 import { TemplateFull } from '../templates/TemplateFull';
 
-export type LoginProps = {
+export type SignupPageProps = {
 }
 
-export const Login:React.FunctionComponent<LoginProps> = () => {
+export const SignupPage:React.FunctionComponent<SignupPageProps> = () => {
 	return (
 		<TemplateFull>
-			Login
+			SignupPage
 		</TemplateFull>
 	)
 }
