@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
   * {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
+    box-sizing: border-box;
   }
 
   a {
@@ -16,5 +17,9 @@ export const GlobalStyle = createGlobalStyle`
 
   html, body {
     height: 100%;
+  }
+
+  div {
+    display: flex;
   }
 `
