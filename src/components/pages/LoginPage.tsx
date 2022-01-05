@@ -1,13 +1,13 @@
 import React from 'react';
 import { TemplateFull } from '../templates/TemplateFull';
 
-export type ErrorProps = {
+export type LoginPageProps = {
 }
 
-export const Error:React.FunctionComponent<ErrorProps> = () => {
+export const LoginPage:React.FunctionComponent<LoginPageProps> = () => {
 	return (
 		<TemplateFull>
-			Error
+			LoginPage
 		</TemplateFull>
 	)
 }

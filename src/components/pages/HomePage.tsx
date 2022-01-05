@@ -1,10 +1,10 @@
 import React from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 
-export type HomeProps = {
+export type HomePageProps = {
 }
 
-export const Home:React.FunctionComponent<HomeProps> = () => {
+export const HomePage:React.FunctionComponent<HomePageProps> = () => {
 	return (
 		<TemplateBasic>
 			홈 페이지

@@ -28,7 +28,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "eslint-autofix": "eslint --fix --ext .js,.jsx,.ts,.tsx ./",
+    "eslint-check": "eslint --quiet --ext .js,.jsx,.ts,.tsx ./",
+    "typescript-check": "tsc --project ./tsconfig.json"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@types/navermaps": "^3.0.13",
     "@types/redux-actions": "^2.6.2",
     "@types/redux-logger": "^3.0.9",
     "@types/styled-components": "^5.1.19"
