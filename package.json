@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@types/navermaps": "^3.0.13",
     "@types/redux-actions": "^2.6.2",
     "@types/redux-logger": "^3.0.9",
     "@types/styled-components": "^5.1.19"
