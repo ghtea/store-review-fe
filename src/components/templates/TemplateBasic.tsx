@@ -6,7 +6,6 @@ export type TemplateBasicProps = {
 
 const Container = styled.div`
 	width: 100%;
-	height: calc(100vh - 60px);
 	background-color: #888888;
 `;
 
