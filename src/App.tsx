@@ -18,9 +18,9 @@ const App: React.FunctionComponent = () => {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<HomePage/>}/>
-				<Route path="/LoginPage" element={<LoginPage />}/>
-				<Route path="/SignupPage" element={<SignupPage />}/>
-				<Route path="/MapPage" element={<MapPage />}/>
+				<Route path="/login" element={<LoginPage />}/>
+				<Route path="/signup" element={<SignupPage />}/>
+				<Route path="/map" element={<MapPage />}/>
 				<Route path="/*" element={<ErrorPage />}/>
 			</Routes> 
 		</BrowserRouter>
