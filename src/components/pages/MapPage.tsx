@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { naverStore } from '../../store';
 
 export type MapPageProps = {
 }
@@ -91,7 +93,8 @@ const MapDiv = styled.div`
 `;
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
-	
+	const dispatch = useDispatch();
+
 	const [searchValue, setSearchValue] = useState("")
 
 	useEffect(() => {
@@ -105,8 +108,10 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	}, [])
 
 	const handleSearchButtonClick = useCallback(()=>{
-		// searc
-	},[])
+		dispatch(naverStore.return__SEARCH_PLACE({
+			keyword: searchValue
+		}))
+	},[dispatch, searchValue])
 
 	return (
 		<TemplateBasic>
