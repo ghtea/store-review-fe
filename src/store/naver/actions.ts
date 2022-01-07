@@ -11,14 +11,14 @@ export const return__REPLACE = (payload: REPLACE_Payload) => {
 };
 export type REPLACE__Instance = ReturnType<typeof return__REPLACE>;
 
-export const SEARCH_PLACE = 'quiz/SEARCH_PLACE';
-type SEARCH_PLACE__Payload = {
+export const SEARCH_PLACES = 'quiz/SEARCH_PLACES';
+type SEARCH_PLACES__Payload = {
   keyword: string
 };
-export const return__SEARCH_PLACE = (payload: SEARCH_PLACE__Payload) => {
+export const return__SEARCH_PLACES = (payload: SEARCH_PLACES__Payload) => {
   return {
-    type: SEARCH_PLACE,
+    type: SEARCH_PLACES,
     payload: payload,
   };
 };
-export type SEARCH_PLACE_Instance = ReturnType<typeof return__SEARCH_PLACE>;
+export type SEARCH_PLACES_Instance = ReturnType<typeof return__SEARCH_PLACES>;

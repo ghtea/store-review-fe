@@ -2,15 +2,31 @@ import { produce } from 'immer';
 import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
 import * as actions from './actions';
+import {SearchPlacesData} from "./sagas/searchPlaces"
 
-export type State = typeof stateInitial; // 아직 불확실
+export type State = {
+  searchedPlaces: {
+    data: SearchPlacesData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  }
+} // 아직 불확실
 
-const stateInitial = {
+const initialState = {
   // user: null as types.auth.User | null,
   // member: null as types.auth.Member | null,
+  searchedPlaces: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  }
 };
 
-export const authReducer = handleActions<State, any>(
+export const naverReducer = handleActions<State, any>(
   {
     [actions.REPLACE]: (previousState, action: actions.REPLACE__Instance) => {
       return produce(previousState, (newState) => {
@@ -28,5 +44,5 @@ export const authReducer = handleActions<State, any>(
       });
     },
   },
-  stateInitial,
+  initialState,
 );
