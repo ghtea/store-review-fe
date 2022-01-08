@@ -130,6 +130,9 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 									<PlaceAddressSpan>{item.roadAddress}</PlaceAddressSpan>
 								</PlaceSummaryDiv>
 							))}
+							{searchedPlacesState.status.loading && (
+								<div>loading</div>
+							)}
 						</SearchResultDiv>
 					</SideBarDiv>
 				</SideBarWrapper>
