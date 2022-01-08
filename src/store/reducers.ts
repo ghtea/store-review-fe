@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
 import {authReducer} from './auth';
-import {naverReducer} from './naver';
+import {placeReducer} from './place';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  naver: naverReducer,
+  place: placeReducer,
 });
 
 export default rootReducer;

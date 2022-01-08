@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { naverStore } from '../../store';
+import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 
 export type MapPageProps = {
@@ -92,7 +92,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 	const [searchValue, setSearchValue] = useState("")
 
-	const searchedPlacesState = useSelector((state: RootState) => state.naver.searchedPlaces);
+	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
 
 	useEffect(() => {
 		if (!naver) return;
@@ -105,7 +105,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	}, [])
 
 	const handleSearchButtonClick = useCallback(()=>{
-		dispatch(naverStore.return__SEARCH_PLACES({
+		dispatch(placeStore.return__SEARCH_PLACES({
 			keyword: searchValue
 		}))
 	},[dispatch, searchValue])

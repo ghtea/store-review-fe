@@ -24,7 +24,7 @@ const initialState = {
   }
 };
 
-export const naverReducer = handleActions<State, any>(
+export const placeReducer = handleActions<State, any>(
   {
     [actions.REPLACE]: (previousState, action: actions.REPLACE__Instance) => {
       return produce(previousState, (newState) => {

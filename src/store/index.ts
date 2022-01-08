@@ -22,4 +22,4 @@ export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 sagaMiddleware.run(rootSaga);
 
 export * as authStore from "./auth"
-export * as naverStore from "./naver"
+export * as placeStore from "./place"

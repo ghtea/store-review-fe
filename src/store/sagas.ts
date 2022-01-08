@@ -1,13 +1,13 @@
 import { all, fork } from 'redux-saga/effects';
 
 import {authSaga} from './auth';
-import {naverSaga} from './naver';
+import {placeSaga} from './place';
 
 
 export default function* rootSaga() {
   yield all([
     fork(authSaga),
-    fork(naverSaga)
+    fork(placeSaga)
   ]);
 }
 

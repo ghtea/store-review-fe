@@ -1,4 +1,4 @@
-export const REPLACE = 'naver/REPLACE';
+export const REPLACE = 'place/REPLACE';
 type REPLACE_Payload = {
   keyList: (string | number)[];
   replacement: unknown;
@@ -11,7 +11,7 @@ export const return__REPLACE = (payload: REPLACE_Payload) => {
 };
 export type REPLACE__Instance = ReturnType<typeof return__REPLACE>;
 
-export const SEARCH_PLACES = 'quiz/SEARCH_PLACES';
+export const SEARCH_PLACES = 'place/SEARCH_PLACES';
 type SEARCH_PLACES__Payload = {
   keyword: string
 };
