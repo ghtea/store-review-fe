@@ -2,11 +2,11 @@ import { produce } from 'immer';
 import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
 import * as actions from './actions';
-import {SearchPlacesData} from "./sagas/searchPlaces"
+import {SearchPlacesResponseData} from "./sagas/searchPlaces"
 
 export type State = {
   searchedPlaces: {
-    data: SearchPlacesData | undefined,
+    data: SearchPlacesResponseData["data"] | undefined,
     status: {
       loading: boolean,
       ready: boolean,

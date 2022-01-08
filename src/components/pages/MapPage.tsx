@@ -10,12 +10,6 @@ export type MapPageProps = {
 
 const SIDE_BAR_WIDTH = 320
 
-// const PLACES = [
-// 	{title: "호야<b>초밥</b>참치 본점", category: "일식>초밥,롤", roadAddress: "서울특별시 광진구 능동로13길 39 1"},
-// 	{title: "초승달", category: "술집>요리주점", roadAddress: "서울특별시 용산구 회나무로26길 12 1층"},
-// 	{title: "키움<b>초밥</b>", category: "일식>초밥,롤", roadAddress: "서울특별시 마포구 잔다리로 77 대창빌딩"},
-// ]
-
 const MapPageDiv = styled.div`
 	width: 100%;
 	height: 100%;
@@ -98,8 +92,11 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 	const [searchValue, setSearchValue] = useState("")
 
-	const searchedPlacesData = useSelector((state: RootState) => state.naver.searchedPlaces.data);
+	const searchedPlacesState = useSelector((state: RootState) => state.naver.searchedPlaces);
 
+	// useEffect(()=>{
+	// 	console.log("searchedPlacesData: ", searchedPlacesData); // TODO: remove 
+	// },[searchedPlacesData])
 	useEffect(() => {
 		if (!naver) return;
 
@@ -126,7 +123,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 							<SearchButton onClick={handleSearchButtonClick}>검색</SearchButton>
 						</SearchInputButtonWrapper>
 						<SearchResultDiv>
-							{searchedPlacesData?.items.map((item, index)=>(
+							{searchedPlacesState?.data?.items.map((item, index)=>(
 								<PlaceSummaryDiv key={`place-${index}`}>
 									<PlaceTitleHeading>{item.title}</PlaceTitleHeading>
 									<PlaceCategorySpan>{item.category}</PlaceCategorySpan>
