@@ -1,5 +1,4 @@
 import { call, put } from 'redux-saga/effects';
-// import history from 'libraries/history';
 
 import axios, { AxiosResponse } from 'axios';
 
@@ -8,7 +7,6 @@ import * as actions from '../actions';
 export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   const { payload } = action
 
-  console.log("payload: ", payload); // TODO: remove
   yield put(
     actions.return__REPLACE({
       keyList: ['searchedPlaces', 'status'],
@@ -64,17 +62,29 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
 }
 
 // TODO: we should use backend to call api
+// const requestSearchPlaces = (keyword: string): Promise<AxiosResponse<SearchPlacesData, any>> => {
+//   return axios.get(
+//     "https://openapi.naver.com:8080/v1/search/local.json",
+//     {
+//       params: {
+//         display: "5",
+//         query: keyword
+//       },
+//       headers: {
+//         "X-Naver-Client-Id": process.env.REACT_APP_NAVER_CLIENT_ID || "",
+//         "X-Naver-Client-Secret": process.env.REACT_APP_NAVER_CLIENT_SECRET || "",
+//       }
+//     },
+//   );
+// }
+
 const requestSearchPlaces = (keyword: string): Promise<AxiosResponse<SearchPlacesData, any>> => {
   return axios.get(
-    "https://openapi.naver.com:8080/v1/search/local.json",
+    process.env.REACT_APP_BACKEND_URL || "" + "/home/search",
     {
       params: {
         display: "5",
         query: keyword
-      },
-      headers: {
-        "X-Naver-Client-Id": process.env.REACT_APP_NAVER_CLIENT_ID || "",
-        "X-Naver-Client-Secret": process.env.REACT_APP_NAVER_CLIENT_SECRET || "",
       }
     },
   );

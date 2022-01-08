@@ -12,11 +12,9 @@ export type State = {
       ready: boolean,
     }
   }
-} // 아직 불확실
+}
 
 const initialState = {
-  // user: null as types.auth.User | null,
-  // member: null as types.auth.Member | null,
   searchedPlaces: {
     data: undefined,
     status: {
