@@ -69,23 +69,6 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   }
 }
 
-// TODO: we should use backend to call api
-// const requestSearchPlaces = (keyword: string): Promise<AxiosResponse<SearchPlacesData, any>> => {
-//   return axios.get(
-//     "https://openapi.naver.com:8080/v1/search/local.json",
-//     {
-//       params: {
-//         display: "5",
-//         query: keyword
-//       },
-//       headers: {
-//         "X-Naver-Client-Id": process.env.REACT_APP_NAVER_CLIENT_ID || "",
-//         "X-Naver-Client-Secret": process.env.REACT_APP_NAVER_CLIENT_SECRET || "",
-//       }
-//     },
-//   );
-// }
-
 const requestSearchPlaces = (keyword: string): Promise<AxiosResponse<SearchPlacesResponseData, any>> => {
   return axios.get(
     process.env.REACT_APP_BACKEND_URL || "" + "/home/search",

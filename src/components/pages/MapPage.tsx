@@ -94,9 +94,6 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 	const searchedPlacesState = useSelector((state: RootState) => state.naver.searchedPlaces);
 
-	// useEffect(()=>{
-	// 	console.log("searchedPlacesData: ", searchedPlacesData); // TODO: remove 
-	// },[searchedPlacesData])
 	useEffect(() => {
 		if (!naver) return;
 
