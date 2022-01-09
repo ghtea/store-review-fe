@@ -99,6 +99,10 @@ const MapWrapper = styled.div`
 const MapDiv = styled.div`
 	width: 100%;
 	height: 100%;
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
