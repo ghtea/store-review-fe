@@ -5,6 +5,7 @@ import * as actions from './actions';
 import {SearchPlacesResponseData} from "./sagas/searchPlaces"
 
 export type State = {
+  mainMap: naver.maps.Map | undefined
   searchedPlaces: {
     data: SearchPlacesResponseData["data"] | undefined,
     status: {
@@ -15,6 +16,7 @@ export type State = {
 }
 
 const initialState = {
+  mainMap: undefined,
   searchedPlaces: {
     data: undefined,
     status: {

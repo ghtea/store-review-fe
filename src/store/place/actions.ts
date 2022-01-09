@@ -22,3 +22,11 @@ export const return__SEARCH_PLACES = (payload: SEARCH_PLACES__Payload) => {
   };
 };
 export type SEARCH_PLACES_Instance = ReturnType<typeof return__SEARCH_PLACES>;
+
+export const INIT_MAIN_MAP = 'place/INIT_MAIN_MAP';
+export const return__INIT_MAIN_MAP = () => {
+  return {
+    type: INIT_MAIN_MAP,
+  };
+};
+export type INIT_MAIN_MAP_Instance = ReturnType<typeof return__INIT_MAIN_MAP>;

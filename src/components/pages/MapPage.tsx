@@ -113,14 +113,8 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
 
 	useEffect(() => {
-		if (!naver) return;
-
-		const mapOption = {
-			center: new naver.maps.LatLng(37.3595704, 127.105399),
-			zoom: 10
-		}
-		const map = new naver.maps.Map("mainMap", mapOption);
-	}, [])
+		dispatch(placeStore.return__INIT_MAIN_MAP())
+	}, [dispatch])
 
 	const handleSearchButtonClick = useCallback(()=>{
 		dispatch(placeStore.return__SEARCH_PLACES({
