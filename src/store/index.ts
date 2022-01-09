@@ -17,8 +17,9 @@ const middlewares = process.env.NODE_ENV === 'production'
   ? [sagaMiddleware]
   : [sagaMiddleware, logger]
 
-const store = createStore(rootReducer, applyMiddleware(...middlewares));
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 sagaMiddleware.run(rootSaga);
 
-export default store;
+export * as authStore from "./auth"
+export * as placeStore from "./place"

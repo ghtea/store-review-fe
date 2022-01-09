@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { placeStore } from '../../store';
+import { RootState } from '../../store/reducers';
 
 export type MapPageProps = {
 }
@@ -21,6 +24,59 @@ const SideBarDiv = styled.div`
 	width: ${SIDE_BAR_WIDTH}px;
 `;
 
+const SearchInputButtonWrapper = styled.div`
+	flex-direction: row;
+	justify-content: center;
+	align-items: stretch;
+	width: 100%;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 16px;
+	padding-bottom: 16px;
+`;
+
+const SearchInput = styled.input`
+	font-size: 1.125rem;
+	height: 40px;
+	flex: 1;
+`;
+
+const SearchButton = styled.button`
+	font-size: 1.125rem;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 0;
+	border: none;
+	background-color: transparent;
+	padding-left: 16px;
+	padding-right: 16px;
+	flex-shrink: 0;
+`;
+
+const SearchResultDiv = styled.div`
+	padding: 16px;
+`
+
+const PlaceSummaryDiv = styled.div`
+	padding: 16px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: gray;
+`
+
+const PlaceTitleHeading = styled.h3`
+	font-size: 1.125rem;
+`
+
+const PlaceCategorySpan = styled.span`
+	margin-top: 8px;
+`
+
+const PlaceAddressSpan = styled.span`
+	margin-top: 16px;
+	font-size: 0.875rem;
+`
+
 const MapWrapper = styled.div`
 	width: calc(100% - ${SIDE_BAR_WIDTH}px);
 	height: 100%;
@@ -32,7 +88,12 @@ const MapDiv = styled.div`
 `;
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
-	
+	const dispatch = useDispatch();
+
+	const [searchValue, setSearchValue] = useState("")
+
+	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
+
 	useEffect(() => {
 		if (!naver) return;
 
@@ -43,12 +104,33 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		const map = new naver.maps.Map("mainMap", mapOption);
 	}, [])
 
+	const handleSearchButtonClick = useCallback(()=>{
+		dispatch(placeStore.return__SEARCH_PLACES({
+			keyword: searchValue
+		}))
+	},[dispatch, searchValue])
+
 	return (
 		<TemplateBasic>
 			<MapPageDiv>
 				<SideBarWrapper>
 					<SideBarDiv>
-						사이드 바
+						<SearchInputButtonWrapper>
+							<SearchInput value={searchValue} onChange={(event)=>setSearchValue(event.target.value)}></SearchInput>
+							<SearchButton onClick={handleSearchButtonClick}>검색</SearchButton>
+						</SearchInputButtonWrapper>
+						<SearchResultDiv>
+							{searchedPlacesState?.data?.items.map((item, index)=>(
+								<PlaceSummaryDiv key={`place-${index}`}>
+									<PlaceTitleHeading>{item.title}</PlaceTitleHeading>
+									<PlaceCategorySpan>{item.category}</PlaceCategorySpan>
+									<PlaceAddressSpan>{item.roadAddress}</PlaceAddressSpan>
+								</PlaceSummaryDiv>
+							))}
+							{searchedPlacesState.status.loading && (
+								<div>loading</div>
+							)}
+						</SearchResultDiv>
 					</SideBarDiv>
 				</SideBarWrapper>
 
