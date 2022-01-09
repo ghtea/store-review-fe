@@ -2,12 +2,12 @@ import { produce } from 'immer';
 import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
 import * as actions from './actions';
-import {SearchPlacesResponseData} from "./sagas/searchPlaces"
+import { Place } from './types';
 
 export type State = {
-  mainMap: naver.maps.Map | undefined
+  mainMap: kakao.maps.Map | undefined
   searchedPlaces: {
-    data: SearchPlacesResponseData["data"] | undefined,
+    data: Place[] | undefined,
     status: {
       loading: boolean,
       ready: boolean,

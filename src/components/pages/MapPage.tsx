@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
-import { SearchPlacesResponseData } from '../../store/place/sagas/searchPlaces';
+import { Place } from '../../store/place';
 
 export type MapPageProps = {
 }
@@ -19,7 +19,7 @@ const MapPageDiv = styled.div`
 `;
 
 const SideBarWrapper = styled.div`
-	
+	height: 100%;
 `;
 
 const SideBarDiv = styled.div`
@@ -67,6 +67,7 @@ const SearchResultDiv = styled.div`
 	margin: 8px;
 	border-radius: 4px;
 	background-color: #ffffff;
+	overflow-y: scroll;
 `
 
 const PlaceSummaryDiv = styled.div`
@@ -119,6 +120,7 @@ const MapOverlayTopDiv = styled.div`
 	padding-top: 16px;
 	padding-left: 16px;
 	padding-right: 16px;
+	z-index: 1;
 `;
 
 const OverlayButton = styled(Button)`
@@ -150,11 +152,11 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		}))
 	},[dispatch])
 
-	const handlePlaceSummaryClick = useCallback((item: SearchPlacesResponseData["data"]["items"][number] )=>{
+	const handlePlaceSummaryClick = useCallback((item: Place )=>{
 		dispatch(placeStore.return__MOVE_MAP({
-			point: {
-				x: parseInt(item.mapx),
-				y: parseInt(item.mapx),
+			coords: {
+				latitude: item.y,
+				longitude: item.x,
 			}
 		}))
 	},[dispatch])
@@ -175,11 +177,13 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 							</SearchButton>
 						</SearchInputButtonWrapper>
 						<SearchResultDiv>
-							{searchedPlacesState?.data?.items.map((item, index)=>(
+
+
+							{(searchedPlacesState?.data || []).map((item, index)=>(
 								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
-									<PlaceTitleHeading>{item.title}</PlaceTitleHeading>
-									<PlaceCategorySpan>{item.category}</PlaceCategorySpan>
-									<PlaceAddressSpan>{item.roadAddress}</PlaceAddressSpan>
+									<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
+									<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
+									<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
 								</PlaceSummaryDiv>
 							))}
 							{searchedPlacesState.status.loading && (
@@ -201,3 +205,21 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		</TemplateBasic>
 	)
 }
+
+
+	/* 
+	
+	place_name: string,
+  distance: number,
+  place_url: string,
+  category_name: string,
+  address_name: string,
+  road_address_name: string,
+  id: number,
+  phone: string,
+  category_group_code: string,
+  category_group_name: string,
+  x: number,
+  y: number 
+
+*/

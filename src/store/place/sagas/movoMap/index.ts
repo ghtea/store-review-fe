@@ -7,28 +7,23 @@ import { DEFAULT_COORDS, getCurrentPosition } from '../initMainMap/getCurrentPos
 export function* moveMap(action: actions.MOVE_MAP_Instance) {
   const payload = action.payload
 
-  if (!naver) return;
-
-  const mainMap: naver.maps.Map = yield select(
+  const mainMap: kakao.maps.Map | undefined = yield select(
     (state: RootState) => state.place.mainMap
   );
 
+  if (!kakao || !mainMap) return;
+
   let destinationLatLng = undefined
-  
-  if (payload.point){
-    const tm128Location = new naver.maps.Point(payload.point.x, payload.point.y)
-    destinationLatLng = naver.maps.TransCoord.fromTM128ToLatLng(tm128Location);
-  }
 
   if (payload.coords){
-    destinationLatLng = new naver.maps.LatLng(payload.coords.latitude, payload.coords.latitude)
+    destinationLatLng = new kakao.maps.LatLng(payload.coords.latitude, payload.coords.longitude)
   }
 
   if (payload.isCurrent){
     try {
       const currentPosition: GeolocationPosition = yield call(getCurrentPosition);
   
-      destinationLatLng = new naver.maps.LatLng(currentPosition.coords.latitude, currentPosition.coords.latitude)
+      destinationLatLng = new kakao.maps.LatLng(currentPosition.coords.latitude, currentPosition.coords.longitude)
     }
     catch (error){
       console.log("getting current location has failed")
@@ -36,9 +31,8 @@ export function* moveMap(action: actions.MOVE_MAP_Instance) {
   }
 
   if (!destinationLatLng) {
-    destinationLatLng = new naver.maps.LatLng(DEFAULT_COORDS.latitude, DEFAULT_COORDS.longitude)
+    destinationLatLng = new kakao.maps.LatLng(DEFAULT_COORDS.latitude, DEFAULT_COORDS.longitude)
   }
-  
   
   mainMap.setCenter(destinationLatLng)
 }

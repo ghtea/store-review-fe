@@ -5,7 +5,7 @@ import {DEFAULT_COORDS, getCurrentPosition} from "./getCurrentPosition"
 
 export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
 
-  if (!naver) {
+  if (!kakao) {
     yield put(
       actions.return__REPLACE({
         keyList: ['mainMap'],
@@ -29,12 +29,15 @@ export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
       console.log("getting current location has failed")
     }
     
-    const mapOption = {
-      center: new naver.maps.LatLng(coords.latitude, coords.longitude),
-      zoom: 14
-    }
+    const container = document.getElementById('mainMap'); 
+    const options = { 
+      center: new kakao.maps.LatLng(coords.latitude, coords.longitude), //지도의 중심좌표.
+      level: 5 
+    };
 
-    const map = new naver.maps.Map("mainMap", mapOption);
+    if (!container) return
+
+    const map = new kakao.maps.Map(container, options);
 
     yield put(
       actions.return__REPLACE({
