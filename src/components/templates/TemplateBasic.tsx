@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from '../atoms/Button';
 
 export type TemplateBasicProps = {
 }
@@ -14,7 +15,6 @@ const TemplateBasicDiv = styled.div`
 const MenuWrapper = styled.div`
 	width: 100%;
 	height: ${MENU_HEIGHT_PX}px;
-	background-color: #888888;
 `;
 
 const MenuDiv = styled.div`
@@ -23,8 +23,24 @@ const MenuDiv = styled.div`
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 8px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 16px;
+	padding-right: 16px;
+	// background-color: transparent;
 `;
+
+const ServiceLogoSpan = styled.span`
+	color: ${props => props.theme.colors.primary};
+	font-size: 1.25rem;
+	font-weight: 700;
+`
+
+const LoginButton = styled(Button)`
+	background-color: ${props => props.theme.colors.primary};
+	color: ${props => props.theme.colors.textAlternative};
+
+`
 
 const ContentWrapper = styled.div`
 	width: 100%;
@@ -41,15 +57,15 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 			<MenuWrapper>
 				<MenuDiv>
 					<div>
-						<div>
+						<ServiceLogoSpan>
 							여기모아
-						</div>
+						</ServiceLogoSpan>
 					</div>
 
 					<div>
-						<div>
+						<LoginButton status={"primary"}>
 							로그인
-						</div>
+						</LoginButton>
 					</div>
 				</MenuDiv>
 			</MenuWrapper>

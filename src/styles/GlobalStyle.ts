@@ -26,4 +26,17 @@ export const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
   }
+
+  button {
+    display: inline-flex;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
 `

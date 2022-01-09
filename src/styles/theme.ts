@@ -4,7 +4,7 @@
 const common = {
     
   colors: {
-    primary: "#ff792a"
+    primary: "#258FFF" // #258FFF #ff792a
   }
   ,media: {
       sm: 600, 
@@ -28,6 +28,9 @@ export const themes =  {
       textDefault: 'hsl(240, 2%, 0%)',  
       textHint: 'hsl(240, 2%, 18%)',   // 18% down
       textDisabled: 'hsl(240, 2%, 50%)',       // 32% down
+      textAlternative: '#ffffff',      
     },
   },  
 }
+
+export type Theme = typeof themes.light
