@@ -38,5 +38,15 @@ export const GlobalStyle = createGlobalStyle`
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  input {
+    outline: none;
+    border: none;
+    margin: 0;
   }
 `

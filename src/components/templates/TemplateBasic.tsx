@@ -27,6 +27,9 @@ const MenuDiv = styled.div`
 	padding-bottom: 8px;
 	padding-left: 16px;
 	padding-right: 16px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #d0d0d0;
 	// background-color: transparent;
 `;
 
@@ -45,7 +48,6 @@ const LoginButton = styled(Button)`
 const ContentWrapper = styled.div`
 	width: 100%;
 	height: calc(100% - ${MENU_HEIGHT_PX}px);
-	background-color: #DDD;
 `;
 
 export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({

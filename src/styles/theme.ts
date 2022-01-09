@@ -26,8 +26,8 @@ export const themes =  {
     colors: {
       ...common.colors,
       textDefault: 'hsl(240, 2%, 0%)',  
-      textHint: 'hsl(240, 2%, 18%)',   // 18% down
-      textDisabled: 'hsl(240, 2%, 50%)',       // 32% down
+      textHint: 'hsl(240, 2%,40%)',   // 18% down
+      textDisabled: 'hsl(240, 2%, 72%)',       // 32% down
       textAlternative: '#ffffff',      
     },
   },  

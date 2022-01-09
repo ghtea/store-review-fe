@@ -1,12 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-export type ButtonProps = {
+export type ButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
   status?: "primary" | "neutral";
-  shape?: "rounded" | "full"
+  shape?: "rounded" | "custom"
 }
 
 const StyledButton = styled.button<ButtonProps>`
+
   ${props => props.status === "primary" && css`
     background-color: ${props.theme.colors.primary};
     color: ${props.theme.colors.textAlternative};
@@ -16,28 +17,26 @@ const StyledButton = styled.button<ButtonProps>`
     color: ${props.theme.colors.textDefault};
   `}
 
-  ${props => props.shape === "rounded" && css`
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 
+  ${props => props.shape === "rounded" && css`
     border-radius: 4px;
-  `}
-  ${props => props.shape === "full" && css`
-    width: 100%;
-    height: 100%;
   `}
 `
 
 export const Button:React.FunctionComponent<ButtonProps> = ({
+  ref,
 	children,
   status = "neutral",
-  shape = "rounded"
+  shape = "rounded",
+  ...rest
 }) => {
 
 	return (
-		<StyledButton status={status} shape={shape}>
+		<StyledButton status={status} shape={shape} {...rest}>
 			{children}
 		</StyledButton>
 	)

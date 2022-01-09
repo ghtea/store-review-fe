@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
+import { Button } from '../atoms/Button';
 
 export type MapPageProps = {
 }
@@ -22,6 +23,8 @@ const SideBarWrapper = styled.div`
 
 const SideBarDiv = styled.div`
 	width: ${SIDE_BAR_WIDTH}px;
+	height: 100%;
+	background-color: #f0f0f0;
 `;
 
 const SearchInputButtonWrapper = styled.div`
@@ -32,36 +35,44 @@ const SearchInputButtonWrapper = styled.div`
 	padding-left: 16px;
 	padding-right: 16px;
 	padding-top: 16px;
-	padding-bottom: 16px;
+	padding-bottom: 8px;
 `;
 
 const SearchInput = styled.input`
 	font-size: 1.125rem;
 	height: 40px;
 	flex: 1;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-bottom-left-radius: 4px;
+	border-top-left-radius: 4px;
 `;
 
-const SearchButton = styled.button`
-	font-size: 1.125rem;
-	border-radius: 0;
-	box-shadow: none;
-	padding: 0;
-	border: none;
-	background-color: transparent;
-	padding-left: 16px;
-	padding-right: 16px;
-	flex-shrink: 0;
+
+const SearchButton = styled(Button)`
+	padding-top: 0;
+	padding-bottom: 0;
+	border-bottom-right-radius: 4px;
+	border-top-right-radius: 4px;
 `;
+
+const LoadingDiv = styled.div`
+	align-items: center;
+	padding-top: 24px;
+	padding-bottom: 24px;
+`
 
 const SearchResultDiv = styled.div`
-	padding: 16px;
+	margin: 8px;
+	border-radius: 4px;
+	background-color: #ffffff;
 `
 
 const PlaceSummaryDiv = styled.div`
 	padding: 16px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
-	border-bottom-color: gray;
+	border-bottom-color: #d0d0d0;
 `
 
 const PlaceTitleHeading = styled.h3`
@@ -69,12 +80,15 @@ const PlaceTitleHeading = styled.h3`
 `
 
 const PlaceCategorySpan = styled.span`
+font-size: 0.875rem;
 	margin-top: 8px;
+	color: ${props => props.theme.colors.textHint};
 `
 
 const PlaceAddressSpan = styled.span`
-	margin-top: 16px;
-	font-size: 0.875rem;
+	margin-top: 24px;
+	font-size: 0.75rem;
+	color: ${props => props.theme.colors.textHint};
 `
 
 const MapWrapper = styled.div`
@@ -117,7 +131,13 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 					<SideBarDiv>
 						<SearchInputButtonWrapper>
 							<SearchInput value={searchValue} onChange={(event)=>setSearchValue(event.target.value)}></SearchInput>
-							<SearchButton onClick={handleSearchButtonClick}>검색</SearchButton>
+							<SearchButton 
+								onClick={handleSearchButtonClick}
+								status={"primary"}
+								shape={"custom"}
+								>
+								검색
+							</SearchButton>
 						</SearchInputButtonWrapper>
 						<SearchResultDiv>
 							{searchedPlacesState?.data?.items.map((item, index)=>(
@@ -128,7 +148,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 								</PlaceSummaryDiv>
 							))}
 							{searchedPlacesState.status.loading && (
-								<div>loading</div>
+								<LoadingDiv>loading</LoadingDiv>
 							)}
 						</SearchResultDiv>
 					</SideBarDiv>
