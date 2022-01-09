@@ -23,6 +23,7 @@ export const return__SEARCH_PLACES = (payload: SEARCH_PLACES__Payload) => {
 };
 export type SEARCH_PLACES_Instance = ReturnType<typeof return__SEARCH_PLACES>;
 
+//
 export const INIT_MAIN_MAP = 'place/INIT_MAIN_MAP';
 export const return__INIT_MAIN_MAP = () => {
   return {
@@ -30,3 +31,24 @@ export const return__INIT_MAIN_MAP = () => {
   };
 };
 export type INIT_MAIN_MAP_Instance = ReturnType<typeof return__INIT_MAIN_MAP>;
+
+//
+export const MOVE_MAP = 'place/MOVE_MAP';
+type MOVE_MAP__Payload = {
+  coords?: {
+    latitude: number
+    longitude: number
+  }
+  point?: {
+    x: number
+    y: number
+  }
+  isCurrent?: boolean
+};
+export const return__MOVE_MAP = (payload: MOVE_MAP__Payload) => {
+  return {
+    type: MOVE_MAP,
+    payload: payload,
+  };
+};
+export type MOVE_MAP_Instance = ReturnType<typeof return__MOVE_MAP>;

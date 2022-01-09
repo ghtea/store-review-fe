@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
+import {DEFAULT_COORDS, getCurrentPosition} from "./getCurrentPosition"
 
 export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
 
@@ -14,13 +15,10 @@ export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
   }
   else {
 
-    let coords = {
-      latitude: 37.532600,
-      longitude: 127.024612,
-    }
+    let coords = DEFAULT_COORDS
 
     try {
-      const position: GeolocationPosition = yield call(getPosition);
+      const position: GeolocationPosition = yield call(getCurrentPosition);
 
       coords = {
         latitude: position.coords.latitude,
@@ -45,15 +43,4 @@ export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
       }),
     );
   }
-}
-
-const getPosition = (options?: PositionOptions) => {
-  return new Promise((resolve, reject)=>{
-    if (!navigator.geolocation){
-      reject()
-    }
-    else {
-      navigator.geolocation.getCurrentPosition(resolve, reject, options)
-    }
-  })
 }

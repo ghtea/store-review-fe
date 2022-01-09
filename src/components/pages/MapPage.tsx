@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
+import { SearchPlacesResponseData } from '../../store/place/sagas/searchPlaces';
 
 export type MapPageProps = {
 }
@@ -73,6 +74,10 @@ const PlaceSummaryDiv = styled.div`
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #d0d0d0;
+	cursor: pointer;
+	&:hover {
+		background-color: #f8f8f8;
+	}
 `
 
 const PlaceTitleHeading = styled.h3`
@@ -92,11 +97,13 @@ const PlaceAddressSpan = styled.span`
 `
 
 const MapWrapper = styled.div`
+	position: relative;
 	width: calc(100% - ${SIDE_BAR_WIDTH}px);
 	height: 100%;
 `;
 
 const MapDiv = styled.div`
+	position: absolute;
 	width: 100%;
 	height: 100%;
 
@@ -104,6 +111,21 @@ const MapDiv = styled.div`
 		outline: none;
 	}
 `;
+
+const MapOverlayTopDiv = styled.div`
+	top: 0;
+	right: 0;
+	position: absolute;
+	padding-top: 16px;
+	padding-left: 16px;
+	padding-right: 16px;
+`;
+
+const OverlayButton = styled(Button)`
+	border-width: 1px;
+	border-style: solid;
+	border-color: #d0d0d0;
+`
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const dispatch = useDispatch();
@@ -122,6 +144,21 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		}))
 	},[dispatch, searchValue])
 
+	const handleCurrentLocationButtonClick = useCallback(()=>{
+		dispatch(placeStore.return__MOVE_MAP({
+			isCurrent: true
+		}))
+	},[dispatch])
+
+	const handlePlaceSummaryClick = useCallback((item: SearchPlacesResponseData["data"]["items"][number] )=>{
+		dispatch(placeStore.return__MOVE_MAP({
+			point: {
+				x: parseInt(item.mapx),
+				y: parseInt(item.mapx),
+			}
+		}))
+	},[dispatch])
+
 	return (
 		<TemplateBasic>
 			<MapPageDiv>
@@ -139,7 +176,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 						</SearchInputButtonWrapper>
 						<SearchResultDiv>
 							{searchedPlacesState?.data?.items.map((item, index)=>(
-								<PlaceSummaryDiv key={`place-${index}`}>
+								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
 									<PlaceTitleHeading>{item.title}</PlaceTitleHeading>
 									<PlaceCategorySpan>{item.category}</PlaceCategorySpan>
 									<PlaceAddressSpan>{item.roadAddress}</PlaceAddressSpan>
@@ -154,6 +191,11 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 				<MapWrapper>
 					<MapDiv id={"mainMap"}/>
+					<MapOverlayTopDiv>
+						<OverlayButton onClick={handleCurrentLocationButtonClick}>
+							현재 위치
+						</OverlayButton>
+					</MapOverlayTopDiv>
 				</MapWrapper>
 			</MapPageDiv>
 		</TemplateBasic>

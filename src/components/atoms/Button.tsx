@@ -13,7 +13,7 @@ const StyledButton = styled.button<ButtonProps>`
     color: ${props.theme.colors.textAlternative};
   `}
   ${props => props.status === "neutral" && css`
-    background-color: transparent;
+    background-color: #fff;
     color: ${props.theme.colors.textDefault};
   `}
 
