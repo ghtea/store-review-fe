@@ -22,6 +22,13 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
     }),
   );
 
+  yield put(
+    actions.return__REPLACE({
+      keyList: ['searchedPlaces', 'keyword'],
+      replacement: payload.keyword
+    }),
+  );
+
   try {
     const places = new kakao.maps.services.Places(mainMap);
 
@@ -59,13 +66,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
       }),
     );
   } catch (error) {
-    console.error(error);
-
-    // yield put(
-    //   actions.notification.return__ADD_DELETE_BANNER({
-    //     situationCode: 'GetQuizList_UnknownError__E',
-    //   }),
-    // );
+    console.log(error);
 
     yield put(
       actions.return__REPLACE({
@@ -76,6 +77,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
         },
       }),
     );
+    
   }
 }
 
@@ -88,13 +90,17 @@ const requestSearchPlaces = ({
 }): Promise<any> => {
   return new Promise((resolve, reject) => {
     const callback: KakaoKeywordSearchCallback = (result, status, paginations) => {
-      if (status === kakao.maps.services.Status.OK) {
+      if (
+        status === kakao.maps.services.Status.OK || 
+        status === kakao.maps.services.Status.ZERO_RESULT
+        ) {
         resolve({
           result,
           status,
           paginations,
         });
-      } else {
+      }
+      else {
         reject({
           result,
           status,

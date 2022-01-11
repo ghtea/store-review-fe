@@ -70,6 +70,20 @@ const SearchResultDiv = styled.div`
 	overflow-y: scroll;
 `
 
+const LoadingWrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`
+
+const NoResultWrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`
+
 const PlaceSummaryDiv = styled.div`
 	padding: 16px;
 	border-bottom-style: solid;
@@ -195,6 +209,10 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		}))
 	},[dispatch, displayingPlaces])
 
+	const isNoSearchResult = useMemo(()=>{
+		return searchedPlacesState.keyword && searchedPlacesState.data?.length === 0 && !searchedPlacesState.status.loading
+	},[searchedPlacesState.data?.length, searchedPlacesState.keyword, searchedPlacesState.status.loading])
+
 	return (
 		<TemplateBasic>
 			<MapPageDiv>
@@ -224,10 +242,19 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 									<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
 								</PlaceSummaryDiv>
 							))}
-							{searchedPlacesState.status.loading && (
-								<LoadingDiv>loading</LoadingDiv>
-							)}
 						</SearchResultDiv>
+
+						{searchedPlacesState.status.loading && (
+							<LoadingWrapper> 
+								<LoadingDiv>loading</LoadingDiv>
+							</LoadingWrapper>
+							)}
+							
+						{isNoSearchResult && (
+							<NoResultWrapper> 
+								<span> 검색된 장소가 없습니다 </span>
+							</NoResultWrapper>
+							)}
 					</SideBarDiv>
 				</SideBarWrapper>
 

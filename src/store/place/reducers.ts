@@ -8,6 +8,7 @@ export type State = {
   mainMap: kakao.maps.Map | undefined
   searchedPlaces: {
     data: Place[] | undefined,
+    keyword: string | undefined,
     status: {
       loading: boolean,
       ready: boolean,
@@ -20,6 +21,7 @@ const initialState = {
   mainMap: undefined,
   searchedPlaces: {
     data: undefined,
+    keyword: undefined,
     status: {
       loading: false,
       ready: true,
