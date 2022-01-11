@@ -19,7 +19,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   );
 
   try {
-    
+
     // TODO: uncommnet when backend is ready
     // const response: AxiosResponse<SearchPlacesData, any> = yield call(
     //   requestSearchPlaces,
@@ -83,25 +83,25 @@ const requestSearchPlaces = (keyword: string): Promise<AxiosResponse<SearchPlace
 
 export type SearchPlacesResponseData = {
   meta: {
-    code : number 
+    code: number
   },
   data: {
     lastBuildDate: string
     total: number
     start: number
     display: number // max is 5
-    items: 
-      {
-        title: string
-        link: string
-        category: string
-        description: string
-        telephone: string
-        address: string
-        roadAddress: string
-        mapx: string
-        mapy: string
-      }[]
+    items:
+    {
+      title: string
+      link: string
+      category: string
+      description: string
+      telephone: string
+      address: string
+      roadAddress: string
+      mapx: string
+      mapy: string
+    }[]
   }
 }
 
@@ -109,12 +109,12 @@ export type SearchPlacesResponseData = {
 const requestDummySearchPlaces = (keyword: string, shouldSuccess: boolean): Promise<AxiosResponse<SearchPlacesResponseData, any>> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (shouldSuccess){
+      if (shouldSuccess) {
         resolve(
           {
-            data: { 
-              meta : {
-              code : 200, 
+            data: {
+              meta: {
+                code: 200,
               },
               data: DUMMY_DATA,
             },
@@ -129,15 +129,15 @@ const requestDummySearchPlaces = (keyword: string, shouldSuccess: boolean): Prom
       else {
         reject({
           response: {
-            data: { 
-              meta : {
-                  code : 599,
-                    error_type : "SYSTEM ERROR", 
-                    error_message : "시스템 오류."
+            data: {
+              meta: {
+                code: 599,
+                error_type: "SYSTEM ERROR",
+                error_message: "시스템 오류."
               }
-             }
+            }
           }
-          })
+        })
       }
     }, 2000);
   });
