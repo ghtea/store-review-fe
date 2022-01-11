@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
+import { Place } from '../../store/place';
 
 export type MapPageProps = {
 }
@@ -18,7 +19,7 @@ const MapPageDiv = styled.div`
 `;
 
 const SideBarWrapper = styled.div`
-	
+	height: 100%;
 `;
 
 const SideBarDiv = styled.div`
@@ -66,6 +67,7 @@ const SearchResultDiv = styled.div`
 	margin: 8px;
 	border-radius: 4px;
 	background-color: #ffffff;
+	overflow-y: scroll;
 `
 
 const PlaceSummaryDiv = styled.div`
@@ -73,6 +75,10 @@ const PlaceSummaryDiv = styled.div`
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #d0d0d0;
+	cursor: pointer;
+	&:hover {
+		background-color: #f8f8f8;
+	}
 `
 
 const PlaceTitleHeading = styled.h3`
@@ -92,11 +98,13 @@ const PlaceAddressSpan = styled.span`
 `
 
 const MapWrapper = styled.div`
+	position: relative;
 	width: calc(100% - ${SIDE_BAR_WIDTH}px);
 	height: 100%;
 `;
 
 const MapDiv = styled.div`
+	position: absolute;
 	width: 100%;
 	height: 100%;
 
@@ -104,6 +112,22 @@ const MapDiv = styled.div`
 		outline: none;
 	}
 `;
+
+const MapOverlayTopDiv = styled.div`
+	top: 0;
+	right: 0;
+	position: absolute;
+	padding-top: 16px;
+	padding-left: 16px;
+	padding-right: 16px;
+	z-index: 1;
+`;
+
+const OverlayButton = styled(Button)`
+	border-width: 1px;
+	border-style: solid;
+	border-color: #d0d0d0;
+`
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const dispatch = useDispatch();
@@ -113,20 +137,29 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
 
 	useEffect(() => {
-		if (!naver) return;
-
-		const mapOption = {
-			center: new naver.maps.LatLng(37.3595704, 127.105399),
-			zoom: 10
-		}
-		const map = new naver.maps.Map("mainMap", mapOption);
-	}, [])
+		dispatch(placeStore.return__INIT_MAIN_MAP())
+	}, [dispatch])
 
 	const handleSearchButtonClick = useCallback(()=>{
 		dispatch(placeStore.return__SEARCH_PLACES({
 			keyword: searchValue
 		}))
 	},[dispatch, searchValue])
+
+	const handleCurrentLocationButtonClick = useCallback(()=>{
+		dispatch(placeStore.return__MOVE_MAP({
+			isCurrent: true
+		}))
+	},[dispatch])
+
+	const handlePlaceSummaryClick = useCallback((item: Place )=>{
+		dispatch(placeStore.return__MOVE_MAP({
+			coords: {
+				latitude: item.y,
+				longitude: item.x,
+			}
+		}))
+	},[dispatch])
 
 	return (
 		<TemplateBasic>
@@ -144,11 +177,13 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 							</SearchButton>
 						</SearchInputButtonWrapper>
 						<SearchResultDiv>
-							{searchedPlacesState?.data?.items.map((item, index)=>(
-								<PlaceSummaryDiv key={`place-${index}`}>
-									<PlaceTitleHeading>{item.title}</PlaceTitleHeading>
-									<PlaceCategorySpan>{item.category}</PlaceCategorySpan>
-									<PlaceAddressSpan>{item.roadAddress}</PlaceAddressSpan>
+
+
+							{(searchedPlacesState?.data || []).map((item, index)=>(
+								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
+									<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
+									<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
+									<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
 								</PlaceSummaryDiv>
 							))}
 							{searchedPlacesState.status.loading && (
@@ -160,8 +195,31 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 				<MapWrapper>
 					<MapDiv id={"mainMap"}/>
+					<MapOverlayTopDiv>
+						<OverlayButton onClick={handleCurrentLocationButtonClick}>
+							현재 위치
+						</OverlayButton>
+					</MapOverlayTopDiv>
 				</MapWrapper>
 			</MapPageDiv>
 		</TemplateBasic>
 	)
 }
+
+
+	/* 
+	
+	place_name: string,
+  distance: number,
+  place_url: string,
+  category_name: string,
+  address_name: string,
+  road_address_name: string,
+  id: number,
+  phone: string,
+  category_group_code: string,
+  category_group_name: string,
+  x: number,
+  y: number 
+
+*/

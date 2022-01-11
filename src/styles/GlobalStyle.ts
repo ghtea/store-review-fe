@@ -28,6 +28,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   button {
+    width: auto;
     display: inline-flex;
     border: none;
     padding: 0;
