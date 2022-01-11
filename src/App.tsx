@@ -12,6 +12,7 @@ import { GlobalStyle } from './styles/GlobalStyle';
 import { themes } from './styles/theme';
 import { Provider as ReduxProvider } from 'react-redux';
 import {store} from './store';
+import { StorePage } from './components/pages/StorePage';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FunctionComponent = () => {
 					<Route path="/login" element={<LoginPage />}/>
 					<Route path="/signup" element={<SignupPage />}/>
 					<Route path="/map" element={<MapPage />}/>
+					<Route path="/store/:storeId" element={<StorePage />}/>
 					<Route path="/*" element={<ErrorPage />}/>
 				</Routes> 
 			</BrowserRouter>
