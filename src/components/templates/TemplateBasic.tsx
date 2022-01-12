@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from '../atoms/Button';
 
 export type TemplateBasicProps = {
+	backgroundColor?: string
 }
 
 const MENU_HEIGHT_PX = 60
@@ -45,12 +46,14 @@ const LoginButton = styled(Button)`
 
 `
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{backgroundColor?: string}>`
 	width: 100%;
 	height: calc(100% - ${MENU_HEIGHT_PX}px);
+	background-color: ${props => props.backgroundColor || "transparent"};
 `;
 
 export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
+	backgroundColor,
 	children
 }) => {
 
@@ -71,7 +74,7 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 					</div>
 				</MenuDiv>
 			</MenuWrapper>
-			<ContentWrapper>
+			<ContentWrapper backgroundColor={backgroundColor}>
 				{children}
 			</ContentWrapper>
 		</TemplateBasicDiv>
