@@ -3,15 +3,17 @@ import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { placeStore } from '../../store';
+import { RootState } from '../../store/reducers';
 
 export type StorePageProps = {
 }
 
 
-const PlaceAddressSpan = styled.span`
-	margin-top: 24px;
-	font-size: 0.75rem;
-	color: ${props => props.theme.colors.textHint};
+const MainDiv = styled.div`
+	width: 100%;
+	max-width: ${props => props.theme.media.lg}px;
+	align-items: center;
 `
 
 // /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
@@ -21,7 +23,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 	const { id } = useParams<"id">();
   const [searchParams, setSearchParams] = useSearchParams();
 
-	// const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
+	const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
 
 	// const handleCurrentLocationButtonClick = useCallback(()=>{
 	// 	dispatch(placeStore.return__MOVE_MAP({
@@ -29,9 +31,34 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 	// 	}))
 	// },[dispatch])
 
+	useEffect(()=>{
+		const name = searchParams.get("name")
+		const latitude = parseFloat(searchParams.get("latitude") || "")
+		const longitude = parseFloat(searchParams.get("longitude") || "")
+
+		console.log(id, name, latitude, longitude)
+		if (!id || !name || !latitude || !longitude) return
+
+		dispatch(placeStore.return__GET_PAGE_STORE({
+			id,
+			name,
+			latitude,
+			longitude,
+		}))
+	},[dispatch, id, searchParams])
+
 	return (
 		<TemplateBasic>
-			
+			<div>
+				<MainDiv>
+					{!pageStoreState.data && pageStoreState.status.loading && (
+						<div>loading</div>
+					)}
+					{pageStoreState.data && (
+						<div>{pageStoreState.data.place_name}</div>
+					)}
+				</MainDiv>
+			</div>
 		</TemplateBasic>
 	)
 }

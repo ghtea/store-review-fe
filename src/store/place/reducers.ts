@@ -14,7 +14,14 @@ export type State = {
       ready: boolean,
     }
   },
-  markers: kakao.maps.Marker[]
+  markers: kakao.maps.Marker[],
+  getPageStore: {
+    data: Place | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
 }
 
 const initialState = {
@@ -27,7 +34,14 @@ const initialState = {
       ready: true,
     }
   },
-  markers: []
+  markers: [],
+  getPageStore: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
 };
 
 export const placeReducer = handleActions<State, any>(

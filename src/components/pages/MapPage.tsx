@@ -6,6 +6,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Place } from '../../store/place';
+import { useNavigate } from 'react-router-dom';
 
 export type MapPageProps = {
 }
@@ -85,6 +86,7 @@ const NoResultWrapper = styled.div`
 `
 
 const PlaceSummaryDiv = styled.div`
+	flex-direction: row;
 	padding: 16px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
@@ -93,6 +95,14 @@ const PlaceSummaryDiv = styled.div`
 	&:hover {
 		background-color: #f8f8f8;
 	}
+`
+
+const PlaceSummaryLeftDiv = styled.div`
+	flex: 1;
+`
+const PlaceSummaryRightDiv = styled.div`
+	width: 72px;
+	align-items: center;
 `
 
 const PlaceTitleHeading = styled.h3`
@@ -145,7 +155,8 @@ const OverlayButton = styled(Button)`
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const dispatch = useDispatch();
-
+	const navigate = useNavigate()
+	
 	const [searchValue, setSearchValue] = useState("")
 
 	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
@@ -182,6 +193,15 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 			}
 		}))
 	},[dispatch])
+
+	const handlePlaceSummaryLinkClick = useCallback((item: Place )=>{
+		const serachParams = new URLSearchParams();
+		serachParams.set("name", item.place_name)
+		serachParams.set("longitude", item.x.toString())
+		serachParams.set("latitude", item.y.toString())
+
+		navigate({pathname: `/store/${item.id}`, search: serachParams.toString()})
+	},[navigate])
 
 	const displayingPlaces = useMemo(()=>{
 		return (searchedPlacesState?.data || [])
@@ -237,9 +257,14 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
 							{displayingPlaces.map((item, index)=>(
 								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
-									<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
-									<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
-									<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
+									<PlaceSummaryLeftDiv>
+										<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
+										<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
+										<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
+									</PlaceSummaryLeftDiv>
+									<PlaceSummaryRightDiv>
+										<div onClick={()=>handlePlaceSummaryLinkClick(item)}>go</div>
+									</PlaceSummaryRightDiv>
 								</PlaceSummaryDiv>
 							))}
 						</SearchResultDiv>
