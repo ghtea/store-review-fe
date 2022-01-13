@@ -50,4 +50,8 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
     margin: 0;
   }
+
+  textarea {
+    font-size: 1rem;
+  }
 `
