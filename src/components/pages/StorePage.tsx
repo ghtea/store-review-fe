@@ -190,7 +190,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 	const dispatch = useDispatch();
 
 	const { id } = useParams<"id">();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
 	const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
 

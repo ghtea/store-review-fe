@@ -6,7 +6,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Place } from '../../store/place';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export type MapPageProps = {
 }
@@ -156,14 +156,25 @@ const OverlayButton = styled(Button)`
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
-	
-	const [searchValue, setSearchValue] = useState("")
-
+	const [searchParams] = useSearchParams();
 	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
+	const mainMap = useSelector((state: RootState) => state.place.mainMap);
+
+	const [searchValue, setSearchValue] = useState("")
 
 	useEffect(() => {
 		dispatch(placeStore.return__INIT_MAIN_MAP())
 	}, [dispatch])
+
+	useEffect(()=>{
+		const newKeyword = searchParams.get("q") || ""
+		if (mainMap && newKeyword){
+			dispatch(placeStore.return__SEARCH_PLACES({
+				keyword: newKeyword
+			}))
+			setSearchValue(newKeyword)
+		}
+	},[dispatch, searchParams, mainMap])
 
 	const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
 		if (event.key === "Enter"){
