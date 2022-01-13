@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
+import { Rating } from '../atoms/Rating';
 
 export type StorePageProps = {
 }
@@ -206,7 +207,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 								<ReviewMyDiv>
 									<ReviewGroupHeading>{"리뷰 작성"}</ReviewGroupHeading>
 									<ReviewGroupContentDiv>
-										<div>*****</div>
+										<Rating ratingValue={2.5} size={32}/>
 										<ReviewTextarea onChange={(event)=>{}}/>
 										<ReviewBottomDiv>
 											<ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
@@ -224,7 +225,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 														<span>잡스</span>
 													</ReviewSummaryLeftDiv>
 													<ReviewSummaryRightDiv>
-														<span> *** </span>
+														<Rating ratingValue={2.5} size={24}/>
 														<p>맛 없습니다</p>
 													</ReviewSummaryRightDiv>
 												</ReviewSummaryDiv>
