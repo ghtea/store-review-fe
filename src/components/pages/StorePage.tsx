@@ -7,6 +7,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
+import { ModalReviewUpsert } from '../organisms/Rating';
 
 export type StorePageProps = {
 }
@@ -303,6 +304,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 					)}
 				</MainDiv>
 			</div>
+			<ModalReviewUpsert isOpen={true}/>
 		</TemplateBasic>
 	)
 }
