@@ -3,6 +3,8 @@ import { TemplateFull } from '../templates/TemplateFull';
 import styled, { css } from 'styled-components';
 import axios from 'axios';
 
+const color1 = "#60a9f2";
+
 const Logo = styled.div`
 	margin: auto;
 	font-size: 24px;
@@ -20,7 +22,7 @@ const Container = styled.div`
 	height: 600px;
 	border-radius: 5px;
 	border: 0px;
-	box-shadow: 2px 2px 5px 3px #60a9f2, 1px 1px 1px 1px #60a9f2;
+	box-shadow: 2px 2px 5px 3px ${color1}, 1px 1px 1px 1px ${color1};
 	`;
 
 const InputTitlePtag = styled.p`
@@ -34,10 +36,10 @@ height: 30px;
 border-radius: 5px;
 padding-left: 10px;
 border: 0px;
-box-shadow: inset 2px 2px 3px 1px #60a9f2, 2px 2px 3px 1px #60a9f2;
+box-shadow: inset 2px 2px 3px 1px ${color1}, 2px 2px 3px 1px ${color1};
 
 &:focus , &:hover {
-	background-color: #60a9f2;
+	background-color: ${color1};
 	color: white;
 }
 `;
@@ -72,11 +74,10 @@ const Button = styled.button`
 	background-color: white;
 	line-height: 40px;
 `;
-interface Props {
+export type SignupPageProps = {
 
 }
-
-function SignupPage({ }: Props): ReactElement {
+export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
 	const initValues = { id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
 	const [userData, setUserData] = useState(initValues);
 	const [errors, setErrors] = useState({ id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
@@ -201,5 +202,4 @@ function SignupPage({ }: Props): ReactElement {
 	)
 }
 
-export default SignupPage
 

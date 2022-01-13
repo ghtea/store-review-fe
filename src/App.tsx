@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components'
 
 import { HomePage } from './components/pages/HomePage';
 import { LoginPage } from './components/pages/LoginPage';
-import SignupPage from "./components/pages/SignupPage"
+import { SignupPage } from "./components/pages/SignupPage"
 import { MapPage } from './components/pages/MapPage';
 import { ErrorPage } from './components/pages/ErrorPage';
 import { BrowserRouter } from 'react-router-dom';
