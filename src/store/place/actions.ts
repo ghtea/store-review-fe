@@ -39,10 +39,6 @@ type MOVE_MAP__Payload = {
     latitude: number
     longitude: number
   }
-  point?: {
-    x: number
-    y: number
-  }
   isCurrent?: boolean
 };
 export const return__MOVE_MAP = (payload: MOVE_MAP__Payload) => {
@@ -52,3 +48,21 @@ export const return__MOVE_MAP = (payload: MOVE_MAP__Payload) => {
   };
 };
 export type MOVE_MAP_Instance = ReturnType<typeof return__MOVE_MAP>;
+
+//
+export const ADD_MARKERS = 'place/ADD_MARKERS';
+type ADD_MARKERS__Payload = {
+  items: {
+    coords: {
+      latitude: number
+      longitude: number
+    }
+  }[]
+};
+export const return__ADD_MARKERS = (payload: ADD_MARKERS__Payload) => {
+  return {
+    type: ADD_MARKERS,
+    payload: payload,
+  };
+};
+export type ADD_MARKERS_Instance = ReturnType<typeof return__ADD_MARKERS>;
