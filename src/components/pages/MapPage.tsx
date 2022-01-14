@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -140,6 +140,14 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		dispatch(placeStore.return__INIT_MAIN_MAP())
 	}, [dispatch])
 
+	const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
+		if (event.key === "Enter"){
+			dispatch(placeStore.return__SEARCH_PLACES({
+				keyword: searchValue
+			}))
+		}
+	},[dispatch, searchValue])
+
 	const handleSearchButtonClick = useCallback(()=>{
 		dispatch(placeStore.return__SEARCH_PLACES({
 			keyword: searchValue
@@ -161,13 +169,43 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		}))
 	},[dispatch])
 
+	const displayingPlaces = useMemo(()=>{
+		return (searchedPlacesState?.data || [])
+	},[searchedPlacesState?.data])
+
+	useEffect(()=>{
+		const firstPlace = displayingPlaces[0];
+
+		if (firstPlace){
+			dispatch(placeStore.return__MOVE_MAP({
+				coords: {
+					latitude: firstPlace.y,
+					longitude: firstPlace.x,
+				}
+			}))
+		}
+
+		dispatch(placeStore.return__ADD_MARKERS({
+			items: displayingPlaces.map(item => ({
+				coords: {
+					latitude: item.y,
+					longitude: item.x
+				}
+			}))
+		}))
+	},[dispatch, displayingPlaces])
+
 	return (
 		<TemplateBasic>
 			<MapPageDiv>
 				<SideBarWrapper>
 					<SideBarDiv>
 						<SearchInputButtonWrapper>
-							<SearchInput value={searchValue} onChange={(event)=>setSearchValue(event.target.value)}></SearchInput>
+							<SearchInput 
+								value={searchValue} 
+								onChange={(event)=>setSearchValue(event.target.value)}
+								onKeyDown={handleSearchInputKeyDown}
+								></SearchInput>
 							<SearchButton 
 								onClick={handleSearchButtonClick}
 								status={"primary"}
@@ -179,7 +217,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 						<SearchResultDiv>
 
 
-							{(searchedPlacesState?.data || []).map((item, index)=>(
+							{displayingPlaces.map((item, index)=>(
 								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
 									<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
 									<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
