@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components'
 
 import { HomePage } from './components/pages/HomePage';
@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { GlobalStyle } from './styles/GlobalStyle';
 import { themes } from './styles/theme';
 import { Provider as ReduxProvider } from 'react-redux';
-import {store} from './store';
+import { store } from './store';
 
 const App: React.FunctionComponent = () => {
   return (

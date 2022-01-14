@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
-import {DEFAULT_COORDS, getCurrentPosition} from "./getCurrentPosition"
+import { DEFAULT_COORDS, getCurrentPosition } from "./getCurrentPosition"
 
 export function* initMainMap(action: actions.INIT_MAIN_MAP_Instance) {
 
