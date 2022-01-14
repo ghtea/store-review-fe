@@ -211,7 +211,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 		serachParams.set("longitude", item.x.toString())
 		serachParams.set("latitude", item.y.toString())
 
-		navigate({pathname: `/store/${item.id}`, search: serachParams.toString()})
+		navigate({ pathname: `/store/${item.id}`, search: serachParams.toString() })
 	},[navigate])
 
 	const displayingPlaces = useMemo(()=>{

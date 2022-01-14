@@ -91,7 +91,7 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 		const serachParams = new URLSearchParams();
 		serachParams.set("q", searchValue)
 
-		navigate({pathname: "/map", search: serachParams.toString()})
+		navigate({ pathname: "/map", search: serachParams.toString() })
 	},[navigate, searchValue])
 
 	const handleSeachButotnClick = useCallback(()=>{
