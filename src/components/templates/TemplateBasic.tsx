@@ -51,29 +51,29 @@ const ContentWrapper = styled.div`
 `;
 
 export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
-	children
+  children
 }) => {
 
-	return (
-		<TemplateBasicDiv>
-			<MenuWrapper>
-				<MenuDiv>
-					<div>
-						<ServiceLogoSpan>
+  return (
+    <TemplateBasicDiv>
+      <MenuWrapper>
+        <MenuDiv>
+          <div>
+            <ServiceLogoSpan>
 							여기모아
-						</ServiceLogoSpan>
-					</div>
+            </ServiceLogoSpan>
+          </div>
 
-					<div>
-						<LoginButton status={"primary"}>
+          <div>
+            <LoginButton status={"primary"}>
 							로그인
-						</LoginButton>
-					</div>
-				</MenuDiv>
-			</MenuWrapper>
-			<ContentWrapper>
-				{children}
-			</ContentWrapper>
-		</TemplateBasicDiv>
-	)
+            </LoginButton>
+          </div>
+        </MenuDiv>
+      </MenuWrapper>
+      <ContentWrapper>
+        {children}
+      </ContentWrapper>
+    </TemplateBasicDiv>
+  )
 }

@@ -5,9 +5,9 @@ export type LoginPageProps = {
 }
 
 export const LoginPage:React.FunctionComponent<LoginPageProps> = () => {
-	return (
-		<TemplateFull>
+  return (
+    <TemplateFull>
 			LoginPage
-		</TemplateFull>
-	)
+    </TemplateFull>
+  )
 }

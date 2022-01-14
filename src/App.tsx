@@ -15,20 +15,20 @@ import { store } from './store';
 
 const App: React.FunctionComponent = () => {
   return (
-	<ReduxProvider store={store}>
-		<ThemeProvider theme={themes.light}>
-			<GlobalStyle/>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<HomePage/>}/>
-					<Route path="/login" element={<LoginPage />}/>
-					<Route path="/signup" element={<SignupPage />}/>
-					<Route path="/map" element={<MapPage />}/>
-					<Route path="/*" element={<ErrorPage />}/>
-				</Routes> 
-			</BrowserRouter>
-		</ThemeProvider>
-	</ReduxProvider>
+    <ReduxProvider store={store}>
+      <ThemeProvider theme={themes.light}>
+        <GlobalStyle/>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/login" element={<LoginPage />}/>
+            <Route path="/signup" element={<SignupPage />}/>
+            <Route path="/map" element={<MapPage />}/>
+            <Route path="/*" element={<ErrorPage />}/>
+          </Routes> 
+        </BrowserRouter>
+      </ThemeProvider>
+    </ReduxProvider>
   );
 }
 

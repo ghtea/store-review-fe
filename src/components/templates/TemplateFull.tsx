@@ -14,10 +14,10 @@ const Container = styled.div`
 `;
 
 export const TemplateFull:React.FunctionComponent<TemplateFullProps> = ({
-	children
+  children
 }) => {
 
-	return (
-		<Container>{children}</Container>
-	)
+  return (
+    <Container>{children}</Container>
+  )
 }

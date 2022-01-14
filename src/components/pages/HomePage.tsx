@@ -5,9 +5,9 @@ export type HomePageProps = {
 }
 
 export const HomePage:React.FunctionComponent<HomePageProps> = () => {
-	return (
-		<TemplateBasic>
+  return (
+    <TemplateBasic>
 			홈 페이지
-		</TemplateBasic>
-	)
+    </TemplateBasic>
+  )
 }

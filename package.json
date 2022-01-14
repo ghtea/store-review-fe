@@ -42,10 +42,7 @@
       "react-app/jest"
     ],
     "rules": {
-      "react/jsx-indent": [
-        2,
-        "tab"
-      ],
+      "indent": ["error", 2],
       "object-curly-spacing": ["error", "always"]
     }
   },
