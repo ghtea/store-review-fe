@@ -45,7 +45,8 @@
       "react/jsx-indent": [
         2,
         "tab"
-      ]
+      ],
+      "object-curly-spacing": ["error", "always"]
     }
   },
   "browserslist": {
@@ -68,3 +69,4 @@
     "@types/styled-components": "^5.1.19"
   }
 }
+
