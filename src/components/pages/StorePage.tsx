@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,8 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
-import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
+import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
+import { SummaryReview } from '../organisms/SummaryReview';
 
 export type StorePageProps = {
 }
@@ -113,60 +114,17 @@ const PeopleImageCollectionDiv = styled.div`
 	margin-right: 16px;
 `
 
+const PeopleImage = styled.img`
+  width: 80px;
+  height: 80px;
+`
+
 const ReviewPeopleReviewsListDiv = styled.div`
 	width: 100%;
 	margin-top: 16px;
 	align-items: center;
 `
 
-const ReviewSummaryDiv = styled.div`
-	width: 100%;
-	max-width: 640px;
-	height: 180px;
-	padding: 16px;
-
-	&:nth-child(n+2){
-		border-width: 1px;
-		border-top-style: solid;
-		border-color: #d0d0d0;
-	}
-`
-
-const ReviewSummaryTopDiv = styled.div`
-	
-`
-
-const ReviewSummaryTopNameSpan = styled.span`
-	font-size: 1.125rem;
-	padding-left: 4px;
-`
-
-const ReviewSummaryTopInfoDiv = styled.div`
-	margin-top: 8px;
-	flex-direction: row;
-	align-items: center;
-	& > *:nth-child(n+2) {
-		margin-left: 8px;
-	}
-`
-
-const ReviewSummaryTopInfoDateSpan = styled.span`
-	color: ${props => props.theme.colors.textHint};
-`
-
-const ReviewSummaryBottomDiv = styled.div`
-	flex-direction: row;
-	padding: 16px;
-`
-
-const ReviewSummaryBottomLeftDiv = styled.div`
-	align-items: center;
-	width: 120px;
-`
-
-const ReviewSummaryBottomRightDiv = styled.div`
-	flex: 1;
-`
 
 // /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
 export const StorePage:React.FunctionComponent<StorePageProps> = () => {
@@ -183,7 +141,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     const latitude = parseFloat(searchParams.get("latitude") || "")
     const longitude = parseFloat(searchParams.get("longitude") || "")
 
-    console.log(id, name, latitude, longitude)
     if (!id || !name || !latitude || !longitude) return
 
     dispatch(placeStore.return__GET_PAGE_STORE({
@@ -201,10 +158,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const handleReviewCreateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
   },[])
-  // const hasMyReview = useMemo(()=>{
-  //   return false
-  // }, [])
-
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
@@ -262,33 +215,14 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       <span>{"4.3/5"}</span>
                       <Rating ratingValue={2.5} size={32}/>
                       <PeopleImageCollectionDiv>
-                        <div>image 1</div>
-                        <div>image 2</div>
-                        <div>image 3</div>
+                        <PeopleImage/>
+                        <PeopleImage/>
+                        <PeopleImage/>
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
                       {[undefined, null].map((item, index)=>(
-                        <ReviewSummaryDiv key={`review-${index}`}>
-                          <ReviewSummaryTopDiv>
-                            <ReviewSummaryTopNameSpan>잡스</ReviewSummaryTopNameSpan>
-                            <ReviewSummaryTopInfoDiv>
-                              <Rating ratingValue={2.5} size={24}/>
-                              <ReviewSummaryTopInfoDateSpan>2011.1.1.</ReviewSummaryTopInfoDateSpan>
-                            </ReviewSummaryTopInfoDiv>
-                          </ReviewSummaryTopDiv>
-													
-                          <ReviewSummaryBottomDiv>
-                            <ReviewSummaryBottomRightDiv>
-                              <p>맛 없습니다</p>
-                            </ReviewSummaryBottomRightDiv>
-
-                            <ReviewSummaryBottomLeftDiv>
-															photos
-                            </ReviewSummaryBottomLeftDiv>
-                          </ReviewSummaryBottomDiv>
-
-                        </ReviewSummaryDiv>
+                        <SummaryReview key={`review-${index}`}/>
                       ))}
                     </ReviewPeopleReviewsListDiv>
                   </ReviewGroupContentDiv>
@@ -302,21 +236,3 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     </TemplateBasic>
   )
 }
-
-
-/* 
-	
-	place_name: string,
-  distance: number,
-  place_url: string,
-  category_name: string,
-  address_name: string,
-  road_address_name: string,
-  id: number,
-  phone: string,
-  category_group_code: string,
-  category_group_name: string,
-  x: number,
-  y: number 
-
-*/
