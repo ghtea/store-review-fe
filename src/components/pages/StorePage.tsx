@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -188,129 +188,129 @@ const ReviewSummaryBottomRightDiv = styled.div`
 
 // /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
 export const StorePage:React.FunctionComponent<StorePageProps> = () => {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-	const { id } = useParams<"id">();
+  const { id } = useParams<"id">();
   const [searchParams] = useSearchParams();
 
-	const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
+  const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
 
-	// const handleCurrentLocationButtonClick = useCallback(()=>{
-	// 	dispatch(placeStore.return__MOVE_MAP({
-	// 		isCurrent: true
-	// 	}))
-	// },[dispatch])
+  // const handleCurrentLocationButtonClick = useCallback(()=>{
+  // 	dispatch(placeStore.return__MOVE_MAP({
+  // 		isCurrent: true
+  // 	}))
+  // },[dispatch])
 
-	useEffect(()=>{
-		const name = searchParams.get("name")
-		const latitude = parseFloat(searchParams.get("latitude") || "")
-		const longitude = parseFloat(searchParams.get("longitude") || "")
+  useEffect(()=>{
+    const name = searchParams.get("name")
+    const latitude = parseFloat(searchParams.get("latitude") || "")
+    const longitude = parseFloat(searchParams.get("longitude") || "")
 
-		console.log(id, name, latitude, longitude)
-		if (!id || !name || !latitude || !longitude) return
+    console.log(id, name, latitude, longitude)
+    if (!id || !name || !latitude || !longitude) return
 
-		dispatch(placeStore.return__GET_PAGE_STORE({
-			id,
-			name,
-			latitude,
-			longitude,
-		}))
-	},[dispatch, id, searchParams])
+    dispatch(placeStore.return__GET_PAGE_STORE({
+      id,
+      name,
+      latitude,
+      longitude,
+    }))
+  },[dispatch, id, searchParams])
 
-	// const storeDetailInfoItems = useMemo(()=>{
-	// 	return ([
-	// 		{key: "전화번호", value: pageStoreState.data?.phone},
-	// 		{key: "주소", value: pageStoreState.data?.road_address_name || pageStoreState.data?.address_name},
-	// 	])
-	// },[])
+  // const storeDetailInfoItems = useMemo(()=>{
+  // 	return ([
+  // 		{key: "전화번호", value: pageStoreState.data?.phone},
+  // 		{key: "주소", value: pageStoreState.data?.road_address_name || pageStoreState.data?.address_name},
+  // 	])
+  // },[])
 
-	return (
-		<TemplateBasic backgroundColor={"#f8f8f8"}>
-			<div>
-				<MainDiv>
-					{!pageStoreState.data && pageStoreState.status.loading && (
-						<div>loading</div>
-					)}
-					{pageStoreState.data && (
-						<ContentDiv>
-							<StoreInfoDiv>
-								<StoreNameSpan>
-									{pageStoreState.data.place_name}
-								</StoreNameSpan>
-								<StoreDetailTableDiv>
-									<StoreDetailTableItemDiv>
-										<StoreDetailTableKeyDiv> {"주소"} </StoreDetailTableKeyDiv>
-										<StoreDetailTableValueDiv> {pageStoreState.data.road_address_name || pageStoreState.data.address_name} </StoreDetailTableValueDiv>
-									</StoreDetailTableItemDiv>
-									<StoreDetailTableItemDiv>
-										<StoreDetailTableKeyDiv> {"전화번호"} </StoreDetailTableKeyDiv>
-										<StoreDetailTableValueDiv> {pageStoreState.data.phone} </StoreDetailTableValueDiv>
-									</StoreDetailTableItemDiv>
-								</StoreDetailTableDiv>
-							</StoreInfoDiv>
-							<ReviewInfoDiv>
-								<ReviewMyDiv>
-									<ReviewGroupHeading>{"리뷰 작성"}</ReviewGroupHeading>
-									<ReviewGroupContentDiv>
-										<Rating ratingValue={2.5} size={32}/>
-										<ReviewTextarea onChange={(event)=>{}}/>
-										<ReviewBottomDiv>
-											<ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
-										</ReviewBottomDiv>
-									</ReviewGroupContentDiv>
+  return (
+    <TemplateBasic backgroundColor={"#f8f8f8"}>
+      <div>
+        <MainDiv>
+          {!pageStoreState.data && pageStoreState.status.loading && (
+            <div>loading</div>
+          )}
+          {pageStoreState.data && (
+            <ContentDiv>
+              <StoreInfoDiv>
+                <StoreNameSpan>
+                  {pageStoreState.data.place_name}
+                </StoreNameSpan>
+                <StoreDetailTableDiv>
+                  <StoreDetailTableItemDiv>
+                    <StoreDetailTableKeyDiv> {"주소"} </StoreDetailTableKeyDiv>
+                    <StoreDetailTableValueDiv> {pageStoreState.data.road_address_name || pageStoreState.data.address_name} </StoreDetailTableValueDiv>
+                  </StoreDetailTableItemDiv>
+                  <StoreDetailTableItemDiv>
+                    <StoreDetailTableKeyDiv> {"전화번호"} </StoreDetailTableKeyDiv>
+                    <StoreDetailTableValueDiv> {pageStoreState.data.phone} </StoreDetailTableValueDiv>
+                  </StoreDetailTableItemDiv>
+                </StoreDetailTableDiv>
+              </StoreInfoDiv>
+              <ReviewInfoDiv>
+                <ReviewMyDiv>
+                  <ReviewGroupHeading>{"리뷰 작성"}</ReviewGroupHeading>
+                  <ReviewGroupContentDiv>
+                    <Rating ratingValue={2.5} size={32}/>
+                    <ReviewTextarea onChange={(event)=>{}}/>
+                    <ReviewBottomDiv>
+                      <ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
+                    </ReviewBottomDiv>
+                  </ReviewGroupContentDiv>
 									
-								</ReviewMyDiv>
-								<ReviewPeopleDiv>
-									<ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
-									<ReviewGroupContentDiv>
-										<ReviewPeopleReviewsSummaryDiv>
-											<span>{"전체 평점"}</span>
-											<span>{"4.3/5"}</span>
-											<Rating ratingValue={2.5} size={32}/>
-											<PeopleImageCollectionDiv>
-												<div>image 1</div>
-												<div>image 2</div>
-												<div>image 3</div>
-											</PeopleImageCollectionDiv>
-										</ReviewPeopleReviewsSummaryDiv>
-										<ReviewPeopleReviewsListDiv>
-											{[undefined, null].map((item, index)=>(
-												<ReviewSummaryDiv key={`review-${index}`}>
-													<ReviewSummaryTopDiv>
-														<ReviewSummaryTopNameSpan>잡스</ReviewSummaryTopNameSpan>
-														<ReviewSummaryTopInfoDiv>
-															<Rating ratingValue={2.5} size={24}/>
-															<ReviewSummaryTopInfoDateSpan>2011.1.1.</ReviewSummaryTopInfoDateSpan>
-														</ReviewSummaryTopInfoDiv>
-													</ReviewSummaryTopDiv>
+                </ReviewMyDiv>
+                <ReviewPeopleDiv>
+                  <ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
+                  <ReviewGroupContentDiv>
+                    <ReviewPeopleReviewsSummaryDiv>
+                      <span>{"전체 평점"}</span>
+                      <span>{"4.3/5"}</span>
+                      <Rating ratingValue={2.5} size={32}/>
+                      <PeopleImageCollectionDiv>
+                        <div>image 1</div>
+                        <div>image 2</div>
+                        <div>image 3</div>
+                      </PeopleImageCollectionDiv>
+                    </ReviewPeopleReviewsSummaryDiv>
+                    <ReviewPeopleReviewsListDiv>
+                      {[undefined, null].map((item, index)=>(
+                        <ReviewSummaryDiv key={`review-${index}`}>
+                          <ReviewSummaryTopDiv>
+                            <ReviewSummaryTopNameSpan>잡스</ReviewSummaryTopNameSpan>
+                            <ReviewSummaryTopInfoDiv>
+                              <Rating ratingValue={2.5} size={24}/>
+                              <ReviewSummaryTopInfoDateSpan>2011.1.1.</ReviewSummaryTopInfoDateSpan>
+                            </ReviewSummaryTopInfoDiv>
+                          </ReviewSummaryTopDiv>
 													
-													<ReviewSummaryBottomDiv>
-														<ReviewSummaryBottomRightDiv>
-															<p>맛 없습니다</p>
-														</ReviewSummaryBottomRightDiv>
+                          <ReviewSummaryBottomDiv>
+                            <ReviewSummaryBottomRightDiv>
+                              <p>맛 없습니다</p>
+                            </ReviewSummaryBottomRightDiv>
 
-														<ReviewSummaryBottomLeftDiv>
+                            <ReviewSummaryBottomLeftDiv>
 															photos
-														</ReviewSummaryBottomLeftDiv>
-													</ReviewSummaryBottomDiv>
+                            </ReviewSummaryBottomLeftDiv>
+                          </ReviewSummaryBottomDiv>
 
-												</ReviewSummaryDiv>
-										))}
-										</ReviewPeopleReviewsListDiv>
-									</ReviewGroupContentDiv>
-								</ReviewPeopleDiv>
-							</ReviewInfoDiv>
-						</ContentDiv>
-					)}
-				</MainDiv>
-			</div>
-			<ModalReviewUpsert isOpen={true}/>
-		</TemplateBasic>
-	)
+                        </ReviewSummaryDiv>
+                      ))}
+                    </ReviewPeopleReviewsListDiv>
+                  </ReviewGroupContentDiv>
+                </ReviewPeopleDiv>
+              </ReviewInfoDiv>
+            </ContentDiv>
+          )}
+        </MainDiv>
+      </div>
+      <ModalReviewUpsert isOpen={true}/>
+    </TemplateBasic>
+  )
 }
 
 
-	/* 
+/* 
 	
 	place_name: string,
   distance: number,

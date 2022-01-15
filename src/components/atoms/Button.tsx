@@ -29,15 +29,15 @@ const StyledButton = styled.button<ButtonProps>`
 
 export const Button:React.FunctionComponent<ButtonProps> = ({
   ref,
-	children,
+  children,
   status = "neutral",
   shape = "rounded",
   ...rest
 }) => {
 
-	return (
-		<StyledButton status={status} shape={shape} {...rest}>
-			{children}
-		</StyledButton>
-	)
+  return (
+    <StyledButton status={status} shape={shape} {...rest}>
+      {children}
+    </StyledButton>
+  )
 }

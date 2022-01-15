@@ -12,7 +12,7 @@ export const requestSearchPlaces = ({
       if (
         status === kakao.maps.services.Status.OK || 
         status === kakao.maps.services.Status.ZERO_RESULT
-        ) {
+      ) {
         resolve({
           result,
           status,

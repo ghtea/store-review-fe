@@ -66,24 +66,24 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   isOpen
 }) => {
 
-	return (
-		<>
-			{isOpen && (
-			<FullScreenDiv>
-				<ModalDiv>
-					<HeaderDiv>
-						<ModalTitleHeading>리뷰 작성</ModalTitleHeading>
-					</HeaderDiv>
-					<ContentDiv>
-						<Rating ratingValue={2.5} size={32}/>
-						<ReviewTextarea onChange={(event)=>{}}/>
-						<div>images</div>
-						<ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
-					</ContentDiv>
-				</ModalDiv>
-			</FullScreenDiv>
+  return (
+    <>
+      {isOpen && (
+        <FullScreenDiv>
+          <ModalDiv>
+            <HeaderDiv>
+              <ModalTitleHeading>리뷰 작성</ModalTitleHeading>
+            </HeaderDiv>
+            <ContentDiv>
+              <Rating ratingValue={2.5} size={32}/>
+              <ReviewTextarea onChange={(event)=>{}}/>
+              <div>images</div>
+              <ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
+            </ContentDiv>
+          </ModalDiv>
+        </FullScreenDiv>
       )}
-		</>
+    </>
     
-	)
+  )
 }

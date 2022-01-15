@@ -5,9 +5,9 @@ export type SignupPageProps = {
 }
 
 export const SignupPage:React.FunctionComponent<SignupPageProps> = () => {
-	return (
-		<TemplateFull>
+  return (
+    <TemplateFull>
 			SignupPage
-		</TemplateFull>
-	)
+    </TemplateFull>
+  )
 }

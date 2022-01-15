@@ -5,9 +5,9 @@ export type ErrorPageProps = {
 }
 
 export const ErrorPage:React.FunctionComponent<ErrorPageProps> = () => {
-	return (
-		<TemplateFull>
+  return (
+    <TemplateFull>
 			ErrorPage
-		</TemplateFull>
-	)
+    </TemplateFull>
+  )
 }

@@ -76,60 +76,60 @@ const ContentWrapper = styled.div<{backgroundColor?: string}>`
 `;
 
 export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
-	backgroundColor,
-	children
+  backgroundColor,
+  children
 }) => {
-	const navigate = useNavigate()
-	const location = useLocation();
-	const [searchValue, setSearchValue] = useState("")
+  const navigate = useNavigate()
+  const location = useLocation();
+  const [searchValue, setSearchValue] = useState("")
 
-	const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
-		setSearchValue(event.target.value || "")
-	},[])
+  const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
+    setSearchValue(event.target.value || "")
+  },[])
 
-	const searchMap = useCallback(()=>{
-		const serachParams = new URLSearchParams();
-		serachParams.set("q", searchValue)
+  const searchMap = useCallback(()=>{
+    const serachParams = new URLSearchParams();
+    serachParams.set("q", searchValue)
 
-		navigate({ pathname: "/map", search: serachParams.toString() })
-	},[navigate, searchValue])
+    navigate({ pathname: "/map", search: serachParams.toString() })
+  },[navigate, searchValue])
 
-	const handleSeachButotnClick = useCallback(()=>{
-		searchMap();
-	},[searchMap])
+  const handleSeachButotnClick = useCallback(()=>{
+    searchMap();
+  },[searchMap])
 
-	const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
-		if (event.key === "Enter"){
-			searchMap();
-		}
-	},[searchMap])
+  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
+    if (event.key === "Enter"){
+      searchMap();
+    }
+  },[searchMap])
 
-	return (
-		<TemplateBasicDiv>
-			<MenuWrapper>
-				<MenuDiv>
-					<MenuLeftDiv>
-						<ServiceLogoSpan>
+  return (
+    <TemplateBasicDiv>
+      <MenuWrapper>
+        <MenuDiv>
+          <MenuLeftDiv>
+            <ServiceLogoSpan>
 							여기모아
-						</ServiceLogoSpan>
-						{location.pathname !== "/map" && (
-							<SearchDiv>
-								<SearchInput onKeyDown={handleSearchInputKeyDown} onChange={handleSearchInputChange} />
-								<SearchButton onClick={handleSeachButotnClick}>{"검색"}</SearchButton>
-							</SearchDiv>
-						)}
-					</MenuLeftDiv>
+            </ServiceLogoSpan>
+            {location.pathname !== "/map" && (
+              <SearchDiv>
+                <SearchInput onKeyDown={handleSearchInputKeyDown} onChange={handleSearchInputChange} />
+                <SearchButton onClick={handleSeachButotnClick}>{"검색"}</SearchButton>
+              </SearchDiv>
+            )}
+          </MenuLeftDiv>
 
-					<div>
-						<LoginButton status={"primary"}>
+          <div>
+            <LoginButton status={"primary"}>
 							로그인
-						</LoginButton>
-					</div>
-				</MenuDiv>
-			</MenuWrapper>
-			<ContentWrapper backgroundColor={backgroundColor}>
-				{children}
-			</ContentWrapper>
-		</TemplateBasicDiv>
-	)
+            </LoginButton>
+          </div>
+        </MenuDiv>
+      </MenuWrapper>
+      <ContentWrapper backgroundColor={backgroundColor}>
+        {children}
+      </ContentWrapper>
+    </TemplateBasicDiv>
+  )
 }
