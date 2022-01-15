@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import dayjs from 'dayjs';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
@@ -42,6 +43,15 @@ const ModalTitleHeading = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
 
+`
+
+const UpdatedAtSpan = styled.span`
+  color: ${props => props.theme.colors.textHint};
+  font-size: 1.125rem;
+`
+
+const RatingWrapper = styled.div`
+  margin-top: 8px;
 `
 
 const ReviewTextarea = styled.textarea`
@@ -114,6 +124,10 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }
   },[]);
 
+  const updatedAtText = useMemo(()=>{
+    return dayjs().format("YYYY-M-D") 
+  },[])
+
   return (
     <>
       {isOpen && (
@@ -123,7 +137,10 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
               <ModalTitleHeading>리뷰 작성</ModalTitleHeading>
             </HeaderDiv>
             <ContentDiv>
-              <Rating ratingValue={2.5} size={32}/>
+              <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
+              <RatingWrapper>
+                <Rating ratingValue={2.5} size={32}/>
+              </RatingWrapper>
               <ReviewTextarea onChange={(event)=>{}}/>
               <ImageCollectionDiv>
                 {images.map((item, index) => (
