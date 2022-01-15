@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
-import { ModalReviewUpsert } from '../organisms/Rating';
+import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 
 export type StorePageProps = {
 }
@@ -91,25 +91,7 @@ const ReviewGroupContentDiv = styled.div`
 	align-items: center;
 `
 
-const ReviewTextarea = styled.textarea`
-	width: 100%;
-	height: 140px;
-	padding: 8px;
-	margin-top: 8px;
-	margin-left: 8px;
-	margin-right: 8px;
-	border-color: #d0d0d0;
-	border-width: 1px;
-	border-radius: 4px;
-`
-
-const ReviewBottomDiv = styled.div`
-	flex-direction: row;
-	width: 100%;
-	justify-content: flex-end;
-`
-
-const ReviewSubmitButton = styled(Button)`
+const ReviewUpsertButton = styled(Button)`
 	margin-top: 8px;
 `
 
@@ -189,17 +171,12 @@ const ReviewSummaryBottomRightDiv = styled.div`
 // /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
 export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const dispatch = useDispatch();
-
   const { id } = useParams<"id">();
   const [searchParams] = useSearchParams();
-
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
 
-  // const handleCurrentLocationButtonClick = useCallback(()=>{
-  // 	dispatch(placeStore.return__MOVE_MAP({
-  // 		isCurrent: true
-  // 	}))
-  // },[dispatch])
+  const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
+  const [hasMyReview, setHasMyReivew] = useState(false)
 
   useEffect(()=>{
     const name = searchParams.get("name")
@@ -217,12 +194,17 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, id, searchParams])
 
-  // const storeDetailInfoItems = useMemo(()=>{
-  // 	return ([
-  // 		{key: "전화번호", value: pageStoreState.data?.phone},
-  // 		{key: "주소", value: pageStoreState.data?.road_address_name || pageStoreState.data?.address_name},
-  // 	])
-  // },[])
+  const handleReviewUpdateButton = useCallback(()=>{
+    setIsModalReviewUpsertOpen(true)
+  },[])
+
+  const handleReviewCreateButton = useCallback(()=>{
+    setIsModalReviewUpsertOpen(true)
+  },[])
+  // const hasMyReview = useMemo(()=>{
+  //   return false
+  // }, [])
+
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
@@ -250,15 +232,27 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
               </StoreInfoDiv>
               <ReviewInfoDiv>
                 <ReviewMyDiv>
-                  <ReviewGroupHeading>{"리뷰 작성"}</ReviewGroupHeading>
-                  <ReviewGroupContentDiv>
-                    <Rating ratingValue={2.5} size={32}/>
-                    <ReviewTextarea onChange={(event)=>{}}/>
-                    <ReviewBottomDiv>
-                      <ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
-                    </ReviewBottomDiv>
-                  </ReviewGroupContentDiv>
-									
+                  <ReviewGroupHeading>{"내 리뷰"}</ReviewGroupHeading>
+                  {true && (
+                    <ReviewGroupContentDiv>
+                      <Rating ratingValue={2.5} size={24}/>
+                      <p>dddd 맛있었다</p>                     
+                      <ReviewUpsertButton 
+                        status={"primary"}
+                        onClick={handleReviewUpdateButton}
+                      >
+                        리뷰 수정
+                      </ReviewUpsertButton>
+                    </ReviewGroupContentDiv>
+                  )}
+                  {true && (
+                    <ReviewUpsertButton 
+                      status={"primary"}
+                      onClick={handleReviewCreateButton}
+                    >
+                      리뷰 작성
+                    </ReviewUpsertButton>
+                  )}
                 </ReviewMyDiv>
                 <ReviewPeopleDiv>
                   <ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
@@ -304,7 +298,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           )}
         </MainDiv>
       </div>
-      <ModalReviewUpsert isOpen={true}/>
+      <ModalReviewUpsert isOpen={isModalReviewUpsertOpen}/>
     </TemplateBasic>
   )
 }
