@@ -49,5 +49,10 @@ export const GlobalStyle = createGlobalStyle`
     outline: none;
     border: none;
     margin: 0;
+    font-size: 1rem;
+  }
+
+  textarea {
+    font-size: 1rem;
   }
 `

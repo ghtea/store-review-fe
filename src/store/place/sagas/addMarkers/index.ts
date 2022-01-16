@@ -25,7 +25,7 @@ export function* addMarkers(action: actions.ADD_MARKERS_Instance) {
   payload.items.forEach(item => {
     const mapLatLng = new kakao.maps.LatLng(item.coords.latitude, item.coords.longitude);
     const newMarker = new kakao.maps.Marker({
-        position: mapLatLng
+      position: mapLatLng
     });
   
     newMarker.setMap(mainMap);

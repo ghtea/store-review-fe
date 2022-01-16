@@ -7,13 +7,13 @@ const common = {
     primary: "#258FFF" // #258FFF #ff792a
   }
   ,media: {
-      sm: 600, 
-      md: 960, 
-      lg: 1440, 
-      // 0 ≥ screen < 600px  | sm | mobile
-      // 600px ≥ screen < 960px  | md | tablet
-      //   960px ≥ screen < 1440px | lg | wide tablet/small desktop
-      //  1440px ≥ screen          | xl | wide desktop
+    sm: 600, 
+    md: 960, 
+    lg: 1440, 
+    // 0 ≥ screen < 600px  | sm | mobile
+    // 600px ≥ screen < 960px  | md | tablet
+    //   960px ≥ screen < 1440px | lg | wide tablet/small desktop
+    //  1440px ≥ screen          | xl | wide desktop
   }
 }
 

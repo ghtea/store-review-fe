@@ -11,6 +11,7 @@
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
     "immer": "^9.0.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -42,9 +43,9 @@
       "react-app/jest"
     ],
     "rules": {
-      "react/jsx-indent": [
-        2,
-        "tab"
+      "indent": [
+        "error",
+        2
       ],
       "object-curly-spacing": [
         "error",
@@ -72,4 +73,3 @@
     "@types/styled-components": "^5.1.19"
   }
 }
-

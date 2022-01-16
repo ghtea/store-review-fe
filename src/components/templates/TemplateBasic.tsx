@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../atoms/Button';
 
 export type TemplateBasicProps = {
+	backgroundColor?: string
 }
 
 const MENU_HEIGHT_PX = 60
@@ -33,11 +35,33 @@ const MenuDiv = styled.div`
 	// background-color: transparent;
 `;
 
+const MenuLeftDiv = styled.div`
+	flex-direction: row;
+	align-items: center;
+`
+
 const ServiceLogoSpan = styled.span`
 	color: ${props => props.theme.colors.primary};
 	font-size: 1.25rem;
 	font-weight: 700;
 `
+
+const SearchDiv = styled.div`
+	margin-left: 32px;
+	flex-direction: row;
+`
+
+const SearchInput = styled.input`
+	border-style: solid;
+	border-width: 1px;
+	border-color: #d8d8d8;
+	padding: 8px;
+`
+
+const SearchButton = styled(Button)`
+	
+`
+
 
 const LoginButton = styled(Button)`
 	background-color: ${props => props.theme.colors.primary};
@@ -45,35 +69,67 @@ const LoginButton = styled(Button)`
 
 `
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{backgroundColor?: string}>`
 	width: 100%;
 	height: calc(100% - ${MENU_HEIGHT_PX}px);
+	background-color: ${props => props.backgroundColor || "transparent"};
 `;
 
 export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
-	children
+  backgroundColor,
+  children
 }) => {
+  const navigate = useNavigate()
+  const location = useLocation();
+  const [searchValue, setSearchValue] = useState("")
 
-	return (
-		<TemplateBasicDiv>
-			<MenuWrapper>
-				<MenuDiv>
-					<div>
-						<ServiceLogoSpan>
+  const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
+    setSearchValue(event.target.value || "")
+  },[])
+
+  const searchMap = useCallback(()=>{
+    const serachParams = new URLSearchParams();
+    serachParams.set("q", searchValue)
+
+    navigate({ pathname: "/map", search: serachParams.toString() })
+  },[navigate, searchValue])
+
+  const handleSeachButotnClick = useCallback(()=>{
+    searchMap();
+  },[searchMap])
+
+  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
+    if (event.key === "Enter"){
+      searchMap();
+    }
+  },[searchMap])
+
+  return (
+    <TemplateBasicDiv>
+      <MenuWrapper>
+        <MenuDiv>
+          <MenuLeftDiv>
+            <ServiceLogoSpan>
 							여기모아
-						</ServiceLogoSpan>
-					</div>
+            </ServiceLogoSpan>
+            {location.pathname !== "/map" && (
+              <SearchDiv>
+                <SearchInput onKeyDown={handleSearchInputKeyDown} onChange={handleSearchInputChange} />
+                <SearchButton onClick={handleSeachButotnClick}>{"검색"}</SearchButton>
+              </SearchDiv>
+            )}
+          </MenuLeftDiv>
 
-					<div>
-						<LoginButton status={"primary"}>
+          <div>
+            <LoginButton status={"primary"}>
 							로그인
-						</LoginButton>
-					</div>
-				</MenuDiv>
-			</MenuWrapper>
-			<ContentWrapper>
-				{children}
-			</ContentWrapper>
-		</TemplateBasicDiv>
-	)
+            </LoginButton>
+          </div>
+        </MenuDiv>
+      </MenuWrapper>
+      <ContentWrapper backgroundColor={backgroundColor}>
+        {children}
+      </ContentWrapper>
+    </TemplateBasicDiv>
+  )
 }

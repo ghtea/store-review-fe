@@ -8,24 +8,40 @@ export type State = {
   mainMap: kakao.maps.Map | undefined
   searchedPlaces: {
     data: Place[] | undefined,
+    keyword: string | undefined,
     status: {
       loading: boolean,
       ready: boolean,
     }
   },
-  markers: kakao.maps.Marker[]
+  markers: kakao.maps.Marker[],
+  getPageStore: {
+    data: Place | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
 }
 
 const initialState = {
   mainMap: undefined,
   searchedPlaces: {
     data: undefined,
+    keyword: undefined,
     status: {
       loading: false,
       ready: true,
     }
   },
-  markers: []
+  markers: [],
+  getPageStore: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
 };
 
 export const placeReducer = handleActions<State, any>(

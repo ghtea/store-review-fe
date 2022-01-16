@@ -6,6 +6,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Place } from '../../store/place';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export type MapPageProps = {
 }
@@ -70,7 +71,22 @@ const SearchResultDiv = styled.div`
 	overflow-y: scroll;
 `
 
+const LoadingWrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`
+
+const NoResultWrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`
+
 const PlaceSummaryDiv = styled.div`
+	flex-direction: row;
 	padding: 16px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
@@ -79,6 +95,14 @@ const PlaceSummaryDiv = styled.div`
 	&:hover {
 		background-color: #f8f8f8;
 	}
+`
+
+const PlaceSummaryLeftDiv = styled.div`
+	flex: 1;
+`
+const PlaceSummaryRightDiv = styled.div`
+	width: 72px;
+	align-items: center;
 `
 
 const PlaceTitleHeading = styled.h3`
@@ -130,122 +154,161 @@ const OverlayButton = styled(Button)`
 `
 
 export const MapPage:React.FunctionComponent<MapPageProps> = () => {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
+  const mainMap = useSelector((state: RootState) => state.place.mainMap);
 
-	const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("")
 
-	const searchedPlacesState = useSelector((state: RootState) => state.place.searchedPlaces);
+  useEffect(() => {
+    dispatch(placeStore.return__INIT_MAIN_MAP())
+  }, [dispatch])
 
-	useEffect(() => {
-		dispatch(placeStore.return__INIT_MAIN_MAP())
-	}, [dispatch])
+  useEffect(()=>{
+    const newKeyword = searchParams.get("q") || ""
+    if (mainMap && newKeyword){
+      dispatch(placeStore.return__SEARCH_PLACES({
+        keyword: newKeyword
+      }))
+      setSearchValue(newKeyword)
+    }
+  },[dispatch, searchParams, mainMap])
 
-	const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
-		if (event.key === "Enter"){
-			dispatch(placeStore.return__SEARCH_PLACES({
-				keyword: searchValue
-			}))
-		}
-	},[dispatch, searchValue])
+  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
+    if (event.key === "Enter"){
+      dispatch(placeStore.return__SEARCH_PLACES({
+        keyword: searchValue
+      }))
+    }
+  },[dispatch, searchValue])
 
-	const handleSearchButtonClick = useCallback(()=>{
-		dispatch(placeStore.return__SEARCH_PLACES({
-			keyword: searchValue
-		}))
-	},[dispatch, searchValue])
+  const handleSearchButtonClick = useCallback(()=>{
+    dispatch(placeStore.return__SEARCH_PLACES({
+      keyword: searchValue
+    }))
+  },[dispatch, searchValue])
 
-	const handleCurrentLocationButtonClick = useCallback(()=>{
-		dispatch(placeStore.return__MOVE_MAP({
-			isCurrent: true
-		}))
-	},[dispatch])
+  const handleCurrentLocationButtonClick = useCallback(()=>{
+    dispatch(placeStore.return__MOVE_MAP({
+      isCurrent: true
+    }))
+  },[dispatch])
 
-	const handlePlaceSummaryClick = useCallback((item: Place )=>{
-		dispatch(placeStore.return__MOVE_MAP({
-			coords: {
-				latitude: item.y,
-				longitude: item.x,
-			}
-		}))
-	},[dispatch])
+  const handlePlaceSummaryClick = useCallback((item: Place )=>{
+    dispatch(placeStore.return__MOVE_MAP({
+      coords: {
+        latitude: item.y,
+        longitude: item.x,
+      }
+    }))
+  },[dispatch])
 
-	const displayingPlaces = useMemo(()=>{
-		return (searchedPlacesState?.data || [])
-	},[searchedPlacesState?.data])
+  const handlePlaceSummaryLinkClick = useCallback((item: Place )=>{
+    const serachParams = new URLSearchParams();
+    serachParams.set("name", item.place_name)
+    serachParams.set("longitude", item.x.toString())
+    serachParams.set("latitude", item.y.toString())
 
-	useEffect(()=>{
-		const firstPlace = displayingPlaces[0];
+    navigate({ pathname: `/store/${item.id}`, search: serachParams.toString() })
+  },[navigate])
 
-		if (firstPlace){
-			dispatch(placeStore.return__MOVE_MAP({
-				coords: {
-					latitude: firstPlace.y,
-					longitude: firstPlace.x,
-				}
-			}))
-		}
+  const displayingPlaces = useMemo(()=>{
+    return (searchedPlacesState?.data || [])
+  },[searchedPlacesState?.data])
 
-		dispatch(placeStore.return__ADD_MARKERS({
-			items: displayingPlaces.map(item => ({
-				coords: {
-					latitude: item.y,
-					longitude: item.x
-				}
-			}))
-		}))
-	},[dispatch, displayingPlaces])
+  useEffect(()=>{
+    const firstPlace = displayingPlaces[0];
 
-	return (
-		<TemplateBasic>
-			<MapPageDiv>
-				<SideBarWrapper>
-					<SideBarDiv>
-						<SearchInputButtonWrapper>
-							<SearchInput 
-								value={searchValue} 
-								onChange={(event)=>setSearchValue(event.target.value)}
-								onKeyDown={handleSearchInputKeyDown}
-								></SearchInput>
-							<SearchButton 
-								onClick={handleSearchButtonClick}
-								status={"primary"}
-								shape={"custom"}
-								>
+    if (firstPlace){
+      dispatch(placeStore.return__MOVE_MAP({
+        coords: {
+          latitude: firstPlace.y,
+          longitude: firstPlace.x,
+        }
+      }))
+    }
+
+    dispatch(placeStore.return__ADD_MARKERS({
+      items: displayingPlaces.map(item => ({
+        coords: {
+          latitude: item.y,
+          longitude: item.x
+        }
+      }))
+    }))
+  },[dispatch, displayingPlaces])
+
+  const isNoSearchResult = useMemo(()=>{
+    return searchedPlacesState.keyword && searchedPlacesState.data?.length === 0 && !searchedPlacesState.status.loading
+  },[searchedPlacesState.data?.length, searchedPlacesState.keyword, searchedPlacesState.status.loading])
+
+  return (
+    <TemplateBasic>
+      <MapPageDiv>
+        <SideBarWrapper>
+          <SideBarDiv>
+            <SearchInputButtonWrapper>
+              <SearchInput 
+                value={searchValue} 
+                onChange={(event)=>setSearchValue(event.target.value)}
+                onKeyDown={handleSearchInputKeyDown}
+              ></SearchInput>
+              <SearchButton 
+                onClick={handleSearchButtonClick}
+                status={"primary"}
+                shape={"custom"}
+              >
 								검색
-							</SearchButton>
-						</SearchInputButtonWrapper>
-						<SearchResultDiv>
+              </SearchButton>
+            </SearchInputButtonWrapper>
+            <SearchResultDiv>
 
 
-							{displayingPlaces.map((item, index)=>(
-								<PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
-									<PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
-									<PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
-									<PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
-								</PlaceSummaryDiv>
-							))}
-							{searchedPlacesState.status.loading && (
-								<LoadingDiv>loading</LoadingDiv>
-							)}
-						</SearchResultDiv>
-					</SideBarDiv>
-				</SideBarWrapper>
+              {displayingPlaces.map((item, index)=>(
+                <PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
+                  <PlaceSummaryLeftDiv>
+                    <PlaceTitleHeading>{item.place_name}</PlaceTitleHeading>
+                    <PlaceCategorySpan>{item.category_name}</PlaceCategorySpan>
+                    <PlaceAddressSpan>{item.road_address_name}</PlaceAddressSpan>
+                  </PlaceSummaryLeftDiv>
+                  <PlaceSummaryRightDiv>
+                    <div onClick={()=>handlePlaceSummaryLinkClick(item)}>go</div>
+                  </PlaceSummaryRightDiv>
+                </PlaceSummaryDiv>
+              ))}
+            </SearchResultDiv>
 
-				<MapWrapper>
-					<MapDiv id={"mainMap"}/>
-					<MapOverlayTopDiv>
-						<OverlayButton onClick={handleCurrentLocationButtonClick}>
+            {searchedPlacesState.status.loading && (
+              <LoadingWrapper> 
+                <LoadingDiv>loading</LoadingDiv>
+              </LoadingWrapper>
+            )}
+							
+            {isNoSearchResult && (
+              <NoResultWrapper> 
+                <span> 검색된 장소가 없습니다 </span>
+              </NoResultWrapper>
+            )}
+          </SideBarDiv>
+        </SideBarWrapper>
+
+        <MapWrapper>
+          <MapDiv id={"mainMap"}/>
+          <MapOverlayTopDiv>
+            <OverlayButton onClick={handleCurrentLocationButtonClick}>
 							현재 위치
-						</OverlayButton>
-					</MapOverlayTopDiv>
-				</MapWrapper>
-			</MapPageDiv>
-		</TemplateBasic>
-	)
+            </OverlayButton>
+          </MapOverlayTopDiv>
+        </MapWrapper>
+      </MapPageDiv>
+    </TemplateBasic>
+  )
 }
 
 
-	/* 
+/* 
 	
 	place_name: string,
   distance: number,

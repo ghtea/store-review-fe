@@ -69,85 +69,85 @@ export type LoginPageProps = {
 }
 
 export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
-	const initValues = { id: "", password: "" }
-	const [userData, setUserData] = useState(initValues);
-	const [errors, setErrors] = useState({ id: "", password: "" });
-	const [isSubmit, setIsSubmit] = useState(false);
-	const [target, setTarget] = useState("");
+  const initValues = { id: "", password: "" }
+  const [userData, setUserData] = useState(initValues);
+  const [errors, setErrors] = useState({ id: "", password: "" });
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [target, setTarget] = useState("");
 
-	const handleValidation = (e: any) => {
-		//포커스 되었을 때의 값으로 들어간다.
-		const { name, value } = e.target
-		setTarget(name);
-		setUserData({ ...userData, [e.target.name]: value });
-	}
+  const handleValidation = (e: any) => {
+    //포커스 되었을 때의 값으로 들어간다.
+    const { name, value } = e.target
+    setTarget(name);
+    setUserData({ ...userData, [e.target.name]: value });
+  }
 
-	useEffect(() => {
-		switch (target) {
-			case "id":
-				//  5 ~ 12자 영문, 숫자, 대문자 조합
-				//^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
-				var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
-				if (userData.id.length < 5 || userData.id.length > 13) {
-					const error = "아이디의 길이는 5~12자 이내입니다."
-					setErrors({ ...errors, id: error });
-				}
-				else if (!isIdRegex.test(userData.id)) {
-					const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
-					setErrors({ ...errors, id: error });
-				}
-				else {
-					setErrors({ ...errors, id: "" });
-				}
-				break;
-			case "password":
-				//  8 ~ 10자 영문, 숫자 조합
-				var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
-				break;
-			default:
-				break;
-		}
-	}, [userData]);
+  useEffect(() => {
+    switch (target) {
+    case "id":
+      //  5 ~ 12자 영문, 숫자, 대문자 조합
+      //^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
+      var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
+      if (userData.id.length < 5 || userData.id.length > 13) {
+        const error = "아이디의 길이는 5~12자 이내입니다."
+        setErrors({ ...errors, id: error });
+      }
+      else if (!isIdRegex.test(userData.id)) {
+        const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
+        setErrors({ ...errors, id: error });
+      }
+      else {
+        setErrors({ ...errors, id: "" });
+      }
+      break;
+    case "password":
+      //  8 ~ 10자 영문, 숫자 조합
+      var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
+      break;
+    default:
+      break;
+    }
+  }, [userData]);
 
-	useEffect(() => {
-	}, [errors]);
+  useEffect(() => {
+  }, [errors]);
 
-	const handleSubmit = () => {
-		axios.post("http://localhost:8080/api/sign_in", JSON.stringify(userData), {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((response) => {
-			console.log(response);
+  const handleSubmit = () => {
+    axios.post("http://localhost:8080/api/sign_in", JSON.stringify(userData), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      console.log(response);
 
-		}).catch((error) => {
-			console.log(error);
-		})
-	}
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
-	return (
-		<TemplateFull>
-			<Container>
-				<Logo>
+  return (
+    <TemplateFull>
+      <Container>
+        <Logo>
 					여기모아
-				</Logo>
-				<InputDiv>
-					<InputTitlePtag> 아이디 : </InputTitlePtag>
-					<Input type="text" name="id" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
-					<InputAlert className="id"> {errors.id} </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 비밀번호 :  </InputTitlePtag>
-					<Input type="password" name="password" placeholder="비밀번호를 입력하세요" onBlur={handleValidation} />
-					<InputAlert className="password">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<Button onClick={handleSubmit}> 로그인 </Button>
-					<Button> 취소 </Button>
-				</InputDiv>
-			</Container>
-		</TemplateFull>
-	)
+        </Logo>
+        <InputDiv>
+          <InputTitlePtag> 아이디 : </InputTitlePtag>
+          <Input type="text" name="id" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
+          <InputAlert className="id"> {errors.id} </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 비밀번호 :  </InputTitlePtag>
+          <Input type="password" name="password" placeholder="비밀번호를 입력하세요" onBlur={handleValidation} />
+          <InputAlert className="password">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <Button onClick={handleSubmit}> 로그인 </Button>
+          <Button> 취소 </Button>
+        </InputDiv>
+      </Container>
+    </TemplateFull>
+  )
 }
 
 

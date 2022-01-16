@@ -78,128 +78,128 @@ export type SignupPageProps = {
 
 }
 export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
-	const initValues = { id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
-	const [userData, setUserData] = useState(initValues);
-	const [errors, setErrors] = useState({ id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
-	const [isSubmit, setIsSubmit] = useState(false);
-	const [target, setTarget] = useState("");
+  const initValues = { id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
+  const [userData, setUserData] = useState(initValues);
+  const [errors, setErrors] = useState({ id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [target, setTarget] = useState("");
 
-	const handleValidation = (e: any) => {
-		//포커스 되었을 때의 값으로 들어간다.
-		const { name, value } = e.target
-		setTarget(name);
-		setUserData({ ...userData, [e.target.name]: value });
-	}
+  const handleValidation = (e: any) => {
+    //포커스 되었을 때의 값으로 들어간다.
+    const { name, value } = e.target
+    setTarget(name);
+    setUserData({ ...userData, [e.target.name]: value });
+  }
 
-	useEffect(() => {
-		switch (target) {
-			case "id":
-				//  5 ~ 12자 영문, 숫자, 대문자 조합
-				//^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
-				var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
-				if (userData.id.length < 5 || userData.id.length > 13) {
-					const error = "아이디의 길이는 5~12자 이내입니다."
-					setErrors({ ...errors, id: error });
-				}
-				else if (!isIdRegex.test(userData.id)) {
-					const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
-					setErrors({ ...errors, id: error });
-				}
-				else {
-					setErrors({ ...errors, id: "" });
-				}
-				break;
-			case "password":
-				//  8 ~ 10자 영문, 숫자 조합
-				var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
-				break;
-			case "name":
-				break;
-			case "nickname":
-				break;
-			case "birthDate":
-				break;
-			case "gender":
-				break;
-			case "phone":
-				// '-' 입력 시
-				var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
-				// 숫자만 입력시
-				var regExp2 = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
-				break;
-			default:
-				break;
-		}
-	}, [userData]);
+  useEffect(() => {
+    switch (target) {
+    case "id":
+      //  5 ~ 12자 영문, 숫자, 대문자 조합
+      //^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
+      var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
+      if (userData.id.length < 5 || userData.id.length > 13) {
+        const error = "아이디의 길이는 5~12자 이내입니다."
+        setErrors({ ...errors, id: error });
+      }
+      else if (!isIdRegex.test(userData.id)) {
+        const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
+        setErrors({ ...errors, id: error });
+      }
+      else {
+        setErrors({ ...errors, id: "" });
+      }
+      break;
+    case "password":
+      //  8 ~ 10자 영문, 숫자 조합
+      var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
+      break;
+    case "name":
+      break;
+    case "nickname":
+      break;
+    case "birthDate":
+      break;
+    case "gender":
+      break;
+    case "phone":
+      // '-' 입력 시
+      var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
+      // 숫자만 입력시
+      var regExp2 = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
+      break;
+    default:
+      break;
+    }
+  }, [userData]);
 
 
-	useEffect(() => {
-	}, [errors]);
+  useEffect(() => {
+  }, [errors]);
 
-	const handleSubmit = () => {
-		axios.post("http://localhost:8080/user/signup", JSON.stringify(userData), {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((response) => {
-			console.log(response);
+  const handleSubmit = () => {
+    axios.post("http://localhost:8080/user/signup", JSON.stringify(userData), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      console.log(response);
 
-		}).catch((error) => {
-			console.log(error);
-		})
-	}
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
-	return (
-		<TemplateFull>
-			<Container>
-				<Logo>
+  return (
+    <TemplateFull>
+      <Container>
+        <Logo>
 					여기모아
-				</Logo>
-				<InputDiv>
-					<InputTitlePtag> 아이디 :  </InputTitlePtag>
-					<Input type="text" name="id" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
-					<InputAlert className="id"> {errors.id} </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 비밀번호 :  </InputTitlePtag>
-					<Input type="password" name="password" placeholder="비밀번호를 입력하세요" onBlur={handleValidation} />
-					<InputAlert className="password">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 이름 :  </InputTitlePtag>
-					<Input type="text" name="name" placeholder="사용자 이름" onBlur={handleValidation} />
-					<InputAlert className="name">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 닉네임 :  </InputTitlePtag>
-					<Input type="text" name="nickname" placeholder="사용자 닉네임" onBlur={handleValidation} />
-					<InputAlert className="nickname">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 생년월일 :  </InputTitlePtag>
-					<Input type="text" name="birthDate" placeholder="ex)20200807" onBlur={handleValidation} />
-					<InputAlert className="birthDate">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 성별 :  </InputTitlePtag>
-					<GenderStyleDiv >
-						<GenderLabel htmlFor="men"> 남성 </GenderLabel> <input id="men" type="radio" name="gender" value="M" onBlur={handleValidation} />
-						<GenderLabel htmlFor="women"> 여성 </GenderLabel> <input id="women" type="radio" name="gender" value="W" onBlur={handleValidation} />
-					</GenderStyleDiv>
-					<InputAlert className="gender">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<InputTitlePtag> 휴대폰 번호 : </InputTitlePtag>
-					<Input type="text" name="phone" placeholder=" '-' 는 빼고서 입력해주세요" onBlur={handleValidation} />
-					<InputAlert className="phone">  </InputAlert>
-				</InputDiv>
-				<InputDiv>
-					<Button onClick={handleSubmit}> 회원가입 </Button>
-					<Button> 취소 </Button>
-				</InputDiv>
-			</Container>
-		</TemplateFull>
-	)
+        </Logo>
+        <InputDiv>
+          <InputTitlePtag> 아이디 :  </InputTitlePtag>
+          <Input type="text" name="id" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
+          <InputAlert className="id"> {errors.id} </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 비밀번호 :  </InputTitlePtag>
+          <Input type="password" name="password" placeholder="비밀번호를 입력하세요" onBlur={handleValidation} />
+          <InputAlert className="password">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 이름 :  </InputTitlePtag>
+          <Input type="text" name="name" placeholder="사용자 이름" onBlur={handleValidation} />
+          <InputAlert className="name">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 닉네임 :  </InputTitlePtag>
+          <Input type="text" name="nickname" placeholder="사용자 닉네임" onBlur={handleValidation} />
+          <InputAlert className="nickname">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 생년월일 :  </InputTitlePtag>
+          <Input type="text" name="birthDate" placeholder="ex)20200807" onBlur={handleValidation} />
+          <InputAlert className="birthDate">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 성별 :  </InputTitlePtag>
+          <GenderStyleDiv >
+            <GenderLabel htmlFor="men"> 남성 </GenderLabel> <input id="men" type="radio" name="gender" value="M" onBlur={handleValidation} />
+            <GenderLabel htmlFor="women"> 여성 </GenderLabel> <input id="women" type="radio" name="gender" value="W" onBlur={handleValidation} />
+          </GenderStyleDiv>
+          <InputAlert className="gender">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <InputTitlePtag> 휴대폰 번호 : </InputTitlePtag>
+          <Input type="text" name="phone" placeholder=" '-' 는 빼고서 입력해주세요" onBlur={handleValidation} />
+          <InputAlert className="phone">  </InputAlert>
+        </InputDiv>
+        <InputDiv>
+          <Button onClick={handleSubmit}> 회원가입 </Button>
+          <Button> 취소 </Button>
+        </InputDiv>
+      </Container>
+    </TemplateFull>
+  )
 }
 
 
