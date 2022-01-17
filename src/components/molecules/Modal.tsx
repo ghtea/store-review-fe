@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { Children, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Button } from '../atoms/Button';
+import { Button, ButtonProps } from '../atoms/Button';
 
 export type ModalProps = {
   isOpen: boolean
@@ -10,6 +10,7 @@ export type ModalProps = {
 
   onClickConfirm?: () => void
   confirmTitle?: string
+  confirmStatus?: ButtonProps["status"]
 }
 
 const Wrapper = styled.div`
@@ -73,6 +74,7 @@ export const Modal:React.FunctionComponent<ModalProps> = ({
   children,
   onClickConfirm,
   confirmTitle,
+  confirmStatus = "primary",
 }) => {
 
   const handleBackgroundClick = useCallback(()=>{
@@ -93,8 +95,8 @@ export const Modal:React.FunctionComponent<ModalProps> = ({
               {children}
             </ContentDiv>
             <FooterDiv>
-              {onClickConfirm && (
-                <FooterButton status={"primary"}>{confirmTitle}</FooterButton>
+              {confirmTitle && (
+                <FooterButton status={confirmStatus}>{confirmTitle}</FooterButton>
               )}
             </FooterDiv>
           </ModalDiv>

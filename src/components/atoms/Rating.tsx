@@ -13,7 +13,7 @@ export const Rating:React.FunctionComponent<RatingProps> = ({
 
   return (
     <OriginalRating 
-      allowHalfIcon={true}
+      allowHalfIcon={false}
       {...rest}
     />
   )

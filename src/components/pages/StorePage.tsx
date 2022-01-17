@@ -9,6 +9,7 @@ import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
+import { ModalReviewRead } from '../organisms/ModalReviewRead';
 
 export type StorePageProps = {
 }
@@ -134,6 +135,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
 
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
+  const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
+
   const [hasMyReview, setHasMyReivew] = useState(false)
 
   useEffect(()=>{
@@ -157,6 +160,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   const handleReviewCreateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
+  },[])
+
+  const hanldeSummaryReviewClick = useCallback(()=>{
+    setIsModalReviewReadOpen(true)
   },[])
 
   return (
@@ -222,7 +229,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
                       {[undefined, null].map((item, index)=>(
-                        <SummaryReview key={`review-${index}`}/>
+                        <SummaryReview 
+                          key={`review-${index}`}
+                          onClick={hanldeSummaryReviewClick}
+                        />
                       ))}
                     </ReviewPeopleReviewsListDiv>
                   </ReviewGroupContentDiv>
@@ -233,6 +243,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
         </MainDiv>
       </div>
       <ModalReviewUpsert isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
+      <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen}/>
     </TemplateBasic>
   )
 }
