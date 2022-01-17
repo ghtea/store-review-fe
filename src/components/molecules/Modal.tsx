@@ -51,13 +51,19 @@ const ContentDiv = styled.div`
 `
 
 const FooterDiv = styled.div`
+  width: 100%;
   align-items: center;
+  flex-direction: row;
+  margin-top: 16px;
 `
 
 const ModalTitleHeading = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
+`
 
+const FooterButton = styled(Button)`
+  flex: 1;
 `
 
 export const Modal:React.FunctionComponent<ModalProps> = ({
@@ -88,7 +94,7 @@ export const Modal:React.FunctionComponent<ModalProps> = ({
             </ContentDiv>
             <FooterDiv>
               {onClickConfirm && (
-                <Button status={"primary"}>{confirmTitle}</Button>
+                <FooterButton status={"primary"}>{confirmTitle}</FooterButton>
               )}
             </FooterDiv>
           </ModalDiv>

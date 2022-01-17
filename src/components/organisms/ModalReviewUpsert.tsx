@@ -88,6 +88,10 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     return dayjs().format("YYYY-M-D") 
   },[])
 
+  const handleConfirmClick = useCallback(()=>{
+
+  },[])
+
   return (
     
     <Modal
@@ -95,6 +99,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       setIsOpen={setIsOpen}
       title={"리뷰 작성"}
       confirmTitle={"등록"}
+      onClickConfirm={handleConfirmClick}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <RatingWrapper>
@@ -114,7 +119,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
           onChange={handleReviewImageInputChange}
         />
         <label htmlFor='input-review-image' > 
-                  Upload Photo 
+          Upload Photo 
         </label>
       </ImageUploadDiv>
     </Modal>
