@@ -232,7 +232,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           )}
         </MainDiv>
       </div>
-      <ModalReviewUpsert isOpen={isModalReviewUpsertOpen}/>
+      <ModalReviewUpsert isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
     </TemplateBasic>
   )
 }

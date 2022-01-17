@@ -3,47 +3,11 @@ import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
+import { Modal, ModalProps } from '../molecules/Modal';
 
-export type ModalReviewUpsertProps = {
-  isOpen: boolean
+export type ModalReviewUpsertProps = ModalProps & {
 }
 
-const FullScreenDiv = styled.div`
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0,0,0,0.5);
-`
-
-const ModalDiv = styled.div`
-  width: 100%;
-  min-width: 360px;
-  max-width: 640px;
-  border-radius: 8px;
-  background-color: #ffffff;
-  align-items: center;
-  padding: 16px;
-`
-
-const HeaderDiv = styled.div`
-  align-items: center;
-`
-
-const ContentDiv = styled.div`
-  width: 100%;
-  margin-top: 32px;
-  align-items: center;
-`
-
-const ModalTitleHeading = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-
-`
 
 const UpdatedAtSpan = styled.span`
   color: ${props => props.theme.colors.textHint};
@@ -93,13 +57,9 @@ const ImageUploadDiv = styled.div`
   }
 `
 
-const ReviewSubmitButton = styled(Button)`
-	margin-top: 32px;
-  width: 100%;
-`
-
 export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> = ({
-  isOpen
+  isOpen,
+  setIsOpen,
 }) => {
   const [images, setImages] = useState<string[]>([])
 
@@ -129,41 +89,34 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   return (
-    <>
-      {isOpen && (
-        <FullScreenDiv>
-          <ModalDiv>
-            <HeaderDiv>
-              <ModalTitleHeading>리뷰 작성</ModalTitleHeading>
-            </HeaderDiv>
-            <ContentDiv>
-              <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
-              <RatingWrapper>
-                <Rating ratingValue={2.5} size={32}/>
-              </RatingWrapper>
-              <ReviewTextarea onChange={(event)=>{}}/>
-              <ImageCollectionDiv>
-                {images.map((item, index) => (
-                  <ImageWrapper key={`image-${index}`}>
-                    <ReviewImage src={item} ></ReviewImage>
-                    <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
-                  </ImageWrapper>
-                ))}
-              </ImageCollectionDiv>
-              <ImageUploadDiv>
-                <input type="file" accept="image/*" id='input-review-image' 
-                  onChange={handleReviewImageInputChange}
-                />
-                <label htmlFor='input-review-image' > 
-                  Upload Photo 
-                </label>
-              </ImageUploadDiv>
-              <ReviewSubmitButton status={"primary"}>등록</ReviewSubmitButton>
-            </ContentDiv>
-          </ModalDiv>
-        </FullScreenDiv>
-      )}
-    </>
     
+    <Modal
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      title={"리뷰 작성"}
+      confirmTitle={"등록"}
+    >
+      <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
+      <RatingWrapper>
+        <Rating ratingValue={2.5} size={32}/>
+      </RatingWrapper>
+      <ReviewTextarea onChange={(event)=>{}}/>
+      <ImageCollectionDiv>
+        {images.map((item, index) => (
+          <ImageWrapper key={`image-${index}`}>
+            <ReviewImage src={item} ></ReviewImage>
+            <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
+          </ImageWrapper>
+        ))}
+      </ImageCollectionDiv>
+      <ImageUploadDiv>
+        <input type="file" accept="image/*" id='input-review-image' 
+          onChange={handleReviewImageInputChange}
+        />
+        <label htmlFor='input-review-image' > 
+                  Upload Photo 
+        </label>
+      </ImageUploadDiv>
+    </Modal>
   )
 }
