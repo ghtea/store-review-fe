@@ -11,7 +11,7 @@ export type ModalReviewUpsertProps = {
 const SummaryReviewDiv = styled.div`
 	width: 100%;
 	max-width: 640px;
-	height: 180px;
+	height: 200px;
 	padding: 16px;
 
 	&:nth-child(n+2){
@@ -47,11 +47,20 @@ const BottomDiv = styled.div`
 	flex-direction: row;
 	padding: 16px;
   height: 100%;
+  align-items: stretch;
 `
 
 const BottomLeftDiv = styled.div`
 	align-items: center;
 	width: 120px;
+`
+
+const ReviewParagraph = styled.p`
+  flex: 1;
+`
+
+const CommentSpan = styled.span`
+  color: ${props => props.theme.colors.textHint};
 `
 
 const BottomRightDiv = styled.div`
@@ -96,7 +105,8 @@ export const SummaryReview:React.FunctionComponent<ModalReviewUpsertProps> = ({
 													
       <BottomDiv>
         <BottomRightDiv>
-          <p>맛 없습니다</p>
+          <ReviewParagraph>맛 없습니다</ReviewParagraph>
+          <CommentSpan> 6 comments</CommentSpan>
         </BottomRightDiv>
 
         <BottomLeftDiv>
