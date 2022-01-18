@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Comment, DUMMY_REVIEW } from '../../store/reaction';
 import { Modal, ModalProps } from '../molecules/Modal';
@@ -47,8 +47,8 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
 
   return (
     <Modal
-      isOpen={true}
-      //isOpen={isOpen}
+      //isOpen={true}
+      isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={data ? "댓글 수정" : "댓글 등록"}
       confirmTitle={ data ? "수정" : "등록"}
