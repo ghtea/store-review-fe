@@ -11,7 +11,7 @@ import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { DUMMY_REVIEW, Review } from '../../store/reaction';
-import { getStoreReviews } from '../../api/reactions/getStoreReviews';
+import { getStoreReviews } from '../../api/store-review/review/getStoreReviews';
 
 export type StorePageProps = {
 }

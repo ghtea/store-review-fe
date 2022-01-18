@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { StoreReviewApiResponseData } from "..";
-import { Review } from "../../store/reaction";
+import { StoreReviewApiResponseData } from "../..";
+import { Review } from "../../../store/reaction";
 
 type getStoreReviewsOptions = {
   id: string
@@ -23,4 +23,9 @@ export const getStoreReviews = async ({
     const errorMessage = response.data.meta.error_message
     throw Error()
   }
+}
+
+// TODO: not sure yet
+export type getStoreReviewsData = {
+  
 }
