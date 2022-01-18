@@ -1,11 +1,14 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { DUMMY_COMMENT, Review } from '../../store/reaction';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
+import { SummaryComment } from './SummaryComment';
 
 export type ModalReviewReadProps = ModalProps & {
+  data: Review
 }
 
 const ReviewMetaInfoDiv = styled.div`
@@ -73,36 +76,10 @@ const SummaryCommentWrapper = styled.div`
   }  
 `
 
-const SummaryComment = styled.div`
-  width: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-`
-
-const CommentMetaInfoDiv = styled.div`
-  flex-direction: row;
-  align-items: flex-end;
-`
-
-const CommentAuthorSpan = styled.span`
-  color: ${props => props.theme.colors.textDefault};
-`
-
-const CommentCreatedAtSpan = styled.span`
-  margin-left: 16px;
-  color: ${props => props.theme.colors.textHint};
-  font-size: 0.875rem;
-`
-
-const CommentParagraph = styled.p`
-  margin-top: 8px;
-`
-
 export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   isOpen,
   setIsOpen,
+  data,
 }) => {
   const [images, setImages] = useState<string[]>([])
 
@@ -122,7 +99,6 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   },[])
 
   return (
-    
     <Modal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
@@ -148,15 +124,9 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         ))}
       </ImageCollectionDiv>
       <CommentCollectionDiv>
-        {[null, null].map((item, index) => (
+        {[DUMMY_COMMENT].map((item, index) => (
           <SummaryCommentWrapper key={`summary-comment-${index}`}>
-            <SummaryComment>
-              <CommentMetaInfoDiv>
-                <CommentAuthorSpan>author</CommentAuthorSpan>
-                <CommentCreatedAtSpan>createdAt</CommentCreatedAtSpan>
-              </CommentMetaInfoDiv>             
-              <CommentParagraph>comment</CommentParagraph>
-            </SummaryComment>
+            <SummaryComment data={item}/>
           </SummaryCommentWrapper>
         ))}
       </CommentCollectionDiv>

@@ -10,6 +10,7 @@ import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
+import { DUMMY_REVIEW, Review } from '../../store/reaction';
 
 export type StorePageProps = {
 }
@@ -136,8 +137,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
-
-  const [hasMyReview, setHasMyReivew] = useState(false)
+  // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
+  const [myReview, setMyReview] = useState<Review | undefined>(DUMMY_REVIEW)
 
   useEffect(()=>{
     const name = searchParams.get("name")
@@ -193,10 +194,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
               <ReviewInfoDiv>
                 <ReviewMyDiv>
                   <ReviewGroupHeading>{"내 리뷰"}</ReviewGroupHeading>
-                  {true && (
+                  {myReview && (
                     <ReviewGroupContentDiv>
-                      <Rating ratingValue={2.5} size={24}/>
-                      <p>dddd 맛있었다</p>                     
+                      <Rating ratingValue={myReview.stars} size={24}/>
+                      <p>{myReview.content}</p>                     
                       <ReviewUpsertButton 
                         status={"primary"}
                         onClick={handleReviewUpdateButton}
@@ -228,9 +229,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
-                      {[undefined, null].map((item, index)=>(
-                        <SummaryReview 
+                      {[DUMMY_REVIEW, DUMMY_REVIEW].map((item, index)=>(
+                        <SummaryReview
                           key={`review-${index}`}
+                          data={item}
                           onClick={hanldeSummaryReviewClick}
                         />
                       ))}
@@ -243,7 +245,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
         </MainDiv>
       </div>
       <ModalReviewUpsert isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
-      <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen}/>
+      <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={DUMMY_REVIEW}/>
     </TemplateBasic>
   )
 }

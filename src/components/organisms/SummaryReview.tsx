@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
 
-export type ModalReviewUpsertProps = {
+export type SummaryReviewProps = {
   onClick?: () => void
+  data: Review
 }
 
 
@@ -86,33 +88,51 @@ const ImagePlusDiv = styled.div`
 `
 
 
-export const SummaryReview:React.FunctionComponent<ModalReviewUpsertProps> = ({
-  onClick = () => {}
+export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
+  onClick = () => {},
+  data
 }) => {
   const handleClick = useCallback(()=>{
     onClick?.()
   },[onClick])
 
+  const updatedAtText = useMemo(()=>{
+    return dayjs(data.updated_at).format("YYYY-M-D") 
+  },[data.updated_at])
+
+  const additionalImageCount = useMemo(()=>{
+    if (false) { // TODO: replace it by data.images
+      return 0
+    }
+    else {
+      return ([1,3].length - 1) // TODO: replace it by data.images
+    }
+  },[])
+
   return (
     <SummaryReviewDiv onClick={handleClick}>
       <TopDiv>
-        <TopNameSpan>잡스</TopNameSpan>
+        <TopNameSpan>{data.said}</TopNameSpan>
         <TopInfoDiv>
-          <Rating ratingValue={2.5} size={24}/>
-          <TopInfoDateSpan>2011.1.1.</TopInfoDateSpan>
+          <Rating ratingValue={data.stars} size={24}/>
+          <TopInfoDateSpan>{updatedAtText}</TopInfoDateSpan>
         </TopInfoDiv>
       </TopDiv>
 													
       <BottomDiv>
         <BottomRightDiv>
-          <ReviewParagraph>맛 없습니다</ReviewParagraph>
-          <CommentSpan> 6 comments</CommentSpan>
+          <ReviewParagraph>{data.content}</ReviewParagraph>
+          <CommentSpan> 6 comments {/* TODO: data.commentIds */}</CommentSpan>
         </BottomRightDiv>
 
         <BottomLeftDiv>
           <ImageDiv>
-            <Image />
-            <ImagePlusDiv>{"+3"}</ImagePlusDiv>
+            {["ddd"][0] && (
+              <Image src={["ddd"][0]} />
+            )}
+            {additionalImageCount > 0 && (
+              <ImagePlusDiv>{`+${additionalImageCount}`}</ImagePlusDiv>
+            )}
           </ImageDiv>
         </BottomLeftDiv>
       </BottomDiv>
