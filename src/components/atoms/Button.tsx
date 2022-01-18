@@ -19,8 +19,8 @@ const StyledButton = styled.button<ButtonProps>`
 
   padding-left: 12px;
   padding-right: 12px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 
   ${props => props.shape === "rounded" && css`
     border-radius: 4px;

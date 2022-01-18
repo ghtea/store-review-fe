@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { Review } from '../../store/reaction';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
 
 export type ModalReviewUpsertProps = ModalProps & {
+  data?: Review
 }
 
 
@@ -58,6 +60,7 @@ const ImageUploadDiv = styled.div`
 `
 
 export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> = ({
+  data,
   isOpen,
   setIsOpen,
 }) => {
@@ -97,8 +100,8 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     <Modal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      title={"리뷰 작성"}
-      confirmTitle={"등록"}
+      title={data ? "리뷰 수정" : "리뷰 등록"}
+      confirmTitle={ data ? "수정" : "등록"}
       onClickConfirm={handleConfirmClick}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>

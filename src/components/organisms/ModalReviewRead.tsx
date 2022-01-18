@@ -5,6 +5,7 @@ import { DUMMY_COMMENT, Review } from '../../store/reaction';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
+import { ModalCommentUpsert } from './ModalCommentUpsert';
 import { SummaryComment } from './SummaryComment';
 
 export type ModalReviewReadProps = ModalProps & {
@@ -82,6 +83,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   data,
 }) => {
   const [images, setImages] = useState<string[]>([])
+  const [isOpenModalCommentUpsert, setIsOpenModalCommentUpsert] = useState(false)
 
   const handleClearButtonClick = useCallback((index: number)=>{
     const newImages = [...images]
@@ -99,37 +101,40 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   },[])
 
   return (
-    <Modal
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      title={"리뷰"}
-      confirmTitle={"수정하기"}
-      onClickConfirm={handleConfirmClick}
-    >
-      <ReviewMetaInfoDiv>
-        <ReviewAuthorSpan>author</ReviewAuthorSpan>
-        <ReviewTimeSpan>{updatedAtText}</ReviewTimeSpan>
-      </ReviewMetaInfoDiv>          
+    <>
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title={"리뷰"}
+        confirmTitle={"수정하기"}
+        onClickConfirm={handleConfirmClick}
+      >
+        <ReviewMetaInfoDiv>
+          <ReviewAuthorSpan>author</ReviewAuthorSpan>
+          <ReviewTimeSpan>{updatedAtText}</ReviewTimeSpan>
+        </ReviewMetaInfoDiv>          
               
-      <RatingWrapper>
-        <Rating readonly={true} ratingValue={0} size={32}/>
-      </RatingWrapper>
-      <ReviewParagraph/>
-      <ImageCollectionDiv>
-        {images.map((item, index) => (
-          <ImageWrapper key={`image-${index}`}>
-            <ReviewImage src={item} ></ReviewImage>
-            <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
-          </ImageWrapper>
-        ))}
-      </ImageCollectionDiv>
-      <CommentCollectionDiv>
-        {[DUMMY_COMMENT].map((item, index) => (
-          <SummaryCommentWrapper key={`summary-comment-${index}`}>
-            <SummaryComment data={item}/>
-          </SummaryCommentWrapper>
-        ))}
-      </CommentCollectionDiv>
-    </Modal>
+        <RatingWrapper>
+          <Rating readonly={true} ratingValue={0} size={32}/>
+        </RatingWrapper>
+        <ReviewParagraph/>
+        <ImageCollectionDiv>
+          {images.map((item, index) => (
+            <ImageWrapper key={`image-${index}`}>
+              <ReviewImage src={item} ></ReviewImage>
+              <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
+            </ImageWrapper>
+          ))}
+        </ImageCollectionDiv>
+        <CommentCollectionDiv>
+          {[DUMMY_COMMENT].map((item, index) => (
+            <SummaryCommentWrapper key={`summary-comment-${index}`}>
+              <SummaryComment data={item}/>
+            </SummaryCommentWrapper>
+          ))}
+        </CommentCollectionDiv>
+      </Modal>
+      <ModalCommentUpsert isOpen={isOpenModalCommentUpsert} setIsOpen={setIsOpenModalCommentUpsert}/>
+    </>
   )
 }

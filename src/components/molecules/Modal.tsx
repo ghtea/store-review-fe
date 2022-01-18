@@ -28,11 +28,15 @@ const BackgroundDiv = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
+  padding: 16px;
 `
 
 const ModalDiv = styled.div`
   position: absolute;
-  width: 100%;
+  width: calc(100% - 32px);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  flex: 1;
   min-width: 360px;
   max-width: 640px;
   border-radius: 8px;
