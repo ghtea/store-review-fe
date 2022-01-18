@@ -11,10 +11,10 @@ import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { DUMMY_REVIEW, Review } from '../../store/reaction';
+import { getStoreReviews } from '../../api/reactions/getStoreReviews';
 
 export type StorePageProps = {
 }
-
 
 const MainDiv = styled.div`
 	width: 100%;
@@ -42,12 +42,10 @@ const StoreInfoDiv = styled.div`
 	align-items: center;
 `
 
-
 const StoreNameSpan = styled.span`
 	font-size: 1.625rem;
 	font-weight: 700;
 `
-
 
 const StoreDetailTableDiv = styled.div`
 	margin-top: 40px;
@@ -139,6 +137,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
   // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
   const [myReview, setMyReview] = useState<Review | undefined>(DUMMY_REVIEW)
+  const [reviews, setReviews] = useState<Review[]>([DUMMY_REVIEW, DUMMY_REVIEW])
 
   useEffect(()=>{
     const name = searchParams.get("name")
@@ -154,6 +153,22 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
       longitude,
     }))
   },[dispatch, id, searchParams])
+
+  // get review data
+  const getReviewData = useCallback(async (id: string)=>{
+    const newReviews = await getStoreReviews({ id })
+    if (newReviews){
+      setReviews(newReviews)
+    }
+    else {
+      setReviews([])
+    }
+  },[])
+
+  useEffect(()=>{
+    if (!id) return
+    getReviewData(id)
+  },[getReviewData, id])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)

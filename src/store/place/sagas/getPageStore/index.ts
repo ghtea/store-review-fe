@@ -1,7 +1,6 @@
 import { call, put, select } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
-import { RootState } from '../../../reducers';
 import { KakaoKeywordSearchCallback, requestSearchPlaces } from '../searchPlaces/requestSearchPlaces';
 
 export function* getPageStore(action: actions.GET_PAGE_STORE_Instance) {

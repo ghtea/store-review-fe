@@ -9,7 +9,6 @@ export type SummaryReviewProps = {
   data: Review
 }
 
-
 const SummaryReviewDiv = styled.div`
 	width: 100%;
 	max-width: 640px;
