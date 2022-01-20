@@ -154,7 +154,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, id, searchParams])
 
-  // get review data
   const getReviewData = useCallback(async (id: string)=>{
     const newReviews = await getStoreReviews({ id })
     if (newReviews){
@@ -244,7 +243,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
-                      {[DUMMY_REVIEW, DUMMY_REVIEW].map((item, index)=>(
+                      {reviews.map((item, index)=>(
                         <SummaryReview
                           key={`review-${index}`}
                           data={item}

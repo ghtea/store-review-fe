@@ -64,13 +64,15 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   isOpen,
   setIsOpen,
 }) => {
-  const [images, setImages] = useState<string[]>([])
+  const [draftRating, setDraftRating] = useState(0)
+  const [draftReview, setDraftReview] = useState("")
+  const [draftImages, setDraftImages] = useState<string[]>([])
 
   const handleClearButtonClick = useCallback((index: number)=>{
-    const newImages = [...images]
+    const newImages = [...draftImages]
     newImages.splice(index, 1)
-    setImages(newImages)
-  }, [images])
+    setDraftImages(newImages)
+  }, [draftImages])
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
     const files = event.currentTarget.files
@@ -80,12 +82,20 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       reader.onloadend = (readerEvent) => {
         const result = readerEvent?.target?.result;
         if (typeof result === "string"){
-          setImages(prev => [...prev, result])
+          setDraftImages(prev => [...prev, result])
         }
       };
       reader.readAsDataURL(theFile);
     }
   },[]);
+
+  const handleRatingClick = useCallback((value: number) => {
+    setDraftRating(value)
+  },[])
+
+  const handleReviewTextareaChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback((event)=>{
+    setDraftReview(event.currentTarget.value || "")
+  },[])
 
   const updatedAtText = useMemo(()=>{
     return dayjs().format("YYYY-M-D") 
@@ -106,11 +116,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <RatingWrapper>
-        <Rating ratingValue={2.5} size={32}/>
+        <Rating ratingValue={draftRating} size={32} onClick={handleRatingClick}/>
       </RatingWrapper>
-      <ReviewTextarea onChange={(event)=>{}}/>
+      <ReviewTextarea onChange={handleReviewTextareaChange} value={draftReview}/>
       <ImageCollectionDiv>
-        {images.map((item, index) => (
+        {draftImages.map((item, index) => (
           <ImageWrapper key={`image-${index}`}>
             <ReviewImage src={item} ></ReviewImage>
             <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>

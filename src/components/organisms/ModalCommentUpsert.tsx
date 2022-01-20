@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Comment, DUMMY_REVIEW } from '../../store/reaction';
 import { Modal, ModalProps } from '../molecules/Modal';
@@ -37,12 +37,18 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
   isOpen,
   setIsOpen,
 }) => {
+  const [draftComment, setDraftComment] = useState("")
+
   const updatedAtText = useMemo(()=>{
     return dayjs().format("YYYY-M-D") 
   },[])
 
-  const handleConfirmClick = useCallback(()=>{
+  const handleTextAreaChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback((event)=>{
+    setDraftComment(event.currentTarget.value || "")
+  },[])
 
+  const handleConfirmClick = useCallback(()=>{
+    // use draftComment 
   },[])
 
   return (
@@ -58,7 +64,7 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
         <SummaryReview data={DUMMY_REVIEW}/>
       </SummaryReviewWrapper>
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
-      <CommentTextarea onChange={(event)=>{}}/>
+      <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
     </Modal>
   )
 }
