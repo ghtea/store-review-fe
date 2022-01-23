@@ -1,13 +1,18 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+/* eslint-disable indent */
+import React, { useState, useEffect } from 'react'
 import { TemplateFull } from '../templates/TemplateFull';
 import styled, { css } from 'styled-components';
 import axios from 'axios';
+import BackButton from '../atoms/BackButton';
+import { Link } from 'react-router-dom';
 
 const color1 = "#60a9f2";
 
-const Logo = styled.div`
-	margin: auto;
-	font-size: 24px;
+const ServiceLogoSpan = styled.span`
+margin: auto;
+color: ${props => props.theme.colors.primary};
+font-size: 1.25rem;
+font-weight: 700;
 `;
 const InputDiv = styled.div`
 	display: block;
@@ -19,7 +24,6 @@ const Container = styled.div`
 	padding: 20px;
 	margin-top: 20px;
 	width: 400px;
-	height: 600px;
 	border-radius: 5px;
 	border: 0px;
 	box-shadow: 2px 2px 5px 3px ${color1}, 1px 1px 1px 1px ${color1};
@@ -78,9 +82,9 @@ export type SignupPageProps = {
 
 }
 export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
-  const initValues = { id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
+  const initValues = { userId: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
   const [userData, setUserData] = useState(initValues);
-  const [errors, setErrors] = useState({ id: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
+  const [errors, setErrors] = useState({ userId: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
   const [isSubmit, setIsSubmit] = useState(false);
   const [target, setTarget] = useState("");
 
@@ -93,42 +97,42 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
 
   useEffect(() => {
     switch (target) {
-    case "id":
-      //  5 ~ 12자 영문, 숫자, 대문자 조합
-      //^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
-      var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
-      if (userData.id.length < 5 || userData.id.length > 13) {
-        const error = "아이디의 길이는 5~12자 이내입니다."
-        setErrors({ ...errors, id: error });
-      }
-      else if (!isIdRegex.test(userData.id)) {
-        const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
-        setErrors({ ...errors, id: error });
-      }
-      else {
-        setErrors({ ...errors, id: "" });
-      }
-      break;
-    case "password":
-      //  8 ~ 10자 영문, 숫자 조합
-      var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
-      break;
-    case "name":
-      break;
-    case "nickname":
-      break;
-    case "birthDate":
-      break;
-    case "gender":
-      break;
-    case "phone":
-      // '-' 입력 시
-      var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
-      // 숫자만 입력시
-      var regExp2 = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
-      break;
-    default:
-      break;
+      case "id":
+        //  5 ~ 12자 영문, 숫자, 대문자 조합
+        //^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
+        var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
+        if (userData.userId.length < 5 || userData.userId.length > 13) {
+          const error = "아이디의 길이는 5~12자 이내입니다."
+          setErrors({ ...errors, userId: error });
+        }
+        else if (!isIdRegex.test(userData.userId)) {
+          const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
+          setErrors({ ...errors, userId: error });
+        }
+        else {
+          setErrors({ ...errors, userId: "" });
+        }
+        break;
+      case "password":
+        //  8 ~ 10자 영문, 숫자 조합
+        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
+        break;
+      case "name":
+        break;
+      case "nickname":
+        break;
+      case "birthDate":
+        break;
+      case "gender":
+        break;
+      case "phone":
+        // '-' 입력 시
+        var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
+        // 숫자만 입력시
+        var regExp2 = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
+        break;
+      default:
+        break;
     }
   }, [userData]);
 
@@ -137,7 +141,7 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
   }, [errors]);
 
   const handleSubmit = () => {
-    axios.post("http://localhost:8080/user/signup", JSON.stringify(userData), {
+    axios.post("http://person.jjhserverworld.pe.kr:18080/api/signup", JSON.stringify(userData), {
       headers: {
         "Content-Type": "application/json",
       },
@@ -152,13 +156,18 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
   return (
     <TemplateFull>
       <Container>
-        <Logo>
-					여기모아
-        </Logo>
+        <div style={{ width: "40px" }}>
+          <BackButton>  </BackButton>
+        </div>
+        <ServiceLogoSpan>
+          <Link to={'/'}>
+            여기모아
+          </Link>
+        </ServiceLogoSpan>
         <InputDiv>
           <InputTitlePtag> 아이디 :  </InputTitlePtag>
-          <Input type="text" name="id" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
-          <InputAlert className="id"> {errors.id} </InputAlert>
+          <Input type="text" name="userId" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
+          <InputAlert className="id"> {errors.userId} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 비밀번호 :  </InputTitlePtag>
@@ -177,7 +186,7 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 생년월일 :  </InputTitlePtag>
-          <Input type="text" name="birthDate" placeholder="ex)20200807" onBlur={handleValidation} />
+          <Input type="date" name="birthDate" placeholder="ex)20200807" onBlur={handleValidation} />
           <InputAlert className="birthDate">  </InputAlert>
         </InputDiv>
         <InputDiv>

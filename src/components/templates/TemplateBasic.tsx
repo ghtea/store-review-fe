@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../atoms/Button';
 
 export type TemplateBasicProps = {
-	backgroundColor?: string
+  backgroundColor?: string
 }
 
 const MENU_HEIGHT_PX = 60
@@ -69,13 +69,13 @@ const LoginButton = styled(Button)`
 
 `
 
-const ContentWrapper = styled.div<{backgroundColor?: string}>`
+const ContentWrapper = styled.div<{ backgroundColor?: string }>`
 	width: 100%;
 	height: calc(100% - ${MENU_HEIGHT_PX}px);
 	background-color: ${props => props.backgroundColor || "transparent"};
 `;
 
-export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
+export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
   backgroundColor,
   children
 }) => {
@@ -83,26 +83,26 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("")
 
-  const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
+  const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
     setSearchValue(event.target.value || "")
-  },[])
+  }, [])
 
-  const searchMap = useCallback(()=>{
+  const searchMap = useCallback(() => {
     const serachParams = new URLSearchParams();
     serachParams.set("q", searchValue)
 
     navigate({ pathname: "/map", search: serachParams.toString() })
-  },[navigate, searchValue])
+  }, [navigate, searchValue])
 
-  const handleSeachButotnClick = useCallback(()=>{
+  const handleSeachButotnClick = useCallback(() => {
     searchMap();
-  },[searchMap])
+  }, [searchMap])
 
-  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
-    if (event.key === "Enter"){
+  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event) => {
+    if (event.key === "Enter") {
       searchMap();
     }
-  },[searchMap])
+  }, [searchMap])
 
   return (
     <TemplateBasicDiv>
@@ -110,7 +110,9 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
         <MenuDiv>
           <MenuLeftDiv>
             <ServiceLogoSpan>
-							여기모아
+              <Link to={'/'}>
+                여기모아
+              </Link>
             </ServiceLogoSpan>
             {location.pathname !== "/map" && (
               <SearchDiv>
@@ -122,7 +124,9 @@ export const TemplateBasic:React.FunctionComponent<TemplateBasicProps> = ({
 
           <div>
             <LoginButton status={"primary"}>
-							로그인
+              <Link to={'/login'}>
+                로그인
+              </Link>
             </LoginButton>
           </div>
         </MenuDiv>
