@@ -2,6 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
 import { RootState } from '../../../reducers';
+import { DEFAULT_COORDS, getCurrentPosition } from '../initMainMap/getCurrentPosition';
 
 export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   const payload = action.payload
@@ -29,6 +30,20 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
     }),
   );
 
+  let searchLocation = undefined
+  if (payload.isCurrentLocation){
+    try {
+      const currentPosition: GeolocationPosition = yield call(getCurrentPosition);
+      searchLocation = new kakao.maps.LatLng(currentPosition.coords.latitude, currentPosition.coords.longitude)
+    }
+    catch (error){
+      console.log("getting current location has failed")
+    }
+    if (!searchLocation) {
+      searchLocation = new kakao.maps.LatLng(DEFAULT_COORDS.latitude, DEFAULT_COORDS.longitude)
+    }
+  }
+
   try {
     const places = new kakao.maps.services.Places(mainMap);
 
@@ -40,7 +55,10 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
       requestSearchPlaces,
       {
         keyword: payload.keyword,
-        places: places
+        places: places,
+        options: {
+          location: searchLocation
+        }
       }
     );
 
@@ -84,9 +102,11 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
 const requestSearchPlaces = ({
   keyword,
   places,
+  options,
 }: {
   keyword: string
   places: kakao.maps.services.Places
+  options?: KakaoKeywordSearchOption
 }): Promise<any> => {
   return new Promise((resolve, reject) => {
     const callback: KakaoKeywordSearchCallback = (result, status, paginations) => {
@@ -110,9 +130,11 @@ const requestSearchPlaces = ({
     };
 
     places.keywordSearch(keyword, callback, {
-      category_group_code: "FD6" // 음식점  https://apis.map.kakao.com/web/documentation/#CategoryCode
+      category_group_code: "FD6", // 음식점  https://apis.map.kakao.com/web/documentation/#CategoryCode,
+      ...options
     });
   });
 }
 
-type KakaoKeywordSearchCallback = Parameters<kakao.maps.services.Places["keywordSearch"]>[1]
+export type KakaoKeywordSearchCallback = Parameters<kakao.maps.services.Places["keywordSearch"]>[1]
+export type KakaoKeywordSearchOption = Parameters<kakao.maps.services.Places["keywordSearch"]>[2]

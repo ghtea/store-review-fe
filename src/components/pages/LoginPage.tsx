@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TemplateFull } from '../templates/TemplateFull';
 import styled, { css } from 'styled-components';
 import axios from 'axios';

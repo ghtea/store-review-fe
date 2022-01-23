@@ -14,11 +14,9 @@ export function* moveMap(action: actions.MOVE_MAP_Instance) {
   if (!kakao || !mainMap) return;
 
   let destinationLatLng = undefined
-
   if (payload.coords){
     destinationLatLng = new kakao.maps.LatLng(payload.coords.latitude, payload.coords.longitude)
   }
-
   if (payload.isCurrent){
     try {
       const currentPosition: GeolocationPosition = yield call(getCurrentPosition);
@@ -29,7 +27,6 @@ export function* moveMap(action: actions.MOVE_MAP_Instance) {
       console.log("getting current location has failed")
     }
   }
-
   if (!destinationLatLng) {
     destinationLatLng = new kakao.maps.LatLng(DEFAULT_COORDS.latitude, DEFAULT_COORDS.longitude)
   }

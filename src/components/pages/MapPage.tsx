@@ -50,13 +50,28 @@ const SearchInput = styled.input`
 	border-top-left-radius: 4px;
 `;
 
-
 const SearchButton = styled(Button)`
 	padding-top: 0;
 	padding-bottom: 0;
 	border-bottom-right-radius: 4px;
 	border-top-right-radius: 4px;
 `;
+
+const SearchOptionWrapper = styled.div`
+	margin-left: 16px;
+	margin-right: 16px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  & label {
+    margin-left: 4px;
+	  color: ${props => props.theme.colors.textHint};
+    font-size: 0.875rem;
+  }
+`
 
 const LoadingDiv = styled.div`
 	align-items: center;
@@ -65,7 +80,10 @@ const LoadingDiv = styled.div`
 `
 
 const SearchResultDiv = styled.div`
-	margin: 8px;
+	margin-top: 16px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
 	border-radius: 4px;
 	background-color: #ffffff;
 	overflow-y: scroll;
@@ -161,6 +179,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
   const mainMap = useSelector((state: RootState) => state.place.mainMap);
 
   const [searchValue, setSearchValue] = useState("")
+  const [isCurrentLocationSearch, setIsCurrentLocationSearch] = useState(false)
 
   useEffect(() => {
     dispatch(placeStore.return__INIT_MAIN_MAP())
@@ -170,24 +189,39 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
     const newKeyword = searchParams.get("q") || ""
     if (mainMap && newKeyword){
       dispatch(placeStore.return__SEARCH_PLACES({
-        keyword: newKeyword
+        keyword: newKeyword,
+        isCurrentLocation: isCurrentLocationSearch
       }))
       setSearchValue(newKeyword)
     }
-  },[dispatch, searchParams, mainMap])
+  },[dispatch, isCurrentLocationSearch, mainMap, searchParams])
 
   const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((event)=>{
     if (event.key === "Enter"){
       dispatch(placeStore.return__SEARCH_PLACES({
-        keyword: searchValue
+        keyword: searchValue,
+        isCurrentLocation: isCurrentLocationSearch
       }))
     }
-  },[dispatch, searchValue])
+  },[dispatch, isCurrentLocationSearch, searchValue])
 
   const handleSearchButtonClick = useCallback(()=>{
     dispatch(placeStore.return__SEARCH_PLACES({
-      keyword: searchValue
+      keyword: searchValue,
+      isCurrentLocation: isCurrentLocationSearch
     }))
+  },[dispatch, isCurrentLocationSearch, searchValue])
+
+  const handleCurrentLocationSearchCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
+    const newValue = Boolean(event.currentTarget.value)
+    setIsCurrentLocationSearch(newValue)
+
+    if (searchValue){
+      dispatch(placeStore.return__SEARCH_PLACES({
+        keyword: searchValue,
+        isCurrentLocation: newValue
+      }))
+    }
   },[dispatch, searchValue])
 
   const handleCurrentLocationButtonClick = useCallback(()=>{
@@ -263,9 +297,11 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 								검색
               </SearchButton>
             </SearchInputButtonWrapper>
+            <SearchOptionWrapper>
+              <input id={"current-location-search-checkbox"} type={"checkbox"} onChange={handleCurrentLocationSearchCheckboxChange} />
+              <label htmlFor={"current-location-search-checkbox"}>현재 위치 기준</label>
+            </SearchOptionWrapper>
             <SearchResultDiv>
-
-
               {displayingPlaces.map((item, index)=>(
                 <PlaceSummaryDiv key={`place-${index}`} onClick={()=>handlePlaceSummaryClick(item)}>
                   <PlaceSummaryLeftDiv>
@@ -306,21 +342,3 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
     </TemplateBasic>
   )
 }
-
-
-/* 
-	
-	place_name: string,
-  distance: number,
-  place_url: string,
-  category_name: string,
-  address_name: string,
-  road_address_name: string,
-  id: number,
-  phone: string,
-  category_group_code: string,
-  category_group_name: string,
-  x: number,
-  y: number 
-
-*/
