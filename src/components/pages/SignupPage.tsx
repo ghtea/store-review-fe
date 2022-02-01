@@ -4,7 +4,7 @@ import { TemplateFull } from '../templates/TemplateFull';
 import styled, { css } from 'styled-components';
 import axios from 'axios';
 import BackButton from '../atoms/BackButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const color1 = "#60a9f2";
 
@@ -27,7 +27,7 @@ const Container = styled.div`
 	border-radius: 5px;
 	border: 0px;
 	box-shadow: 2px 2px 5px 3px ${color1}, 1px 1px 1px 1px ${color1};
-	`;
+`;
 
 const InputTitlePtag = styled.p`
 	padding-bottom: 5px;
@@ -63,7 +63,10 @@ const InputAlert = styled.div`
 	height: 8px;
 	font-size: 8px;
 	padding: 5px 0px 0px 5px;
-	color: red;
+  color: red;
+`
+const SuccessSpan = styled.span`
+  color: 8px;
 `
 const GenderLabel = styled.label`
 	padding: 0px 5px;
@@ -78,15 +81,17 @@ const Button = styled.button`
 	background-color: white;
 	line-height: 40px;
 `;
+
+
 export type SignupPageProps = {
 
 }
 export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
-  const initValues = { userId: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" }
-  const [userData, setUserData] = useState(initValues);
+  const [userData, setUserData] = useState({ userId: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
   const [errors, setErrors] = useState({ userId: "", password: "", name: "", nickname: "", birthDate: "", gender: "", phone: "" });
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState({ userId: false, password: false, name: false, nickname: false, birthDate: false, gender: false, phone: false });
   const [target, setTarget] = useState("");
+  const navigate = useNavigate();
 
   const handleValidation = (e: any) => {
     //포커스 되었을 때의 값으로 들어간다.
@@ -97,60 +102,114 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
 
   useEffect(() => {
     switch (target) {
-      case "id":
+      case "userId":
         //  5 ~ 12자 영문, 숫자, 대문자 조합
-        //^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$
-        var isIdRegex = /^[a-zA-Z]+[a-z0-9A-Z_]{4,11}$/g;
-        if (userData.userId.length < 5 || userData.userId.length > 13) {
-          const error = "아이디의 길이는 5~12자 이내입니다."
-          setErrors({ ...errors, userId: error });
-        }
-        else if (!isIdRegex.test(userData.userId)) {
-          const error = "아이디는 영문으로 시작하고 영문,숫자,대문자로만 구성되야 합니다."
-          setErrors({ ...errors, userId: error });
+        let isUseridRegex = /^[a-zA-Z0-9]{5,12}$/g;
+        if (!isUseridRegex.test(userData.userId)) {
+          setErrors({ ...errors, userId: "영문,숫자 로 5~12자로 구성되야합니다." });
+          setIsSubmit({ ...isSubmit, userId: false });
         }
         else {
           setErrors({ ...errors, userId: "" });
+          setIsSubmit({ ...isSubmit, userId: true });
         }
         break;
       case "password":
-        //  8 ~ 10자 영문, 숫자 조합
-        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,10}$/
+        //  5 ~ 15자 영문, 숫자 조합
+        let isPasswordRegex = /^[a-zA-Z0-9]{5,15}$/;
+        if (!isPasswordRegex.test(userData.password)) {
+          setErrors({ ...errors, password: "영문,숫자 로 5~15자로 구성되야합니다." });
+          setIsSubmit({ ...isSubmit, password: false });
+        }
+        else {
+          setErrors({ ...errors, password: "" });
+          setIsSubmit({ ...isSubmit, password: true });
+        }
         break;
       case "name":
+        let isNameRegex = /^[ㄱ-힣]{2,8}$/;
+        if (!isNameRegex.test(userData.name)) {
+          setErrors({ ...errors, name: "한글 로 2~8자로 구성되야합니다." });
+          setIsSubmit({ ...isSubmit, name: false });
+        }
+        else {
+          setErrors({ ...errors, name: "" });
+          setIsSubmit({ ...isSubmit, name: true });
+        }
         break;
       case "nickname":
+        let isNicknameRegex = /^[a-zA-Z0-9ㄱ-힣]{2,8}$/;
+        if (!isNicknameRegex.test(userData.nickname)) {
+          setErrors({ ...errors, nickname: "영문,숫자,한글 로 2~8자로 구성되야합니다." });
+          setIsSubmit({ ...isSubmit, nickname: false });
+        }
+        else {
+          setErrors({ ...errors, nickname: "" });
+          setIsSubmit({ ...isSubmit, nickname: true });
+        }
         break;
       case "birthDate":
+        let isBirthDateRegex = /^\d{4}-(\d{2})-(\d{2})$/;
+        if (!isBirthDateRegex.test(userData.birthDate)) {
+          setErrors({ ...errors, birthDate: "날짜 형식에 맞지 않습니다." });
+          setIsSubmit({ ...isSubmit, birthDate: false });
+        }
+        else {
+          setErrors({ ...errors, birthDate: "" });
+          setIsSubmit({ ...isSubmit, birthDate: true });
+        }
         break;
       case "gender":
+        if (userData.gender === null) {
+          setErrors({ ...errors, gender: "성별을 선택하세요" });
+          setIsSubmit({ ...isSubmit, gender: false });
+        }
+        else {
+          setErrors({ ...errors, gender: "" });
+          setIsSubmit({ ...isSubmit, gender: true });
+        }
         break;
       case "phone":
-        // '-' 입력 시
-        var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
-        // 숫자만 입력시
-        var regExp2 = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/
+        var isPhoneRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
+        if (!isPhoneRegex.test(userData.phone)) {
+          setErrors({ ...errors, phone: "ex) 01012345678 과 같이 입력해주세요" });
+          setIsSubmit({ ...isSubmit, phone: false });
+        }
+        else {
+          setErrors({ ...errors, phone: "" });
+          setIsSubmit({ ...isSubmit, phone: true });
+        }
         break;
       default:
         break;
     }
   }, [userData]);
 
-
-  useEffect(() => {
-  }, [errors]);
-
   const handleSubmit = () => {
-    axios.post("http://person.jjhserverworld.pe.kr:18080/api/signup", JSON.stringify(userData), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      console.log(response);
-
-    }).catch((error) => {
-      console.log(error);
-    })
+    if (isSubmit.userId && isSubmit.password && isSubmit.name && isSubmit.nickname && isSubmit.birthDate && isSubmit.gender && isSubmit.phone) {
+      axios({
+        url: 'http://person.jjhserverworld.pe.kr:18080/api/signup',
+        //url: 'http://localhost:8080/api/signup',
+        method: 'POST',
+        data: {
+          "userId": userData.userId,
+          "password": userData.password,
+          "name": userData.name,
+          "nickname": userData.nickname,
+          "birthDate": userData.birthDate,
+          "gender": userData.gender,
+          "phone": userData.phone,
+        },
+      }).then((response) => {
+        alert("회원가입에 성공하였습니다.");
+        navigate('/login');
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+    else {
+      alert("미입력된 부분이나 잘못 입력된 부분이 값이 없는지 확인하세요");
+    }
   }
 
   return (
@@ -167,27 +226,27 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
         <InputDiv>
           <InputTitlePtag> 아이디 :  </InputTitlePtag>
           <Input type="text" name="userId" placeholder="아이디를 입력하세요" onBlur={handleValidation} />
-          <InputAlert className="id"> {errors.userId} </InputAlert>
+          <InputAlert className="userId"> {errors.userId} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 비밀번호 :  </InputTitlePtag>
           <Input type="password" name="password" placeholder="비밀번호를 입력하세요" onBlur={handleValidation} />
-          <InputAlert className="password">  </InputAlert>
+          <InputAlert className="password"> {errors.password} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 이름 :  </InputTitlePtag>
           <Input type="text" name="name" placeholder="사용자 이름" onBlur={handleValidation} />
-          <InputAlert className="name">  </InputAlert>
+          <InputAlert className="name"> {errors.name} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 닉네임 :  </InputTitlePtag>
           <Input type="text" name="nickname" placeholder="사용자 닉네임" onBlur={handleValidation} />
-          <InputAlert className="nickname">  </InputAlert>
+          <InputAlert className="nickname"> {errors.nickname} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 생년월일 :  </InputTitlePtag>
-          <Input type="date" name="birthDate" placeholder="ex)20200807" onBlur={handleValidation} />
-          <InputAlert className="birthDate">  </InputAlert>
+          <Input type="date" name="birthDate" onBlur={handleValidation} />
+          <InputAlert className="birthDate"> {errors.birthDate} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 성별 :  </InputTitlePtag>
@@ -195,12 +254,12 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
             <GenderLabel htmlFor="men"> 남성 </GenderLabel> <input id="men" type="radio" name="gender" value="M" onBlur={handleValidation} />
             <GenderLabel htmlFor="women"> 여성 </GenderLabel> <input id="women" type="radio" name="gender" value="W" onBlur={handleValidation} />
           </GenderStyleDiv>
-          <InputAlert className="gender">  </InputAlert>
+          <InputAlert className="gender"> {errors.gender} </InputAlert>
         </InputDiv>
         <InputDiv>
           <InputTitlePtag> 휴대폰 번호 : </InputTitlePtag>
           <Input type="text" name="phone" placeholder=" '-' 는 빼고서 입력해주세요" onBlur={handleValidation} />
-          <InputAlert className="phone">  </InputAlert>
+          <InputAlert className="phone"> {errors.phone} </InputAlert>
         </InputDiv>
         <InputDiv>
           <Button onClick={handleSubmit}> 회원가입 </Button>

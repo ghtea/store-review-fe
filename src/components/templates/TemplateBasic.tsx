@@ -1,7 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../atoms/Button';
+import Private from './Private';
+import Public from './Public';
+import { useDispatch, useSelector } from 'react-redux';
+import { authStore } from '../../store';
+import { RootState } from '../../store/reducers';
+import { AUTH } from '../../store/auth';
 
 export type TemplateBasicProps = {
   backgroundColor?: string
@@ -62,8 +68,13 @@ const SearchButton = styled(Button)`
 	
 `
 
-
 const LoginButton = styled(Button)`
+	background-color: ${props => props.theme.colors.primary};
+	color: ${props => props.theme.colors.textAlternative};
+
+`
+
+const LogoutButton = styled(Button)`
 	background-color: ${props => props.theme.colors.primary};
 	color: ${props => props.theme.colors.textAlternative};
 
@@ -82,6 +93,7 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
   const navigate = useNavigate()
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("")
+  const dispatch = useDispatch();
 
   const handleSearchInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
     setSearchValue(event.target.value || "")
@@ -104,6 +116,14 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
     }
   }, [searchMap])
 
+  const logoutHandler = () => {
+    localStorage.setItem("login", "false");
+    dispatch(authStore.return__AUTH({
+      authority: "",
+      nickname: ""
+    }))
+  }
+
   return (
     <TemplateBasicDiv>
       <MenuWrapper>
@@ -123,11 +143,18 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
           </MenuLeftDiv>
 
           <div>
-            <LoginButton status={"primary"}>
-              <Link to={'/login'}>
-                로그인
-              </Link>
-            </LoginButton>
+            <Public>
+              <LoginButton status={"primary"}>
+                <Link to={'/login'}>
+                  로그인
+                </Link>
+              </LoginButton>
+            </Public>
+            <Private>
+              <LogoutButton status={"primary"} onClick={logoutHandler}>
+                로그아웃
+              </LogoutButton>
+            </Private>
           </div>
         </MenuDiv>
       </MenuWrapper>
