@@ -2,14 +2,14 @@ import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
-import { PostCommentData } from './types';
+import { PostReviewData } from './types';
 
-export function* postComment(action: actions.POST_COMMENT_Instance) {
+export function* postReview(action: actions.POST_REVIEW_Instance) {
   const payload = action.payload
 
   yield put(
     actions.return__REPLACE({
-      keyList: ['postComment', 'status'],
+      keyList: ['postReview', 'status'],
       replacement: {
         loading: true,
         ready: false,
@@ -18,25 +18,27 @@ export function* postComment(action: actions.POST_COMMENT_Instance) {
   );
 
   try {
-    const response: AxiosResponse<PostCommentData> = yield call(
+    const response: AxiosResponse<PostReviewData> = yield call(
       axios.post,
-      `${process.env.REACT_APP_BACKEND_URL}/comment`,
+      `${process.env.REACT_APP_BACKEND_URL}/review`,
       {
-        reviewId: payload.reviewId,
-        content: payload.content
+        placeId: payload.placeId,
+        content: payload.content,
+        stars: payload.stars,
+        imgUrl: payload.imgUrl,
       }
     );
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['postComment', 'data'],
+        keyList: ['postReview', 'data'],
         replacement: response.data
       }),
     );
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['postComment', 'status'],
+        keyList: ['postReview', 'status'],
         replacement: {
           loading: false,
           ready: true,
@@ -48,7 +50,7 @@ export function* postComment(action: actions.POST_COMMENT_Instance) {
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['postComment', 'status'],
+        keyList: ['postReview', 'status'],
         replacement: {
           loading: false,
           ready: false,

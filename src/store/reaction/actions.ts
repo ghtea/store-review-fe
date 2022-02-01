@@ -92,7 +92,7 @@ export const POST_REVIEW = 'reaction/POST_REVIEW';
 type POST_REVIEW__Payload = {
   placeId: string
   content: string
-  starts: number
+  stars: number
   imgUrl: string[]
 };
 export const return__POST_REVIEW = (payload: POST_REVIEW__Payload) => {
@@ -107,7 +107,7 @@ export const PUT_REVIEW = 'reaction/PUT_REVIEW';
 type PUT_REVIEW__Payload = {
   reviewId: number
   content?: string
-  starts?: number
+  stars?: number
   imgUrl?: string[]
 };
 export const return__PUT_REVIEW = (payload: PUT_REVIEW__Payload) => {

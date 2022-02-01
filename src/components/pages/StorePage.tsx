@@ -153,10 +153,9 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, id, searchParams])
 
-  const getReviewData = useCallback(async (id: number)=>{
-    dispatch(reactionStore.return__GET_COMMENTS({ // TODO get review
-      reviewId: id,
-      pageNo: 0,
+  const getReviewData = useCallback(async (id: string)=>{
+    dispatch(reactionStore.return__GET_REVIEWS({ // TODO get review
+      placeId: id,
     }))
   },[dispatch])
 

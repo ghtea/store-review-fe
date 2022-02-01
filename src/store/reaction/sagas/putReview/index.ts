@@ -2,14 +2,14 @@ import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
-import { GetCommentsData } from './types';
+import { PutReviewData } from './types';
 
-export function* getComments(action: actions.GET_COMMENTS_Instance) {
+export function* putReview(action: actions.PUT_REVIEW_Instance) {
   const payload = action.payload
 
   yield put(
     actions.return__REPLACE({
-      keyList: ['getComments', 'status'],
+      keyList: ['putReview', 'status'],
       replacement: {
         loading: true,
         ready: false,
@@ -18,21 +18,26 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
   );
 
   try {
-    const response: AxiosResponse<GetCommentsData> = yield call(
-      axios.get,
-      `${process.env.REACT_APP_BACKEND_URL}/comment/${payload.reviewId}/${payload.pageNo}`
+    const response: AxiosResponse<PutReviewData> = yield call(
+      axios.put,
+      `${process.env.REACT_APP_BACKEND_URL}/review`,
+      {
+        ...(payload.content ? { content: payload.content } : {}),
+        ...(payload.stars ? { stars: payload.stars } : {}),
+        ...(payload.imgUrl ? { imgUrl: payload.imgUrl } : {}),
+      }
     );
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['getComments', 'data'],
+        keyList: ['putReview', 'data'],
         replacement: response.data
       }),
     );
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['getComments', 'status'],
+        keyList: ['putReview', 'status'],
         replacement: {
           loading: false,
           ready: true,
@@ -44,7 +49,7 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
 
     yield put(
       actions.return__REPLACE({
-        keyList: ['getComments', 'status'],
+        keyList: ['putReview', 'status'],
         replacement: {
           loading: false,
           ready: false,
