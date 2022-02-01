@@ -3,7 +3,7 @@ import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { placeStore } from '../../store';
+import { placeStore, reactionStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
@@ -11,7 +11,6 @@ import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { DUMMY_REVIEW, Review } from '../../store/reaction';
-import { getStoreReviews } from '../../api/store-review/review/getStoreReviews';
 
 export type StorePageProps = {
 }
@@ -154,18 +153,15 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, id, searchParams])
 
-  const getReviewData = useCallback(async (id: string)=>{
-    const newReviews = await getStoreReviews({ id })
-    if (newReviews){
-      setReviews(newReviews)
-    }
-    else {
-      setReviews([])
-    }
-  },[])
+  const getReviewData = useCallback(async (id: number)=>{
+    dispatch(reactionStore.return__GET_COMMENTS({ // TODO get review
+      reviewId: id,
+      pageNo: 0,
+    }))
+  },[dispatch])
 
   useEffect(()=>{
-    if (!id) return
+    if (!id ) return
     getReviewData(id)
   },[getReviewData, id])
 
