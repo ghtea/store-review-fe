@@ -162,7 +162,7 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
               nickname: "TEST",
             })
           );
-          navigate("/login");
+          navigate("/");
         })
         .catch((error) => {
           alert("로그인 실패...");
