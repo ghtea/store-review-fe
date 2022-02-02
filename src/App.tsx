@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components'
-import { HomePage } from './components/pages/HomePage';
 import { LoginPage } from './components/pages/LoginPage';
 import { MapPage } from './components/pages/MapPage';
 import { ErrorPage } from './components/pages/ErrorPage';
@@ -20,10 +19,9 @@ const App: React.FunctionComponent = () => {
         <GlobalStyle />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<MapPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/map" element={<MapPage />} />
             <Route path="/store/:id" element={<StorePage />} />
             <Route path="/*" element={<ErrorPage />} />
           </Routes>

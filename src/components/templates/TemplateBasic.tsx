@@ -103,7 +103,7 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
     const serachParams = new URLSearchParams();
     serachParams.set("q", searchValue)
 
-    navigate({ pathname: "/map", search: serachParams.toString() })
+    navigate({ pathname: "/", search: serachParams.toString() })
   }, [navigate, searchValue])
 
   const handleSeachButotnClick = useCallback(() => {
@@ -134,7 +134,7 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
                 여기모아
               </Link>
             </ServiceLogoSpan>
-            {location.pathname !== "/map" && (
+            {location.pathname !== "/" && (
               <SearchDiv>
                 <SearchInput onKeyDown={handleSearchInputKeyDown} onChange={handleSearchInputChange} />
                 <SearchButton onClick={handleSeachButotnClick}>{"검색"}</SearchButton>
