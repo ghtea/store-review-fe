@@ -3,11 +3,51 @@ import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
 import * as actions from './actions';
 import { DeleteCommentData } from './sagas/deleteComment/types';
+import { DeleteReviewData } from './sagas/deleteReview/types';
 import { GetCommentsData } from './sagas/getComments/types';
+import { GetReviewData } from './sagas/getReview/types';
+import { GetReviewsData } from './sagas/getReviews/types';
 import { PostCommentData } from './sagas/postComment/types';
+import { PostReviewData } from './sagas/postReview/types';
 import { PutCommentData } from './sagas/putComment/types';
+import { PutReviewData } from './sagas/putReview/types';
 
 export type State = {
+  getReviews: {
+    data: GetReviewsData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
+  getReview: {
+    data: GetReviewData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
+  postReview: {
+    data: PostReviewData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
+  putReview: {
+    data: PutReviewData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
+  deleteReview: {
+    data: DeleteReviewData | undefined,
+    status: {
+      loading: boolean,
+      ready: boolean,
+    }
+  },
   getComments: {
     data: GetCommentsData | undefined,
     status: {
@@ -39,6 +79,41 @@ export type State = {
 }
 
 const initialState = {
+  getReviews: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
+  getReview: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
+  postReview: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
+  putReview: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
+  deleteReview: {
+    data: undefined,
+    status: {
+      loading: false,
+      ready: true,
+    }
+  },
   getComments: {
     data: undefined,
     status: {

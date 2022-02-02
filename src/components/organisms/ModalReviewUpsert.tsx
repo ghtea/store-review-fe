@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { reactionStore } from '../../store';
 import { Review } from '../../store/reaction';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
@@ -8,6 +10,7 @@ import { Modal, ModalProps } from '../molecules/Modal';
 
 export type ModalReviewUpsertProps = ModalProps & {
   data?: Review
+  placeId: string
 }
 
 
@@ -63,7 +66,9 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   data,
   isOpen,
   setIsOpen,
+  placeId,
 }) => {
+  const dispatch = useDispatch()
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
   const [draftImages, setDraftImages] = useState<string[]>([])
@@ -102,8 +107,14 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   const handleConfirmClick = useCallback(()=>{
-
-  },[])
+    console.log("yo111"); // TODO: remove
+    dispatch(reactionStore.return__POST_REVIEW({
+      placeId,
+      content: draftReview,
+      stars: draftRating,
+      imgUrl: draftImages,
+    }))
+  },[dispatch, draftImages, draftRating, draftReview, placeId])
 
   return (
     

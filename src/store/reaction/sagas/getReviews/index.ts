@@ -6,6 +6,7 @@ import { GetReviewsData } from './types';
 
 export function* getReviews(action: actions.GET_REVIEWS_Instance) {
   const payload = action.payload
+  console.log("yo"); // TODO: remove
 
   yield put(
     actions.return__REPLACE({
