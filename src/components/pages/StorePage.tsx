@@ -242,7 +242,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
-                      {(getReviewsState.data?.data.data.reviews || []).map((item, index)=>(
+                      {(getReviewsState.data?.data.reviews || []).map((item, index)=>(
                         <SummaryReview
                           key={`review-${index}`}
                           data={item}

@@ -51,7 +51,5 @@ export type StoreReivewApiResponseData<Data> = {
     errorType?: string
     errorMsg?: string
   },
-  data: {
-    data: Data
-  }
+  data: Data
 }
