@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TemplateBasic } from '../templates/TemplateBasic';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -131,38 +131,42 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const { id } = useParams<"id">();
   const [searchParams] = useSearchParams();
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
-
+  const getReviewsState = useSelector((state: RootState) => state.reaction.getReviews);
+  useEffect(()=>{
+    console.log("getReviewsState: ", getReviewsState); // TODO: remove 
+  },[getReviewsState])
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
   // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
   const [myReview, setMyReview] = useState<Review | undefined>(DUMMY_REVIEW)
-  const [reviews, setReviews] = useState<Review[]>([DUMMY_REVIEW, DUMMY_REVIEW])
+
+  const placeId = useMemo(()=>id ? id : "", [id])
 
   useEffect(()=>{
     const name = searchParams.get("name")
     const latitude = parseFloat(searchParams.get("latitude") || "")
     const longitude = parseFloat(searchParams.get("longitude") || "")
 
-    if (!id || !name || !latitude || !longitude) return
+    if (!placeId || !name || !latitude || !longitude) return
 
     dispatch(placeStore.return__GET_PAGE_STORE({
-      id,
+      id: placeId,
       name,
       latitude,
       longitude,
     }))
-  },[dispatch, id, searchParams])
+  },[dispatch, placeId, searchParams])
 
   const getReviewData = useCallback(async (id: string)=>{
-    dispatch(reactionStore.return__GET_REVIEWS({ // TODO get review
+    dispatch(reactionStore.return__GET_REVIEWS({
       placeId: id,
     }))
   },[dispatch])
 
   useEffect(()=>{
-    if (!id ) return
-    getReviewData(id)
-  },[getReviewData, id])
+    if (!placeId ) return
+    getReviewData(placeId)
+  },[getReviewData, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
@@ -238,7 +242,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
-                      {reviews.map((item, index)=>(
+                      {(getReviewsState.data?.data.data.reviews || []).map((item, index)=>(
                         <SummaryReview
                           key={`review-${index}`}
                           data={item}
@@ -253,7 +257,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           )}
         </MainDiv>
       </div>
-      <ModalReviewUpsert isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
+      <ModalReviewUpsert placeId={placeId} isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
       <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={DUMMY_REVIEW}/>
     </TemplateBasic>
   )

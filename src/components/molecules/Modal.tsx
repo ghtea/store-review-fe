@@ -100,7 +100,7 @@ export const Modal:React.FunctionComponent<ModalProps> = ({
             </ContentDiv>
             <FooterDiv>
               {confirmTitle && (
-                <FooterButton status={confirmStatus}>{confirmTitle}</FooterButton>
+                <FooterButton status={confirmStatus} onClick={onClickConfirm}>{confirmTitle}</FooterButton>
               )}
             </FooterDiv>
           </ModalDiv>
