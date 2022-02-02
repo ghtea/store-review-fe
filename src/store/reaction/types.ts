@@ -13,14 +13,12 @@ export type Review = {
 }
 
 export type Comment = {
-  id: number
-  // TODO: add name of author
-  suid: string
+  commentId: number
   said: string
+  userId: string // email of said
   content: string
-  created_at: Date
-  updated_at: Date
-  review: number
+  createdAt: string
+  updatedAt: string
 }
 
 export const DUMMY_REVIEW: Review = {
@@ -37,12 +35,23 @@ export const DUMMY_REVIEW: Review = {
 }
 
 export const DUMMY_COMMENT: Comment = {
-  id: 164388,
+  commentId: 164388,
   // TODO: add name of author
-  suid: "string",
   said: "string",
+  userId: "ddd@ddd.com",
   content: "cccc comment",
-  created_at: new Date(),
-  updated_at: new Date(),
-  review: 13563667,
+  createdAt: "",
+  updatedAt: "",
+  // review: 13563667,
+}
+
+export type StoreReivewApiResponseData<Data> = {
+  meta: {
+    statusCode: number
+    errorType?: string
+    errorMsg?: string
+  },
+  data: {
+    data: Data
+  }
 }

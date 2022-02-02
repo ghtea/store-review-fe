@@ -23,3 +23,4 @@ sagaMiddleware.run(rootSaga);
 
 export * as authStore from "./auth"
 export * as placeStore from "./place"
+export * as reactionStore from "./reaction"

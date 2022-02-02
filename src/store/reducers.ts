@@ -2,10 +2,12 @@ import { combineReducers } from 'redux';
 
 import { authReducer } from './auth';
 import { placeReducer } from './place';
+import { reactionReducer } from './reaction';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   place: placeReducer,
+  reaction: reactionReducer,
 });
 
 export default rootReducer;

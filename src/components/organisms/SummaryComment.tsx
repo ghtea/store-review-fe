@@ -46,8 +46,8 @@ export const SummaryComment:React.FunctionComponent<SummaryCommentProps> = ({
   },[onClick])
 
   const updatedAtText = useMemo(()=>{
-    return dayjs(data.updated_at).format("YYYY-M-D") 
-  },[data.updated_at])
+    return dayjs(data.updatedAt).format("YYYY-M-D") 
+  },[data.updatedAt])
 
   return (
     <SummaryCommentDiv onClick={handleClick}>
