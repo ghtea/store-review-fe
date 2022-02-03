@@ -188,7 +188,7 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
   const handleSubmit = () => {
     if (isSubmit.userId && isSubmit.password && isSubmit.name && isSubmit.nickname && isSubmit.birthDate && isSubmit.gender && isSubmit.phone) {
       axios({
-        url: 'http://person.jjhserverworld.pe.kr:18080/api/signup',
+        url: 'http://person.jjhserverworld.pe.kr:18080/signup',
         //url: 'http://localhost:8080/api/signup',
         method: 'POST',
         data: {
