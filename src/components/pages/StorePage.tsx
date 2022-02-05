@@ -9,8 +9,6 @@ import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
-import { ModalReviewRead } from '../organisms/ModalReviewRead';
-import { Review } from '../../store/reaction';
 
 export type StorePageProps = {
 }
@@ -105,40 +103,26 @@ const ReviewPeopleReviewsSummaryDiv = styled.div`
 	align-items: center;
 `
 
-const PeopleImageCollectionDiv = styled.div`
-	flex-direction: row;
-	margin-top: 16px;
-	margin-bottom: 16px;
-	margin-left: 16px;
-	margin-right: 16px;
-`
-
-const PeopleImage = styled.img`
-  width: 80px;
-  height: 80px;
-`
-
 const ReviewPeopleReviewsListDiv = styled.div`
 	width: 100%;
 	margin-top: 16px;
 	align-items: center;
 `
 
-
-// /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
 export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const dispatch = useDispatch();
   const { id } = useParams<"id">();
   const [searchParams] = useSearchParams();
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
   const getReviewsState = useSelector((state: RootState) => state.reaction.getReviews);
+  const authData = useSelector((state: RootState) => state.auth.data);
+
   useEffect(()=>{
     console.log("getReviewsState: ", getReviewsState); // TODO: remove 
   },[getReviewsState])
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
   // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
-  const [myReview, setMyReview] = useState<Review | undefined>(undefined)
 
   const placeId = useMemo(()=>id ? id : "", [id])
 
@@ -180,6 +164,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setIsModalReviewReadOpen(true)
   },[])
 
+
+
   const avgStars = useMemo (()=>{
     return Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
   },[getReviewsState.data?.data.placeAvgStar])
@@ -188,7 +174,12 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     console.log("avgStars: ", avgStars); // TODO: remove 
   },[avgStars])
 
-  
+  const myReview = useMemo(()=>{
+    const mySaid = authData?.said
+    if (!mySaid) return null 
+    const newMyReview = (getReviewsState.data?.data.reviewsResponseDtoList || []).find(item => item.said === mySaid)
+    return newMyReview ? newMyReview : null
+  },[authData?.said, getReviewsState.data?.data.reviewsResponseDtoList])
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
@@ -245,11 +236,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       <span>{"전체 평점"}</span>
                       <span>{`${avgStars}/5`}</span>
                       <Rating ratingValue={1.5} size={32} readonly/>
-                      <PeopleImageCollectionDiv>
-                        <PeopleImage/>
-                        <PeopleImage/>
-                        <PeopleImage/>
-                      </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
                       {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(
