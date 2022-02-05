@@ -1,6 +1,6 @@
 import { Review, StoreReivewApiResponseData } from "../..";
 
 export type GetReviewsData = StoreReivewApiResponseData<{
-  reviewsResponseDtoList: Review[],
+  reviewsResponseDtoList: Review[]
   placeAvgStar: number
 }>

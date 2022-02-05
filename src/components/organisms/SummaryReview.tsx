@@ -96,8 +96,8 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
   },[onClick])
 
   const updatedAtText = useMemo(()=>{
-    return dayjs(data.updated_at).format("YYYY-M-D") 
-  },[data.updated_at])
+    return dayjs(data.updatedAt).format("YYYY-M-D") 
+  },[data.updatedAt])
 
   const additionalImageCount = useMemo(()=>{
     if (false) { // TODO: replace it by data.images

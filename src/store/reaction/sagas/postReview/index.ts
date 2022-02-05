@@ -25,7 +25,7 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
         placeId: payload.placeId,
         content: payload.content,
         stars: payload.stars,
-        imgUrl: payload.imgFileList,
+        iimgFileList: payload.imgFileList,
       }
     );
 

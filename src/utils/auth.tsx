@@ -10,13 +10,13 @@ export const AuthProvider: React.FunctionComponent = ({ children }) =>{
     const token = localStorage.getItem("accessToken")
     if (token){
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      dispatch(
-        authStore.return__AUTH({
-          //토큰 해제 필요
-          authority: "USER_ROLE",
-          nickname: "TEST",
-        })
-      );
+      if (token){
+        dispatch(
+          authStore.return__AUTHENTICATE({
+            token
+          })
+        );
+      }
     }
   },[dispatch])
 

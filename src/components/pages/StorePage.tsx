@@ -187,6 +187,9 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   useEffect(()=>{
     console.log("avgStars: ", avgStars); // TODO: remove 
   },[avgStars])
+
+  
+
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>

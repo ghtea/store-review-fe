@@ -1,16 +1,14 @@
 
 export type Review = {
-  id: number
-  // TODO: add name of author
-  suid: string
+  reviewId: number
   said: string
   userId: string
   stars: number
   content: string
-  created_at: Date
-  updated_at: Date
+  createdAt: Date
+  updatedAt: Date
   imgUrl: string[]
-  place: string
+  isDelete: number
 }
 
 export type Comment = {

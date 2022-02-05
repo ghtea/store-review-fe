@@ -155,13 +155,13 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
           localStorage.setItem("accessToken", token);
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           alert("로그인에 성공하였습니다.");
-          dispatch(
-            authStore.return__AUTH({
-              //토큰 해제 필요
-              authority: "USER_ROLE",
-              nickname: "TEST",
-            })
-          );
+          if (token){
+            dispatch(
+              authStore.return__AUTHENTICATE({
+                token
+              })
+            );
+          }
           navigate("/");
         })
         .catch((error) => {
