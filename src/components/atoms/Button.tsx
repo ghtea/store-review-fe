@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 export type ButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
-  status?: "primary" | "neutral";
+  status?: "primary" | "neutral" | "error";
   shape?: "rounded" | "custom"
 }
 
@@ -10,6 +10,10 @@ const StyledButton = styled.button<ButtonProps>`
 
   ${props => props.status === "primary" && css`
     background-color: ${props.theme.colors.primary};
+    color: ${props.theme.colors.textAlternative};
+  `}
+  ${props => props.status === "error" && css`
+    background-color: ${props.theme.colors.error};
     color: ${props.theme.colors.textAlternative};
   `}
   ${props => props.status === "neutral" && css`

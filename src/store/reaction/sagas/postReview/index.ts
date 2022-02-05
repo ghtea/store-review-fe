@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
+import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PostReviewData } from './types';
@@ -18,16 +19,37 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
   );
 
   try {
+    const formData = new FormData();
+    const keyValue = {
+      placeId: payload.placeId,
+      content: payload.content,
+      stars: payload.stars
+    }
+    formData.append("key", JSON.stringify(keyValue));
+
+    payload.imgFileList.forEach(item => {
+      formData.append("imgFileList", item);
+    })
+
     const response: AxiosResponse<PostReviewData> = yield call(
       axios.post,
       `${process.env.REACT_APP_BACKEND_URL}/review`,
+      formData,
       {
-        placeId: payload.placeId,
-        content: payload.content,
-        stars: payload.stars,
-        iimgFileList: payload.imgFileList,
+        headers: { "Content-Type": "multipart/form-data" }
       }
     );
+    // const response: AxiosResponse<PostReviewData> = yield call(
+    //   axios.post,
+    //   `${process.env.REACT_APP_BACKEND_URL}/review`,
+    //   {
+    //     placeId: payload.placeId,
+    //     content: payload.content,
+    //     stars: payload.stars,
+    //     iimgFileList: payload.imgFileList,
+    //   }
+    // );
+    console.log("response: ", response); // TODO: remove
 
     yield put(
       actions.return__REPLACE({

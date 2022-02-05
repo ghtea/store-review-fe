@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
+import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PutCommentData } from './types';
@@ -22,7 +23,7 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
       axios.put,
       `${process.env.REACT_APP_BACKEND_URL}/comment`,
       {
-        ...(payload.content ? { content: payload.content } : {}),
+        ...(payload.content ? { content: encode(payload.content) } : {}),
       }
     );
 

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
-
+import { encode } from 'js-base64';
 import * as actions from '../../actions';
 import { PostCommentData } from './types';
 
@@ -23,7 +23,7 @@ export function* postComment(action: actions.POST_COMMENT_Instance) {
       `${process.env.REACT_APP_BACKEND_URL}/comment`,
       {
         reviewId: payload.reviewId,
-        content: payload.content
+        content: encode(payload.content)
       }
     );
 

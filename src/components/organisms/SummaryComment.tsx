@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { decode } from 'js-base64';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Comment } from '../../store/reaction';
@@ -49,13 +50,17 @@ export const SummaryComment:React.FunctionComponent<SummaryCommentProps> = ({
     return dayjs(data.updatedAt).format("YYYY-M-D") 
   },[data.updatedAt])
 
+  const content = useMemo(()=>{
+    return decode(data.content)
+  }, [data.content])
+
   return (
     <SummaryCommentDiv onClick={handleClick}>
       <CommentMetaInfoDiv>
         <CommentAuthorSpan>{data.said/*TODO: replace by name of auther*/}</CommentAuthorSpan>
         <CommentCreatedAtSpan>{updatedAtText}</CommentCreatedAtSpan>
       </CommentMetaInfoDiv>             
-      <CommentParagraph>{data.content}</CommentParagraph>
+      <CommentParagraph>{content}</CommentParagraph>
     </SummaryCommentDiv>
   )
 }

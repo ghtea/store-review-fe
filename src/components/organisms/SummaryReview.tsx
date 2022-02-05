@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
+import { decode } from 'js-base64';
 
 export type SummaryReviewProps = {
   onClick?: () => void
@@ -106,7 +107,11 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
     else {
       return (data.imgUrl.length - 1) // TODO: replace it by data.images
     }
-  },[])
+  },[data.imgUrl.length])
+
+  const content = useMemo(()=>{
+    return decode(data.content)
+  }, [data.content])
 
   return (
     <SummaryReviewDiv onClick={handleClick}>
@@ -120,7 +125,7 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
 													
       <BottomDiv>
         <BottomRightDiv>
-          <ReviewParagraph>{data.content}</ReviewParagraph>
+          <ReviewParagraph>{content}</ReviewParagraph>
           <CommentSpan> 6 comments {/* TODO: data.commentIds */}</CommentSpan>
         </BottomRightDiv>
 

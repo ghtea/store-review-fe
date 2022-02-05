@@ -93,7 +93,7 @@ type POST_REVIEW__Payload = {
   placeId: string
   content: string
   stars: number
-  imgFileList: string[]
+  imgFileList: File[]
 };
 export const return__POST_REVIEW = (payload: POST_REVIEW__Payload) => {
   return {
@@ -108,7 +108,8 @@ type PUT_REVIEW__Payload = {
   reviewId: number
   content?: string
   stars?: number
-  imgFileList?: string[]
+  imgFileList?: File[]
+  imgUrl?: string[]
 };
 export const return__PUT_REVIEW = (payload: PUT_REVIEW__Payload) => {
   return {

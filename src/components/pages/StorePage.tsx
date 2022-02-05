@@ -115,7 +115,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const [searchParams] = useSearchParams();
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
   const getReviewsState = useSelector((state: RootState) => state.reaction.getReviews);
-  const authData = useSelector((state: RootState) => state.auth.data);
+  const authStore = useSelector((state: RootState) => state.auth);
 
   useEffect(()=>{
     console.log("getReviewsState: ", getReviewsState); // TODO: remove 
@@ -149,8 +149,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   useEffect(()=>{
     if (!placeId ) return
+    if (!authStore.status.authenticated) return
+
     getReviewData(placeId)
-  },[getReviewData, placeId])
+  },[authStore.status.authenticated, getReviewData, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
@@ -164,22 +166,16 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setIsModalReviewReadOpen(true)
   },[])
 
-
-
   const avgStars = useMemo (()=>{
     return Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
   },[getReviewsState.data?.data.placeAvgStar])
 
-  useEffect(()=>{
-    console.log("avgStars: ", avgStars); // TODO: remove 
-  },[avgStars])
-
   const myReview = useMemo(()=>{
-    const mySaid = authData?.said
-    if (!mySaid) return null 
+    const mySaid = authStore.data?.said
+    if (!mySaid) return undefined 
     const newMyReview = (getReviewsState.data?.data.reviewsResponseDtoList || []).find(item => item.said === mySaid)
-    return newMyReview ? newMyReview : null
-  },[authData?.said, getReviewsState.data?.data.reviewsResponseDtoList])
+    return newMyReview ? newMyReview : undefined
+  },[authStore.data?.said, getReviewsState.data?.data.reviewsResponseDtoList])
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
@@ -220,7 +216,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </ReviewUpsertButton>
                     </ReviewGroupContentDiv>
                   )}
-                  {true && (
+                  {!myReview && (
                     <ReviewUpsertButton 
                       status={"primary"}
                       onClick={handleReviewCreateButton}
@@ -253,7 +249,12 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           )}
         </MainDiv>
       </div>
-      <ModalReviewUpsert placeId={placeId} isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
+      <ModalReviewUpsert 
+        placeId={placeId} 
+        isOpen={isModalReviewUpsertOpen} 
+        setIsOpen={setIsModalReviewUpsertOpen}
+        data={myReview}
+      />
       {/* <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={modalReadData}/> */}
     </TemplateBasic>
   )

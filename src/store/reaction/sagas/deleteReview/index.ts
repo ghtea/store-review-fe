@@ -20,7 +20,7 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
   try {
     const response: AxiosResponse<DeleteReviewData> = yield call(
       axios.delete,
-      `${process.env.REACT_APP_BACKEND_URL}/review/${payload.reviewId}`
+      `${process.env.REACT_APP_BACKEND_URL}/reviews/${payload.reviewId}`
     );
 
     yield put(

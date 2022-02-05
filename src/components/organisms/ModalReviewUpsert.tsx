@@ -8,6 +8,7 @@ import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
+import { decode } from 'js-base64';
 
 export type ModalReviewUpsertProps = ModalProps & {
   data?: Review
@@ -63,17 +64,34 @@ const ImageUploadDiv = styled.div`
   }
 `
 
+const DeleteButtonContainerDiv = styled.div`
+  margin-top: 16px;
+`
+
 export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> = ({
   data,
   isOpen,
   setIsOpen,
   placeId,
 }) => {
+
+  useEffect(()=>{
+    console.log("data: ", data); // TODO: remove 
+  },[data])
   const dispatch = useDispatch()
   const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
   const [draftImages, setDraftImages] = useState<string[]>([])
+  const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
+
+  useEffect(()=>{
+    if (data){
+      setDraftRating(data.stars)
+      setDraftReview(decode(data.content))
+      setDraftImages(data.imgUrl)
+    }
+  },[data])
 
   const handleClearButtonClick = useCallback((index: number)=>{
     const newImages = [...draftImages]
@@ -83,8 +101,8 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
     const files = event.currentTarget.files
-    const theFile = files?.[0];
-    if (theFile){
+    const file = files?.[0];
+    if (file){
       const reader = new FileReader();
       reader.onloadend = (readerEvent) => {
         const result = readerEvent?.target?.result;
@@ -92,11 +110,13 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
           setDraftImages(prev => [...prev, result])
         }
       };
-      reader.readAsDataURL(theFile);
+      setDraftImageFiles(prev => [...prev, file])
+      reader.readAsDataURL(file);
     }
   },[]);
 
   const handleRatingClick = useCallback((value: number) => {
+    console.log("value: ", value); // TODO: remove
     setDraftRating(value)
   },[])
 
@@ -109,19 +129,37 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   const handleConfirmClick = useCallback(()=>{
-    dispatch(reactionStore.return__POST_REVIEW({
-      placeId,
-      content: draftReview,
-      stars: draftRating,
-      imgFileList: draftImages,
-    }))
-  },[dispatch, draftImages, draftRating, draftReview, placeId])
+    if (data){
+      dispatch(reactionStore.return__PUT_REVIEW({
+        reviewId: data.reviewId,
+        content: draftReview,
+        stars: draftRating,
+        imgFileList: draftImageFiles,
+      }))
+    }
+    else {
+      dispatch(reactionStore.return__POST_REVIEW({
+        placeId,
+        content: draftReview,
+        stars: draftRating,
+        imgFileList: draftImageFiles,
+      }))
+    }
+  },[data, dispatch, draftImageFiles, draftRating, draftReview, placeId])
 
   useEffect(()=>{
     if (postReviewState.status.ready){
       setIsOpen(false)
     }
   },[postReviewState.status.ready, setIsOpen])
+
+  const handleDelete = useCallback(()=>{
+    if (!data?.reviewId) return;
+
+    dispatch(reactionStore.return__DELETE_REVIEW({
+      reviewId: data.reviewId,
+    }))
+  },[data?.reviewId, dispatch])
 
   return (
     <Modal
@@ -152,6 +190,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
           Upload Photo 
         </label>
       </ImageUploadDiv>
+      <DeleteButtonContainerDiv>
+        {data?.reviewId && (
+          <Button onClick={handleDelete} status="error">{"리뷰 삭제"}</Button>
+        )}
+      </DeleteButtonContainerDiv>
     </Modal>
   )
 }
