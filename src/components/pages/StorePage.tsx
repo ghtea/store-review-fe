@@ -10,7 +10,7 @@ import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
-import { DUMMY_REVIEW, Review } from '../../store/reaction';
+import { Review } from '../../store/reaction';
 
 export type StorePageProps = {
 }
@@ -138,7 +138,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
   // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
-  const [myReview, setMyReview] = useState<Review | undefined>(DUMMY_REVIEW)
+  const [myReview, setMyReview] = useState<Review | undefined>(undefined)
 
   const placeId = useMemo(()=>id ? id : "", [id])
 
@@ -180,6 +180,13 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setIsModalReviewReadOpen(true)
   },[])
 
+  const avgStars = useMemo (()=>{
+    return Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
+  },[getReviewsState.data?.data.placeAvgStar])
+
+  useEffect(()=>{
+    console.log("avgStars: ", avgStars); // TODO: remove 
+  },[avgStars])
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>
@@ -233,8 +240,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                   <ReviewGroupContentDiv>
                     <ReviewPeopleReviewsSummaryDiv>
                       <span>{"전체 평점"}</span>
-                      <span>{"4.3/5"}</span>
-                      <Rating ratingValue={2.5} size={32}/>
+                      <span>{`${avgStars}/5`}</span>
+                      <Rating ratingValue={1.5} size={32} readonly/>
                       <PeopleImageCollectionDiv>
                         <PeopleImage/>
                         <PeopleImage/>
@@ -242,7 +249,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       </PeopleImageCollectionDiv>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
-                      {(getReviewsState.data?.data.reviews || []).map((item, index)=>(
+                      {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(
                         <SummaryReview
                           key={`review-${index}`}
                           data={item}
@@ -258,7 +265,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
         </MainDiv>
       </div>
       <ModalReviewUpsert placeId={placeId} isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
-      <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={DUMMY_REVIEW}/>
+      {/* <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={modalReadData}/> */}
     </TemplateBasic>
   )
 }

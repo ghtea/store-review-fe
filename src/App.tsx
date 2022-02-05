@@ -11,22 +11,26 @@ import { themes } from './styles/theme';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store';
 import { StorePage } from './components/pages/StorePage';
+import { AuthProvider } from './utils/auth';
 
 const App: React.FunctionComponent = () => {
+
   return (
     <ReduxProvider store={store}>
-      <ThemeProvider theme={themes.light}>
-        <GlobalStyle />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MapPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/store/:id" element={<StorePage />} />
-            <Route path="/*" element={<ErrorPage />} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={themes.light}>
+          <GlobalStyle />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MapPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/store/:id" element={<StorePage />} />
+              <Route path="/*" element={<ErrorPage />} />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </AuthProvider>
     </ReduxProvider>
   );
 }

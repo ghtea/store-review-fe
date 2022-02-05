@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { DUMMY_COMMENT, Review } from '../../store/reaction';
+import { Review } from '../../store/reaction';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
@@ -127,7 +127,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
           ))}
         </ImageCollectionDiv>
         <CommentCollectionDiv>
-          {[DUMMY_COMMENT].map((item, index) => (
+          {[].map((item, index) => (
             <SummaryCommentWrapper key={`summary-comment-${index}`}>
               <SummaryComment data={item}/>
             </SummaryCommentWrapper>

@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RootState } from "../../store/reducers";
 import BackButton from "../atoms/BackButton";
-import Private from "../templates/Private";
+import Private from "../atoms/Private";
 import { useDispatch, useSelector } from "react-redux";
 import { authStore } from "../../store";
 

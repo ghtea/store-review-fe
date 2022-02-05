@@ -36,7 +36,7 @@
     "eject": "react-scripts eject",
     "eslint-autofix": "eslint --fix --ext .js,.jsx,.ts,.tsx ./",
     "eslint-check": "eslint --quiet --ext .js,.jsx,.ts,.tsx ./",
-    "typescript-check": "tsc --project ./tsconfig.json"
+    "ts-check": "tsc --project ./tsconfig.json"
   },
   "eslintConfig": {
     "extends": [

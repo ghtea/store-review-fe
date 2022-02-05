@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import styled from 'styled-components';
 import { reactionStore } from '../../store';
 import { Review } from '../../store/reaction';
+import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
@@ -69,6 +70,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   placeId,
 }) => {
   const dispatch = useDispatch()
+  const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
   const [draftImages, setDraftImages] = useState<string[]>([])
@@ -107,17 +109,21 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   const handleConfirmClick = useCallback(()=>{
-    console.log("yo111"); // TODO: remove
     dispatch(reactionStore.return__POST_REVIEW({
       placeId,
       content: draftReview,
       stars: draftRating,
-      imgUrl: draftImages,
+      imgFileList: draftImages,
     }))
   },[dispatch, draftImages, draftRating, draftReview, placeId])
 
+  useEffect(()=>{
+    if (postReviewState.status.ready){
+      setIsOpen(false)
+    }
+  },[postReviewState.status.ready, setIsOpen])
+
   return (
-    
     <Modal
       isOpen={isOpen}
       setIsOpen={setIsOpen}

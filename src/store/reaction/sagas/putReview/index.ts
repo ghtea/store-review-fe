@@ -24,7 +24,7 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
       {
         ...(payload.content ? { content: payload.content } : {}),
         ...(payload.stars ? { stars: payload.stars } : {}),
-        ...(payload.imgUrl ? { imgUrl: payload.imgUrl } : {}),
+        ...(payload.imgFileList ? { imgFileList: payload.imgFileList } : {}),
       }
     );
 

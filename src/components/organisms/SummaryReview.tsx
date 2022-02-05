@@ -104,16 +104,16 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
       return 0
     }
     else {
-      return ([1,3].length - 1) // TODO: replace it by data.images
+      return (data.imgUrl.length - 1) // TODO: replace it by data.images
     }
   },[])
 
   return (
     <SummaryReviewDiv onClick={handleClick}>
       <TopDiv>
-        <TopNameSpan>{data.said}</TopNameSpan>
+        <TopNameSpan>{data.userId}</TopNameSpan>
         <TopInfoDiv>
-          <Rating ratingValue={data.stars} size={24}/>
+          <Rating ratingValue={data.stars} size={24} readonly/>
           <TopInfoDateSpan>{updatedAtText}</TopInfoDateSpan>
         </TopInfoDiv>
       </TopDiv>
@@ -126,8 +126,8 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
 
         <BottomLeftDiv>
           <ImageDiv>
-            {["ddd"][0] && (
-              <Image src={["ddd"][0]} />
+            {data.imgUrl[0] && (
+              <Image src={data.imgUrl[0]} />
             )}
             {additionalImageCount > 0 && (
               <ImagePlusDiv>{`+${additionalImageCount}`}</ImagePlusDiv>

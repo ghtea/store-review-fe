@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Comment, DUMMY_REVIEW } from '../../store/reaction';
+import { Comment } from '../../store/reaction';
 import { Modal, ModalProps } from '../molecules/Modal';
 import { SummaryReview } from './SummaryReview';
 
@@ -61,7 +61,7 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       onClickConfirm={handleConfirmClick}
     >
       <SummaryReviewWrapper>
-        <SummaryReview data={DUMMY_REVIEW}/>
+        {/* <SummaryReview data={}/> */}
       </SummaryReviewWrapper>
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
