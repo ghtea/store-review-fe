@@ -120,9 +120,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const authStore = useSelector((state: RootState) => state.auth);
   const [readingReviewData, setReadingReviewData] = useState<Review | undefined>(undefined)
 
-  useEffect(()=>{
-    console.log("getReviewsState: ", getReviewsState); // TODO: remove 
-  },[getReviewsState])
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
   // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
@@ -235,7 +232,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                     <ReviewPeopleReviewsSummaryDiv>
                       <span>{"전체 평점"}</span>
                       <span>{`${avgStars}/5`}</span>
-                      <Rating ratingValue={1.5} size={32} readonly/>
+                      <Rating ratingValue={avgStars} size={32} readonly/>
                     </ReviewPeopleReviewsSummaryDiv>
                     <ReviewPeopleReviewsListDiv>
                       {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(

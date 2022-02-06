@@ -1,12 +1,16 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { reactionStore } from '../../store';
 import { Comment } from '../../store/reaction';
 import { Modal, ModalProps } from '../molecules/Modal';
-import { SummaryReview } from './SummaryReview';
+import { decode } from 'js-base64';
+import { RootState } from '../../store/reducers';
 
 export type ModalCommentUpsertProps = ModalProps & {
   data?: Comment
+  reviewId: number
 }
 
 const SummaryReviewWrapper = styled.div`
@@ -36,20 +40,51 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
   data,
   isOpen,
   setIsOpen,
-}) => {
+  reviewId,
+}) => {  
+  const dispatch = useDispatch()
+  const postCommentState = useSelector((state: RootState) => state.reaction.postComment);
+
   const [draftComment, setDraftComment] = useState("")
 
   const updatedAtText = useMemo(()=>{
     return dayjs().format("YYYY-M-D") 
   },[])
 
+  useEffect(()=>{
+    if (data){
+      setDraftComment(decode(data.content))
+    }
+    else {
+      setDraftComment("")
+    }
+  },[data])
+
   const handleTextAreaChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback((event)=>{
     setDraftComment(event.currentTarget.value || "")
   },[])
 
   const handleConfirmClick = useCallback(()=>{
-    // use draftComment 
-  },[])
+    if (data){
+      dispatch(reactionStore.return__PUT_COMMENT({
+        commentId: data.commentId,
+        content: draftComment,
+      }))
+    }
+    else {
+      dispatch(reactionStore.return__POST_COMMENT({
+        reviewId: reviewId,
+        content: draftComment,
+      }))
+    }
+  },[data, dispatch, draftComment, reviewId])
+
+  useEffect(()=>{
+    if (postCommentState.status.ready){
+      setIsOpen(false)
+    }
+  },[postCommentState.status.ready, setIsOpen])
+
 
   return (
     <Modal

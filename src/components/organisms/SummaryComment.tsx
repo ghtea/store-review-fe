@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { decode } from 'js-base64';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Comment } from '../../store/reaction';
 
@@ -13,6 +13,7 @@ const SummaryCommentDiv = styled.div`
 	width: 100%;
 	height: 80px;
 	padding: 16px;
+  cursor: pointer;
 
 	&:nth-child(n+2){
 		border-width: 1px;
@@ -57,7 +58,7 @@ export const SummaryComment:React.FunctionComponent<SummaryCommentProps> = ({
   return (
     <SummaryCommentDiv onClick={handleClick}>
       <CommentMetaInfoDiv>
-        <CommentAuthorSpan>{data.said/*TODO: replace by name of auther*/}</CommentAuthorSpan>
+        <CommentAuthorSpan>{data.userId}</CommentAuthorSpan>
         <CommentCreatedAtSpan>{updatedAtText}</CommentCreatedAtSpan>
       </CommentMetaInfoDiv>             
       <CommentParagraph>{content}</CommentParagraph>

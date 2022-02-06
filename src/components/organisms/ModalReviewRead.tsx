@@ -9,6 +9,9 @@ import { SummaryComment } from './SummaryComment';
 import { decode } from 'js-base64';
 import { RootState } from '../../store/reducers';
 import { useSelector } from 'react-redux';
+import { Button } from '../atoms/Button';
+import { ModalCommentRead } from './ModalCommentRead';
+import { Comment } from '../../store/reaction';
 
 export type ModalReviewReadProps = ModalProps & {
   data: Review,
@@ -78,6 +81,9 @@ const SummaryCommentWrapper = styled.div`
     border-color: #d8d8d8;
   }  
 `
+const CommentUpsertButton = styled(Button)`
+	margin-top: 8px;
+`
 
 export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   isOpen,
@@ -85,7 +91,11 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   data,
 }) => {
   const authStore = useSelector((state: RootState) => state.auth);
+
   const [isOpenModalCommentUpsert, setIsOpenModalCommentUpsert] = useState(false)
+  const [upsertingCommentData, setUpsertingCommentData] = useState<Comment | undefined>(undefined)
+  const [readingCommentData, setReadingCommentData] = useState<Comment | undefined>(undefined)
+  const [isModalCommentReadOpen , setIsModalCommentReadOpen] = useState(false)
 
   const isAuthor = useMemo(()=>{
     return authStore.data?.said && authStore.data?.said === data.said
@@ -98,6 +108,26 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   const handleConfirmClick = useCallback(()=>{
 
   },[])
+
+  const hanldeSummaryCommentClick = useCallback((commentData)=>{
+    setIsModalCommentReadOpen(true)
+    setReadingCommentData(commentData)
+  },[])
+
+  const handleCommentCreateClick = useCallback(()=>{
+    setIsOpenModalCommentUpsert(true)
+    setUpsertingCommentData(undefined)
+  },[])
+
+  // const handleCommentUpdateClick = useCallback((commentData: Comment)=>{
+  //   setIsOpenModalCommentUpsert(true)
+  //   setUpsertingCommentData(commentData)
+  // },[])
+
+  const onClickUpdateCommentInModalCommentRead = useCallback(()=>{
+    setIsOpenModalCommentUpsert(true)
+    setUpsertingCommentData(readingCommentData)
+  },[readingCommentData])
 
   const content = useMemo(()=>{
     return decode(data.content)
@@ -131,12 +161,34 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         <CommentCollectionDiv>
           {[].map((item, index) => (
             <SummaryCommentWrapper key={`summary-comment-${index}`}>
-              <SummaryComment data={item}/>
+              <SummaryComment 
+                data={item} 
+                onClick={()=>hanldeSummaryCommentClick(item)}
+              />
             </SummaryCommentWrapper>
           ))}
         </CommentCollectionDiv>
+        <CommentUpsertButton 
+          status={"primary"}
+          onClick={handleCommentCreateClick}
+        >
+          코멘트 작성
+        </CommentUpsertButton>
       </Modal>
-      <ModalCommentUpsert isOpen={isOpenModalCommentUpsert} setIsOpen={setIsOpenModalCommentUpsert}/>
+      <ModalCommentUpsert 
+        isOpen={isOpenModalCommentUpsert} 
+        setIsOpen={setIsOpenModalCommentUpsert}
+        data={upsertingCommentData}
+        reviewId={data.reviewId}
+      />
+      {readingCommentData && (
+        <ModalCommentRead 
+          isOpen={isModalCommentReadOpen} 
+          setIsOpen={setIsModalCommentReadOpen} 
+          data={readingCommentData}
+          onClickConfirm={onClickUpdateCommentInModalCommentRead} // onClickeUpdateComment
+        />
+      )}
     </>
   )
 }
