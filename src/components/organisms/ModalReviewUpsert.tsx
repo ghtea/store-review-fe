@@ -74,10 +74,6 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   setIsOpen,
   placeId,
 }) => {
-
-  useEffect(()=>{
-    console.log("data: ", data); // TODO: remove 
-  },[data])
   const dispatch = useDispatch()
   const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
   const [draftRating, setDraftRating] = useState(0)
@@ -90,6 +86,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
       setDraftImages(data.imgUrl)
+    }
+    else {
+      setDraftRating(0)
+      setDraftReview("")
+      setDraftImages([])
     }
   },[data])
 

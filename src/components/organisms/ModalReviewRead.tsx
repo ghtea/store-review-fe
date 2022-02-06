@@ -2,14 +2,16 @@ import dayjs from 'dayjs';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
-import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
 import { ModalCommentUpsert } from './ModalCommentUpsert';
 import { SummaryComment } from './SummaryComment';
+import { decode } from 'js-base64';
+import { RootState } from '../../store/reducers';
+import { useSelector } from 'react-redux';
 
 export type ModalReviewReadProps = ModalProps & {
-  data: Review
+  data: Review,
 }
 
 const ReviewMetaInfoDiv = styled.div`
@@ -82,15 +84,12 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   setIsOpen,
   data,
 }) => {
-  const [images, setImages] = useState<string[]>([])
+  const authStore = useSelector((state: RootState) => state.auth);
   const [isOpenModalCommentUpsert, setIsOpenModalCommentUpsert] = useState(false)
 
-  const handleClearButtonClick = useCallback((index: number)=>{
-    const newImages = [...images]
-    newImages.splice(index, 1)
-    setImages(newImages)
-  }, [images])
-
+  const isAuthor = useMemo(()=>{
+    return authStore.data?.said && authStore.data?.said === data.said
+  },[authStore.data?.said, data.said])
 
   const updatedAtText = useMemo(()=>{
     return dayjs().format("YYYY-M-D") 
@@ -100,29 +99,32 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
 
   },[])
 
+  const content = useMemo(()=>{
+    return decode(data.content)
+  }, [data.content])
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         title={"리뷰"}
-        confirmTitle={"수정하기"}
+        confirmTitle={isAuthor ? "수정하기" : ""}
         onClickConfirm={handleConfirmClick}
       >
         <ReviewMetaInfoDiv>
-          <ReviewAuthorSpan>author</ReviewAuthorSpan>
+          <ReviewAuthorSpan>{data.userId}</ReviewAuthorSpan>
           <ReviewTimeSpan>{updatedAtText}</ReviewTimeSpan>
         </ReviewMetaInfoDiv>          
               
         <RatingWrapper>
-          <Rating readonly={true} ratingValue={0} size={32}/>
+          <Rating readonly={true} ratingValue={data.stars} size={32}/>
         </RatingWrapper>
-        <ReviewParagraph/>
+        <ReviewParagraph>{content}</ReviewParagraph>
         <ImageCollectionDiv>
-          {images.map((item, index) => (
+          {data.imgUrl.map((item, index) => (
             <ImageWrapper key={`image-${index}`}>
               <ReviewImage src={item} ></ReviewImage>
-              <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
             </ImageWrapper>
           ))}
         </ImageCollectionDiv>

@@ -9,6 +9,8 @@ import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
+import { Review } from '../../store/reaction';
+import { ModalReviewRead } from '../organisms/ModalReviewRead';
 
 export type StorePageProps = {
 }
@@ -116,6 +118,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
   const getReviewsState = useSelector((state: RootState) => state.reaction.getReviews);
   const authStore = useSelector((state: RootState) => state.auth);
+  const [readingReviewData, setReadingReviewData] = useState<Review | undefined>(undefined)
 
   useEffect(()=>{
     console.log("getReviewsState: ", getReviewsState); // TODO: remove 
@@ -162,8 +165,9 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setIsModalReviewUpsertOpen(true)
   },[])
 
-  const hanldeSummaryReviewClick = useCallback(()=>{
+  const hanldeSummaryReviewClick = useCallback((reviewData)=>{
     setIsModalReviewReadOpen(true)
+    setReadingReviewData(reviewData)
   },[])
 
   const avgStars = useMemo (()=>{
@@ -238,7 +242,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                         <SummaryReview
                           key={`review-${index}`}
                           data={item}
-                          onClick={hanldeSummaryReviewClick}
+                          onClick={()=>hanldeSummaryReviewClick(item)}
                         />
                       ))}
                     </ReviewPeopleReviewsListDiv>
@@ -255,7 +259,13 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
         setIsOpen={setIsModalReviewUpsertOpen}
         data={myReview}
       />
-      {/* <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={modalReadData}/> */}
+      {readingReviewData && (
+        <ModalReviewRead 
+          isOpen={isModalReviewReadOpen} 
+          setIsOpen={setIsModalReviewReadOpen} 
+          data={readingReviewData}
+        />
+      )}
     </TemplateBasic>
   )
 }

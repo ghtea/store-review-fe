@@ -15,6 +15,7 @@ const SummaryReviewDiv = styled.div`
 	max-width: 640px;
 	height: 200px;
 	padding: 16px;
+  cursor: pointer;
 
 	&:nth-child(n+2){
 		border-width: 1px;
