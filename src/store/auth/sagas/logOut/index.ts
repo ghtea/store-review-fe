@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { put } from 'redux-saga/effects';
 
 import * as actions from '../../actions';
@@ -17,4 +18,6 @@ export function* logOut(action: actions.LOG_OUT__Instance) {
     }),
   );
   
+  localStorage.removeItem("accessToken")
+  axios.defaults.headers.common["Authorization"] = ""
 }

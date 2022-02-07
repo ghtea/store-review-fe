@@ -10,13 +10,15 @@ export const AuthProvider: React.FunctionComponent = ({ children }) =>{
     const token = localStorage.getItem("accessToken")
     if (token){
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      if (token){
-        dispatch(
-          authStore.return__AUTHENTICATE({
-            token
-          })
-        );
-      }
+      dispatch(
+        authStore.return__AUTHENTICATE({
+          token
+        })
+      );
+    }
+    else {
+      localStorage.removeItem("accessToken")
+      axios.defaults.headers.common["Authorization"] = ""
     }
   },[dispatch])
 
