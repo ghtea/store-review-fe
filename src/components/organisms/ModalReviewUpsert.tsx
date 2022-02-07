@@ -15,7 +15,6 @@ export type ModalReviewUpsertProps = ModalProps & {
   placeId: string
 }
 
-
 const UpdatedAtSpan = styled.span`
   color: ${props => props.theme.colors.textHint};
   font-size: 1.125rem;
@@ -76,29 +75,31 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
 }) => {
   const dispatch = useDispatch()
   const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
+  const deleteReviewState = useSelector((state: RootState) => state.reaction.deleteReview);
+
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
-  const [draftImages, setDraftImages] = useState<string[]>([])
+  const [imgUrl, setImgUrl] = useState<string[]>([])
   const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
 
   useEffect(()=>{
     if (data){
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
-      setDraftImages(data.imgUrl)
+      setImgUrl(data.imgUrl.map(decode))
     }
     else {
       setDraftRating(0)
       setDraftReview("")
-      setDraftImages([])
+      setImgUrl([])
     }
   },[data])
 
   const handleClearButtonClick = useCallback((index: number)=>{
-    const newImages = [...draftImages]
+    const newImages = [...imgUrl]
     newImages.splice(index, 1)
-    setDraftImages(newImages)
-  }, [draftImages])
+    setImgUrl(newImages)
+  }, [imgUrl])
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
     const files = event.currentTarget.files
@@ -108,7 +109,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       reader.onloadend = (readerEvent) => {
         const result = readerEvent?.target?.result;
         if (typeof result === "string"){
-          setDraftImages(prev => [...prev, result])
+          setImgUrl(prev => [...prev, result])
         }
       };
       setDraftImageFiles(prev => [...prev, file])
@@ -117,7 +118,6 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[]);
 
   const handleRatingClick = useCallback((value: number) => {
-    console.log("value: ", value); // TODO: remove
     setDraftRating(value)
   },[])
 
@@ -154,6 +154,12 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }
   },[postReviewState.status.ready, setIsOpen])
 
+  useEffect(()=>{
+    if (deleteReviewState.status.ready){
+      setIsOpen(false)
+    }
+  },[deleteReviewState.status.ready, setIsOpen])
+
   const handleDelete = useCallback(()=>{
     if (!data?.reviewId) return;
 
@@ -176,7 +182,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       </RatingWrapper>
       <ReviewTextarea onChange={handleReviewTextareaChange} value={draftReview}/>
       <ImageCollectionDiv>
-        {draftImages.map((item, index) => (
+        {imgUrl.map((item, index) => (
           <ImageWrapper key={`image-${index}`}>
             <ReviewImage src={item} ></ReviewImage>
             <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>

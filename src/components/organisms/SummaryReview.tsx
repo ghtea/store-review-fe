@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
@@ -114,12 +114,19 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
     return decode(data.content)
   }, [data.content])
 
+  const imgUrl = useMemo(()=>{
+    return data.imgUrl.map(decode)
+  }, [data.imgUrl])
+
+  useEffect(()=>{
+    console.log("data: ", data); // TODO: remove 
+  },[data])
   return (
     <SummaryReviewDiv onClick={handleClick}>
       <TopDiv>
         <TopNameSpan>{data.userId}</TopNameSpan>
         <TopInfoDiv>
-          <Rating ratingValue={data.stars} size={24} readonly/>
+          <Rating ratingValue={4} size={24} readonly/>
           <TopInfoDateSpan>{updatedAtText}</TopInfoDateSpan>
         </TopInfoDiv>
       </TopDiv>
@@ -127,13 +134,13 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
       <BottomDiv>
         <BottomRightDiv>
           <ReviewParagraph>{content}</ReviewParagraph>
-          <CommentSpan> 6 comments {/* TODO: data.commentIds */}</CommentSpan>
+          <CommentSpan>{`${data.commentNum} comments`}</CommentSpan>
         </BottomRightDiv>
 
         <BottomLeftDiv>
           <ImageDiv>
-            {data.imgUrl[0] && (
-              <Image src={data.imgUrl[0]} />
+            {imgUrl[0] && (
+              <Image src={imgUrl[0]} />
             )}
             {additionalImageCount > 0 && (
               <ImagePlusDiv>{`+${additionalImageCount}`}</ImagePlusDiv>

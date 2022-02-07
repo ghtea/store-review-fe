@@ -9,6 +9,7 @@ export type Review = {
   updatedAt: Date
   imgUrl: string[]
   isDelete: number
+  commentNum: number
 }
 
 export type Comment = {

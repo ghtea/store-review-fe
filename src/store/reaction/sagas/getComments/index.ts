@@ -39,6 +39,13 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
         },
       }),
     );
+
+    yield put(
+      actions.return__REPLACE({
+        keyList: ["getComments", "reviewId"],
+        replacement: payload.reviewId
+      })
+    )
   } catch (error) {
     console.log(error);
 

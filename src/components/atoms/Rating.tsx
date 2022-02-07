@@ -8,6 +8,7 @@ export type RatingProps = React.ComponentProps<typeof OriginalRating> & {
 
 export const Rating:React.FunctionComponent<RatingProps> = ({
   onClick,
+  ratingValue,
   ...rest
 }) => {
   const handleClick = useCallback((value: number)=>{
@@ -18,6 +19,7 @@ export const Rating:React.FunctionComponent<RatingProps> = ({
     <OriginalRating 
       allowHalfIcon={false}
       onClick={handleClick}
+      ratingValue={ratingValue * (100/5)}
       {...rest}
     />
   )

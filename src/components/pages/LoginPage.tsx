@@ -138,7 +138,7 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
     //if (isSubmit.userId && isSubmit.password) {
     if (true) {
       axios({
-        url: "http://person.jjhserverworld.pe.kr:18080/authenticate",
+        url: `${process.env.REACT_APP_BACKEND_URL}/authenticate`,
         method: "POST",
         data: {
           //test@review.com

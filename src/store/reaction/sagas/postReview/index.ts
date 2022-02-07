@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PostReviewData } from './types';
+import { RootState } from '../../../reducers';
 
 export function* postReview(action: actions.POST_REVIEW_Instance) {
   const payload = action.payload
@@ -22,7 +23,7 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
     const formData = new FormData();
     const keyValue = {
       placeId: payload.placeId,
-      content: payload.content,
+      content: encode(payload.content),
       stars: payload.stars
     }
     formData.append("key", JSON.stringify(keyValue));
@@ -67,6 +68,19 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
         },
       }),
     );
+
+    // refetch reviews
+    const getReviewsPlaceId: string | undefined = yield select(
+      (state: RootState) => state.reaction.getReviews.placeId
+    );
+
+    if (getReviewsPlaceId){
+      yield put(
+        actions.return__GET_REVIEWS({
+          placeId: getReviewsPlaceId
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

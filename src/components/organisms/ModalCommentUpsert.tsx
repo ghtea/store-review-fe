@@ -7,6 +7,7 @@ import { Comment } from '../../store/reaction';
 import { Modal, ModalProps } from '../molecules/Modal';
 import { decode } from 'js-base64';
 import { RootState } from '../../store/reducers';
+import { Button } from '../atoms/Button';
 
 export type ModalCommentUpsertProps = ModalProps & {
   data?: Comment
@@ -34,6 +35,10 @@ const CommentTextarea = styled.textarea`
 	border-color: #d0d0d0;
 	border-width: 1px;
 	border-radius: 4px;
+`
+
+const DeleteButtonContainerDiv = styled.div`
+  margin-top: 16px;
 `
 
 export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps> = ({
@@ -85,6 +90,13 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
     }
   },[postCommentState.status.ready, setIsOpen])
 
+  const handleDelete = useCallback(()=>{
+    if (!data?.commentId) return;
+
+    dispatch(reactionStore.return__DELETE_COMMENT({
+      commentId: data.commentId,
+    }))
+  },[data?.commentId, dispatch])
 
   return (
     <Modal
@@ -100,6 +112,11 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       </SummaryReviewWrapper>
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
+      <DeleteButtonContainerDiv>
+        {data?.commentId && (
+          <Button onClick={handleDelete} status="error">{"코멘트 삭제"}</Button>
+        )}
+      </DeleteButtonContainerDiv>
     </Modal>
   )
 }

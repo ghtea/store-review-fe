@@ -11,6 +11,7 @@ import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
 import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
+import { Loading } from '../atoms/Loading';
 
 export type StorePageProps = {
 }
@@ -141,7 +142,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, placeId, searchParams])
 
-  const getReviewData = useCallback(async (id: string)=>{
+  const getReviews = useCallback((id: string)=>{
     dispatch(reactionStore.return__GET_REVIEWS({
       placeId: id,
     }))
@@ -151,8 +152,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     if (!placeId ) return
     if (!authStore.status.authenticated) return
 
-    getReviewData(placeId)
-  },[authStore.status.authenticated, getReviewData, placeId])
+    getReviews(placeId)
+  },[authStore.status.authenticated, getReviews, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
@@ -167,9 +168,16 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setReadingReviewData(reviewData)
   },[])
 
+  const onClickConfirmModalReviewRead = useCallback(()=>{
+    setIsModalReviewUpsertOpen(true)
+    setIsModalReviewReadOpen(false)
+  },[])
+
   const avgStars = useMemo (()=>{
-    return Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
-  },[getReviewsState.data?.data.placeAvgStar])
+    if (getReviewsState.data === undefined) return undefined
+    return Math.round(getReviewsState.data?.data.placeAvgStar * 10)/10
+  },[getReviewsState.data])
+  // Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
 
   const myReview = useMemo(()=>{
     const mySaid = authStore.data?.said
@@ -183,7 +191,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
       <div>
         <MainDiv>
           {!pageStoreState.data && pageStoreState.status.loading && (
-            <div>loading</div>
+            <Loading/>
           )}
           {pageStoreState.data && (
             <ContentDiv>
@@ -207,7 +215,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                   <ReviewGroupHeading>{"내 리뷰"}</ReviewGroupHeading>
                   {myReview && (
                     <ReviewGroupContentDiv>
-                      <Rating ratingValue={myReview.stars} size={24}/>
+                      <Rating ratingValue={myReview.stars} size={24} readonly/>
                       <p>{myReview.content}</p>                     
                       <ReviewUpsertButton 
                         status={"primary"}
@@ -228,22 +236,34 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                 </ReviewMyDiv>
                 <ReviewPeopleDiv>
                   <ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
-                  <ReviewGroupContentDiv>
-                    <ReviewPeopleReviewsSummaryDiv>
-                      <span>{"전체 평점"}</span>
-                      <span>{`${avgStars}/5`}</span>
-                      <Rating ratingValue={avgStars} size={32} readonly/>
-                    </ReviewPeopleReviewsSummaryDiv>
-                    <ReviewPeopleReviewsListDiv>
-                      {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(
-                        <SummaryReview
-                          key={`review-${index}`}
-                          data={item}
-                          onClick={()=>hanldeSummaryReviewClick(item)}
-                        />
-                      ))}
-                    </ReviewPeopleReviewsListDiv>
-                  </ReviewGroupContentDiv>
+                  { getReviewsState.status.loading 
+                    ? <Loading/>
+                    : (
+                      <>
+                        <ReviewGroupContentDiv>
+                          {avgStars === undefined
+                            ? ("리뷰가 없습니다")
+                            : (
+                              <ReviewPeopleReviewsSummaryDiv>
+                                <span>{"전체 평점"}</span>
+                                <span>{`${avgStars}/5`}</span>
+                                <Rating ratingValue={avgStars} size={32} readonly/>
+                              </ReviewPeopleReviewsSummaryDiv>
+                            )
+                          }
+                          <ReviewPeopleReviewsListDiv>
+                            {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(
+                              <SummaryReview
+                                key={`review-${index}`}
+                                data={item}
+                                onClick={()=>hanldeSummaryReviewClick(item)}
+                              />
+                            ))}
+                          </ReviewPeopleReviewsListDiv>
+                        </ReviewGroupContentDiv>
+                      </>
+                    )
+                  }
                 </ReviewPeopleDiv>
               </ReviewInfoDiv>
             </ContentDiv>
@@ -261,6 +281,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           isOpen={isModalReviewReadOpen} 
           setIsOpen={setIsModalReviewReadOpen} 
           data={readingReviewData}
+          onClickConfirm={onClickConfirmModalReviewRead}
         />
       )}
     </TemplateBasic>

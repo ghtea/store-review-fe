@@ -39,6 +39,13 @@ export function* getReviews(action: actions.GET_REVIEWS_Instance) {
         },
       }),
     );
+
+    yield put(
+      actions.return__REPLACE({
+        keyList: ["getReviews", "placeId"],
+        replacement: payload.placeId
+      })
+    )
   } catch (error) {
     console.log(error);
 

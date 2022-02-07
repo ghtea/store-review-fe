@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PutReviewData } from './types';
+import { RootState } from '../../../reducers';
 
 export function* putReview(action: actions.PUT_REVIEW_Instance) {
   const payload = action.payload
@@ -68,6 +69,19 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
         },
       }),
     );
+    
+    // refetch reviews
+    const getReviewsPlaceId: string | undefined = yield select(
+      (state: RootState) => state.reaction.getReviews.placeId
+    );
+
+    if (getReviewsPlaceId){
+      yield put(
+        actions.return__GET_REVIEWS({
+          placeId: getReviewsPlaceId
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

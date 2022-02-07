@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
@@ -8,10 +8,12 @@ import { ModalCommentUpsert } from './ModalCommentUpsert';
 import { SummaryComment } from './SummaryComment';
 import { decode } from 'js-base64';
 import { RootState } from '../../store/reducers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../atoms/Button';
 import { ModalCommentRead } from './ModalCommentRead';
 import { Comment } from '../../store/reaction';
+import { reactionStore } from '../../store';
+import { Loading } from '../atoms/Loading';
 
 export type ModalReviewReadProps = ModalProps & {
   data: Review,
@@ -72,6 +74,8 @@ const CommentCollectionDiv = styled.div`
   padding-right: 8px;
   margin-top: 16px;
   margin-bottom: 16px;
+  max-height: 300px;
+  overflow: auto;
 `
 
 const SummaryCommentWrapper = styled.div`
@@ -89,8 +93,11 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   isOpen,
   setIsOpen,
   data,
+  onClickConfirm
 }) => {
   const authStore = useSelector((state: RootState) => state.auth);
+  const getCommentsState = useSelector((state: RootState) => state.reaction.getComments);
+  const dispatch = useDispatch();
 
   const [isOpenModalCommentUpsert, setIsOpenModalCommentUpsert] = useState(false)
   const [upsertingCommentData, setUpsertingCommentData] = useState<Comment | undefined>(undefined)
@@ -105,9 +112,23 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
     return dayjs().format("YYYY-M-D") 
   },[])
 
-  const handleConfirmClick = useCallback(()=>{
+  const getComments = useCallback((reviewId: number, pageNo: number)=>{
+    dispatch(reactionStore.return__GET_COMMENTS({
+      reviewId: reviewId,
+      pageNo: pageNo,
+    }))
+  },[dispatch])
 
-  },[])
+  useEffect(()=>{
+    if (!data.reviewId ) return
+    if (!authStore.status.authenticated) return
+
+    getComments(data.reviewId, 0)
+  },[authStore.status.authenticated, data.reviewId, getComments])
+
+  const handleConfirmClick = useCallback(()=>{
+    onClickConfirm?.();
+  },[onClickConfirm])
 
   const hanldeSummaryCommentClick = useCallback((commentData)=>{
     setIsModalCommentReadOpen(true)
@@ -119,12 +140,8 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
     setUpsertingCommentData(undefined)
   },[])
 
-  // const handleCommentUpdateClick = useCallback((commentData: Comment)=>{
-  //   setIsOpenModalCommentUpsert(true)
-  //   setUpsertingCommentData(commentData)
-  // },[])
-
   const onClickUpdateCommentInModalCommentRead = useCallback(()=>{
+    setIsModalCommentReadOpen(false)
     setIsOpenModalCommentUpsert(true)
     setUpsertingCommentData(readingCommentData)
   },[readingCommentData])
@@ -132,6 +149,10 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   const content = useMemo(()=>{
     return decode(data.content)
   }, [data.content])
+
+  const imgUrl = useMemo(()=>{
+    return data.imgUrl.map(decode)
+  }, [data.imgUrl])
 
   return (
     <>
@@ -152,22 +173,27 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         </RatingWrapper>
         <ReviewParagraph>{content}</ReviewParagraph>
         <ImageCollectionDiv>
-          {data.imgUrl.map((item, index) => (
+          {imgUrl.map((item, index) => (
             <ImageWrapper key={`image-${index}`}>
               <ReviewImage src={item} ></ReviewImage>
             </ImageWrapper>
           ))}
         </ImageCollectionDiv>
-        <CommentCollectionDiv>
-          {[].map((item, index) => (
-            <SummaryCommentWrapper key={`summary-comment-${index}`}>
-              <SummaryComment 
-                data={item} 
-                onClick={()=>hanldeSummaryCommentClick(item)}
-              />
-            </SummaryCommentWrapper>
-          ))}
-        </CommentCollectionDiv>
+        { getCommentsState.status.loading 
+          ? <Loading/>
+          : (
+            <CommentCollectionDiv>
+              {(getCommentsState.data?.data?.comments || []).map((item, index) => (
+                <SummaryCommentWrapper key={`summary-comment-${index}`}>
+                  <SummaryComment 
+                    data={item} 
+                    onClick={()=>hanldeSummaryCommentClick(item)}
+                  />
+                </SummaryCommentWrapper>
+              ))}
+            </CommentCollectionDiv>
+          )
+        }
         <CommentUpsertButton 
           status={"primary"}
           onClick={handleCommentCreateClick}

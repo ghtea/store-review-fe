@@ -15,6 +15,7 @@ import { PutReviewData } from './sagas/putReview/types';
 export type State = {
   getReviews: {
     data: GetReviewsData | undefined,
+    placeId: string | undefined,
     status: {
       loading: boolean,
       ready: boolean,
@@ -50,6 +51,7 @@ export type State = {
   },
   getComments: {
     data: GetCommentsData | undefined,
+    reviewId: number | undefined,
     status: {
       loading: boolean,
       ready: boolean,
@@ -81,6 +83,7 @@ export type State = {
 const initialState = {
   getReviews: {
     data: undefined,
+    placeId: undefined,
     status: {
       loading: false,
       ready: true,
@@ -116,6 +119,7 @@ const initialState = {
   },
   getComments: {
     data: undefined,
+    reviewId: undefined,
     status: {
       loading: false,
       ready: true,
