@@ -174,17 +174,20 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   },[])
 
   const avgStars = useMemo (()=>{
-    if (getReviewsState.data === undefined) return undefined
-    return Math.round(getReviewsState.data?.data.placeAvgStar * 10)/10
+    if (getReviewsState.data?.data?.placeAvgStar) {
+      return Math.round(getReviewsState.data.data.placeAvgStar * 10)/10
+    } else {
+      return undefined
+    }
   },[getReviewsState.data])
   // Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
 
   const myReview = useMemo(()=>{
     const mySaid = authStore.data?.said
     if (!mySaid) return undefined 
-    const newMyReview = (getReviewsState.data?.data.reviewsResponseDtoList || []).find(item => item.said === mySaid)
+    const newMyReview = (getReviewsState.data?.data?.reviewsResponseDtoList || []).find(item => item.said === mySaid)
     return newMyReview ? newMyReview : undefined
-  },[authStore.data?.said, getReviewsState.data?.data.reviewsResponseDtoList])
+  },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
@@ -241,8 +244,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                     : (
                       <>
                         <ReviewGroupContentDiv>
-                          {avgStars === undefined
-                            ? ("리뷰가 없습니다")
+                          {(avgStars === undefined) || isNaN(avgStars)
+                            ? ("평점이 없습니다")
                             : (
                               <ReviewPeopleReviewsSummaryDiv>
                                 <span>{"전체 평점"}</span>
@@ -252,7 +255,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                             )
                           }
                           <ReviewPeopleReviewsListDiv>
-                            {(getReviewsState.data?.data.reviewsResponseDtoList || []).map((item, index)=>(
+                            {(getReviewsState.data?.data?.reviewsResponseDtoList || []).map((item, index)=>(
                               <SummaryReview
                                 key={`review-${index}`}
                                 data={item}
