@@ -24,6 +24,7 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
       axios.put,
       `${process.env.REACT_APP_BACKEND_URL}/comment`,
       {
+        commentId: payload.commentId,
         ...(payload.content ? { content: encode(payload.content) } : {}),
       }
     );

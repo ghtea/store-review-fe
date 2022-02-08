@@ -36,7 +36,7 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
     // })
     const response: AxiosResponse<PutReviewData> = yield call(
       axios.put,
-      `${process.env.REACT_APP_BACKEND_URL}/review`,
+      `${process.env.REACT_APP_BACKEND_URL}/reviews/${payload.reviewId}`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" }
