@@ -82,18 +82,35 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   const [imgUrl, setImgUrl] = useState<string[]>([])
   const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
 
+  const resetDraft = useCallback(()=>{
+    setDraftRating(0)
+    setDraftReview("")
+    setImgUrl([])
+  },[])
+
   useEffect(()=>{
     if (data){
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
+      console.log("data.imgUrl: ", data.imgUrl); // TODO: remove
       setImgUrl(data.imgUrl.map(decode))
     }
     else {
-      setDraftRating(0)
-      setDraftReview("")
-      setImgUrl([])
+      resetDraft()
     }
-  },[data])
+  },[data, resetDraft])
+
+  useEffect(()=>{
+    if (postReviewState.status.ready){
+      resetDraft()
+    }
+  },[postReviewState.status.ready, resetDraft])
+
+  useEffect(()=>{
+    if (deleteReviewState.status.ready){
+      resetDraft()
+    }
+  },[deleteReviewState.status.ready, resetDraft])
 
   const handleClearButtonClick = useCallback((index: number)=>{
     const newImages = [...imgUrl]
@@ -169,6 +186,9 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }))
   },[data?.reviewId, dispatch])
 
+  useEffect(()=>{
+    console.log("imgUrl: ", imgUrl); // TODO: remove 
+  },[imgUrl])
   return (
     <Modal
       isOpen={isOpen}

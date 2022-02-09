@@ -14,12 +14,6 @@ export type ModalCommentUpsertProps = ModalProps & {
   reviewId: number
 }
 
-const SummaryReviewWrapper = styled.div`
-  width: 100%;
-  padding-left: 32px;
-  padding-right: 32px;
-`
-
 const UpdatedAtSpan = styled.span`
   color: ${props => props.theme.colors.textHint};
   font-size: 1.125rem;
@@ -49,6 +43,7 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
 }) => {  
   const dispatch = useDispatch()
   const postCommentState = useSelector((state: RootState) => state.reaction.postComment);
+  const deleteCommentState = useSelector((state: RootState) => state.reaction.deleteComment);
 
   const [draftComment, setDraftComment] = useState("")
 
@@ -56,14 +51,30 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
     return dayjs().format("YYYY-M-D") 
   },[])
 
+  const resetDraft = useCallback(()=>{
+    setDraftComment("")
+  },[])
+
   useEffect(()=>{
     if (data){
       setDraftComment(decode(data.content))
     }
     else {
-      setDraftComment("")
+      resetDraft()
     }
-  },[data])
+  },[data, resetDraft])
+
+  useEffect(()=>{
+    if (postCommentState.status.ready){
+      resetDraft()
+    }
+  },[postCommentState.status.ready, resetDraft])
+
+  useEffect(()=>{
+    if (deleteCommentState.status.ready){
+      resetDraft()
+    }
+  },[deleteCommentState.status.ready, resetDraft])
 
   const handleTextAreaChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback((event)=>{
     setDraftComment(event.currentTarget.value || "")
@@ -107,9 +118,6 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       confirmTitle={ data ? "수정" : "등록"}
       onClickConfirm={handleConfirmClick}
     >
-      <SummaryReviewWrapper>
-        {/* <SummaryReview data={}/> */}
-      </SummaryReviewWrapper>
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
       <DeleteButtonContainerDiv>
