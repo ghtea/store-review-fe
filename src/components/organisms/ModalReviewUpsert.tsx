@@ -135,6 +135,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         reviewId: data.reviewId,
         content: draftReview,
         stars: draftRating,
+        imgUrl: imgUrl,
         imgFileList: draftImageFiles,
       }))
     }
@@ -146,7 +147,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         imgFileList: draftImageFiles,
       }))
     }
-  },[data, dispatch, draftImageFiles, draftRating, draftReview, placeId])
+  },[data, dispatch, draftImageFiles, draftRating, draftReview, imgUrl, placeId])
 
   useEffect(()=>{
     if (postReviewState.status.ready){
