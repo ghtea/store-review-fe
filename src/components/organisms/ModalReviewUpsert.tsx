@@ -89,16 +89,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   useEffect(()=>{
+    if (!isOpen) return;
     if (data){
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
-      console.log("data.imgUrl: ", data.imgUrl); // TODO: remove
       setImgUrl(data.imgUrl.map(decode))
     }
     else {
       resetDraft()
     }
-  },[data, resetDraft])
+  },[data, isOpen, resetDraft])
 
   useEffect(()=>{
     if (postReviewState.status.ready){

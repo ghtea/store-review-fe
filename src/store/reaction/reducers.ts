@@ -11,6 +11,7 @@ import { PostCommentData } from './sagas/postComment/types';
 import { PostReviewData } from './sagas/postReview/types';
 import { PutCommentData } from './sagas/putComment/types';
 import { PutReviewData } from './sagas/putReview/types';
+import { Comment } from './types';
 
 export type State = {
   getReviews: {
@@ -43,39 +44,42 @@ export type State = {
     }
   },
   deleteReview: {
-    data: DeleteReviewData | undefined,
+    data: DeleteReviewData | undefined
     status: {
-      loading: boolean,
-      ready: boolean,
+      loading: boolean
+      ready: boolean
     }
   },
   getComments: {
-    data: GetCommentsData | undefined,
-    reviewId: number | undefined,
+    data: GetCommentsData | undefined
+    reviewId: number | undefined
+    allComments: Comment[] | undefined
+    pageNo: number | undefined
+    hasMore: boolean | undefined
     status: {
-      loading: boolean,
-      ready: boolean,
+      loading: boolean
+      ready: boolean
     }
   },
   postComment: {
-    data: PostCommentData | undefined,
+    data: PostCommentData | undefined
     status: {
-      loading: boolean,
-      ready: boolean,
+      loading: boolean
+      ready: boolean
     }
   },
   putComment: {
-    data: PutCommentData | undefined,
+    data: PutCommentData | undefined
     status: {
-      loading: boolean,
-      ready: boolean,
+      loading: boolean
+      ready: boolean
     }
   },
   deleteComment: {
-    data: DeleteCommentData | undefined,
+    data: DeleteCommentData | undefined
     status: {
-      loading: boolean,
-      ready: boolean,
+      loading: boolean
+      ready: boolean
     }
   },
 }
@@ -120,6 +124,9 @@ const initialState = {
   getComments: {
     data: undefined,
     reviewId: undefined,
+    allComments: undefined,
+    pageNo: undefined,
+    hasMore: undefined,
     status: {
       loading: false,
       ready: true,

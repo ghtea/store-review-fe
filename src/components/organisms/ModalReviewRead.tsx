@@ -154,6 +154,10 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
     return data.imgUrl.map(decode)
   }, [data.imgUrl])
 
+  const onClickMore = useCallback(()=>{
+    getComments(data.reviewId, getCommentsState.pageNo === undefined ? 0 : getCommentsState.pageNo +1 )
+  },[data.reviewId, getComments, getCommentsState.pageNo])
+
   return (
     <>
       <Modal
@@ -179,11 +183,11 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
             </ImageWrapper>
           ))}
         </ImageCollectionDiv>
-        { getCommentsState.status.loading 
+        { (getCommentsState.status.loading && (getCommentsState.allComments || []).length === 0)
           ? <Loading/>
           : (
             <CommentCollectionDiv>
-              {(getCommentsState.data?.data?.comments || []).map((item, index) => (
+              {(getCommentsState.allComments || []).map((item, index) => (
                 <SummaryCommentWrapper key={`summary-comment-${index}`}>
                   <SummaryComment 
                     data={item} 
@@ -191,6 +195,9 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
                   />
                 </SummaryCommentWrapper>
               ))}
+              {getCommentsState.hasMore && (
+                <Button onClick={onClickMore}>더보기</Button>
+              )}
             </CommentCollectionDiv>
           )
         }

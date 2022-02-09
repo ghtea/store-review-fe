@@ -56,13 +56,14 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
   },[])
 
   useEffect(()=>{
+    if (!isOpen) return;
     if (data){
       setDraftComment(decode(data.content))
     }
     else {
       resetDraft()
     }
-  },[data, resetDraft])
+  },[data, isOpen, resetDraft])
 
   useEffect(()=>{
     if (postCommentState.status.ready){

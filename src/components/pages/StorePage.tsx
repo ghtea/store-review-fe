@@ -273,6 +273,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
           )}
         </MainDiv>
       </div>
+      {isModalReviewUpsertOpen }
       <ModalReviewUpsert 
         placeId={placeId} 
         isOpen={isModalReviewUpsertOpen} 
