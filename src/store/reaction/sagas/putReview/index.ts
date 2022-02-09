@@ -22,10 +22,11 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
   try {
     const formData = new FormData();
     const keyValue = {
-      ...(payload.content ? { content: encode(payload.content) } : {}),
-      ...(payload.stars ? { stars: payload.stars } : {}),
-      ...(payload.imgUrl ? { imgUrl: payload.imgUrl } : {}),
+      content: encode(payload.content),
+      stars: payload.stars,
+      imgUrl: payload.imgUrl
     }
+
     formData.append("key", JSON.stringify(keyValue));
 
     (payload.imgFileList || []).forEach(item => {

@@ -106,10 +106,10 @@ export type POST_REVIEW_Instance = ReturnType<typeof return__POST_REVIEW>;
 export const PUT_REVIEW = 'reaction/PUT_REVIEW';
 type PUT_REVIEW__Payload = {
   reviewId: number
-  content?: string
-  stars?: number
+  content: string
+  stars: number
+  imgUrl: string[]
   imgFileList?: File[]
-  imgUrl?: string[]
 };
 export const return__PUT_REVIEW = (payload: PUT_REVIEW__Payload) => {
   return {

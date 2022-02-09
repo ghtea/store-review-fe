@@ -4,7 +4,6 @@ import { encode } from 'js-base64';
 import * as actions from '../../actions';
 import { PostCommentData } from './types';
 import { RootState } from '../../../reducers';
-import { GetReviewsData } from '../getReviews/types';
 
 export function* postComment(action: actions.POST_COMMENT_Instance) {
   const payload = action.payload
