@@ -108,7 +108,7 @@ type PUT_REVIEW__Payload = {
   reviewId: number
   content: string
   stars: number
-  imgUrl: string[]
+  serverImgUrl: string[]
   imgFileList?: File[]
 };
 export const return__PUT_REVIEW = (payload: PUT_REVIEW__Payload) => {

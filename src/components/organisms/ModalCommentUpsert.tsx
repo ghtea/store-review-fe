@@ -43,6 +43,7 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
 }) => {  
   const dispatch = useDispatch()
   const postCommentState = useSelector((state: RootState) => state.reaction.postComment);
+  const putCommentState = useSelector((state: RootState) => state.reaction.putComment);
   const deleteCommentState = useSelector((state: RootState) => state.reaction.deleteComment);
 
   const [draftComment, setDraftComment] = useState("")
@@ -101,6 +102,18 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       setIsOpen(false)
     }
   },[postCommentState.status.ready, setIsOpen])
+
+  useEffect(()=>{
+    if (putCommentState.status.ready){
+      setIsOpen(false)
+    }
+  },[putCommentState.status.ready, setIsOpen])
+
+  useEffect(()=>{
+    if (deleteCommentState.status.ready){
+      setIsOpen(false)
+    }
+  },[deleteCommentState.status.ready, setIsOpen])
 
   const handleDelete = useCallback(()=>{
     if (!data?.commentId) return;

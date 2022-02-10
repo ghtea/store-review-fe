@@ -12,6 +12,7 @@ import { SummaryReview } from '../organisms/SummaryReview';
 import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { Loading } from '../atoms/Loading';
+import { decode } from 'js-base64';
 
 export type StorePageProps = {
 }
@@ -79,6 +80,7 @@ const ReviewGroupHeading = styled.h3`
 	font-size: 1.25rem;	
 	width: 100%;
 	padding-left: 16px;
+  font-weight: 700;
 `
 
 const ReviewMyDiv = styled.div`
@@ -97,6 +99,7 @@ const ReviewUpsertButton = styled(Button)`
 `
 
 const ReviewPeopleDiv = styled.div`
+  margin-top: 24px;
 	align-items: center;
 `
 
@@ -123,7 +126,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
-  // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
 
   const placeId = useMemo(()=>id ? id : "", [id])
 
@@ -189,6 +191,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     return newMyReview ? newMyReview : undefined
   },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
 
+  const myReviewContent = useMemo(()=>decode(myReview?.content || ""),[myReview?.content])
+
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>
@@ -219,7 +223,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                   {myReview && (
                     <ReviewGroupContentDiv>
                       <Rating ratingValue={myReview.stars} size={24} readonly/>
-                      <p>{myReview.content}</p>                     
                       <ReviewUpsertButton 
                         status={"primary"}
                         onClick={handleReviewUpdateButton}

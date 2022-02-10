@@ -24,7 +24,7 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
     const keyValue = {
       content: encode(payload.content),
       stars: payload.stars,
-      imgUrl: payload.imgUrl
+      imgUrl: payload.serverImgUrl.map(item => encode(item)) // WIP: check  
     }
 
     formData.append("key", JSON.stringify(keyValue));

@@ -76,16 +76,19 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   const dispatch = useDispatch()
   const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
   const deleteReviewState = useSelector((state: RootState) => state.reaction.deleteReview);
+  const putReviewState = useSelector((state: RootState) => state.reaction.putReview);
 
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
-  const [imgUrl, setImgUrl] = useState<string[]>([])
+  const [localImgUrl, setLocalImgUrl] = useState<string[]>([])
+  const [serverImgUrl, setServerImgUrl] = useState<string[]>([])
   const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
 
   const resetDraft = useCallback(()=>{
     setDraftRating(0)
     setDraftReview("")
-    setImgUrl([])
+    setLocalImgUrl([])
+    setServerImgUrl([])
   },[])
 
   useEffect(()=>{
@@ -93,7 +96,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     if (data){
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
-      setImgUrl((data.imgUrl || []).map(decode))
+      setServerImgUrl((data.imgUrl || []).map(item => decode(item)))
     }
     else {
       resetDraft()
@@ -112,11 +115,18 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }
   },[deleteReviewState.status.ready, resetDraft])
 
-  const handleClearButtonClick = useCallback((index: number)=>{
-    const newImages = [...imgUrl]
-    newImages.splice(index, 1)
-    setImgUrl(newImages)
-  }, [imgUrl])
+  // TODO: 
+  const handleLocalImageClear = useCallback((index: number)=>{
+    const newLocalImgUrl = [...localImgUrl]
+    newLocalImgUrl.splice(index, 1)
+    setLocalImgUrl(newLocalImgUrl)
+  }, [localImgUrl])
+
+  const handleServerImageClear = useCallback((index: number)=>{
+    const newServerImgUrl = [...serverImgUrl]
+    newServerImgUrl.splice(index, 1)
+    setServerImgUrl(newServerImgUrl)
+  }, [serverImgUrl])
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
     const files = event.currentTarget.files
@@ -126,7 +136,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       reader.onloadend = (readerEvent) => {
         const result = readerEvent?.target?.result;
         if (typeof result === "string"){
-          setImgUrl(prev => [...prev, result])
+          setLocalImgUrl(prev => [...prev, result])
         }
       };
       setDraftImageFiles(prev => [...prev, file])
@@ -152,7 +162,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         reviewId: data.reviewId,
         content: draftReview,
         stars: draftRating,
-        imgUrl: imgUrl,
+        serverImgUrl: serverImgUrl,
         imgFileList: draftImageFiles,
       }))
     }
@@ -164,10 +174,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         imgFileList: draftImageFiles,
       }))
     }
-  },[data, dispatch, draftImageFiles, draftRating, draftReview, imgUrl, placeId])
+  },[data, dispatch, draftImageFiles, draftRating, draftReview, serverImgUrl, placeId])
 
   useEffect(()=>{
     if (postReviewState.status.ready){
+      setIsOpen(false)
+    }
+  },[postReviewState.status.ready, setIsOpen])
+
+  useEffect(()=>{
+    if (putReviewState.status.ready){
       setIsOpen(false)
     }
   },[postReviewState.status.ready, setIsOpen])
@@ -186,9 +202,6 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }))
   },[data?.reviewId, dispatch])
 
-  useEffect(()=>{
-    console.log("imgUrl: ", imgUrl); // TODO: remove 
-  },[imgUrl])
   return (
     <Modal
       isOpen={isOpen}
@@ -203,10 +216,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       </RatingWrapper>
       <ReviewTextarea onChange={handleReviewTextareaChange} value={draftReview}/>
       <ImageCollectionDiv>
-        {imgUrl.map((item, index) => (
+        {serverImgUrl.map((item, index) => (
           <ImageWrapper key={`image-${index}`}>
             <ReviewImage src={item} ></ReviewImage>
-            <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
+            <Button onClick={()=>handleServerImageClear(index)} status={"neutral"}>clear</Button>
+          </ImageWrapper>
+        ))}
+        {localImgUrl.map((item, index) => (
+          <ImageWrapper key={`image-${index}`}>
+            <ReviewImage src={item} ></ReviewImage>
+            <Button onClick={()=>handleLocalImageClear(index)} status={"neutral"}>clear</Button>
           </ImageWrapper>
         ))}
       </ImageCollectionDiv>
