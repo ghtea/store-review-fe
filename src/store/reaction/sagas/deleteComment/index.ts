@@ -20,7 +20,7 @@ export function* deleteComment(action: actions.DELETE_COMMENT_Instance) {
 
   try {
     const response: AxiosResponse<DeleteCommentData> = yield call(
-      axios.put,
+      axios.delete,
       `${process.env.REACT_APP_BACKEND_URL}/comment/${payload.commentId}`,
     );
 
