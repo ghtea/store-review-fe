@@ -186,7 +186,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     if (putReviewState.status.ready){
       setIsOpen(false)
     }
-  },[postReviewState.status.ready, setIsOpen])
+  },[putReviewState.status.ready, setIsOpen])
 
   useEffect(()=>{
     if (deleteReviewState.status.ready){

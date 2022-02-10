@@ -125,7 +125,6 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
 
   return (
     <Modal
-      //isOpen={true}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={data ? "댓글 수정" : "댓글 등록"}
