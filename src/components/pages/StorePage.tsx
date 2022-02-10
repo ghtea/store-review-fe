@@ -99,7 +99,7 @@ const ReviewUpsertButton = styled(Button)`
 `
 
 const ReviewPeopleDiv = styled.div`
-  margin-top: 24px;
+  margin-top: 40px;
 	align-items: center;
 `
 
@@ -182,7 +182,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
       return undefined
     }
   },[getReviewsState.data])
-  // Math.round((getReviewsState.data?.data.placeAvgStar || 0) * (5/100) * 10)/10
 
   const myReview = useMemo(()=>{
     const mySaid = authStore.data?.said
@@ -190,8 +189,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     const newMyReview = (getReviewsState.data?.data?.reviewsResponseDtoList || []).find(item => item.said === mySaid)
     return newMyReview ? newMyReview : undefined
   },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
-
-  const myReviewContent = useMemo(()=>decode(myReview?.content || ""),[myReview?.content])
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>

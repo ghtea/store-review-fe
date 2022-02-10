@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { reactionStore } from '../../store';
 import { Review } from '../../store/reaction';
@@ -115,7 +115,6 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }
   },[deleteReviewState.status.ready, resetDraft])
 
-  // TODO: 
   const handleLocalImageClear = useCallback((index: number)=>{
     const newLocalImgUrl = [...localImgUrl]
     newLocalImgUrl.splice(index, 1)
@@ -202,6 +201,14 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     }))
   },[data?.reviewId, dispatch])
 
+  const confirmDisabled = useMemo(()=>{
+    return (
+      postReviewState.status.loading ||
+      putReviewState.status.loading ||
+      deleteReviewState.status.loading
+    ) 
+  }, [deleteReviewState.status.loading, postReviewState.status.loading, putReviewState.status.loading])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -209,6 +216,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       title={data ? "리뷰 수정" : "리뷰 등록"}
       confirmTitle={ data ? "수정" : "등록"}
       onClickConfirm={handleConfirmClick}
+      confirmDisabled={confirmDisabled}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <RatingWrapper>
@@ -239,7 +247,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       </ImageUploadDiv>
       <DeleteButtonContainerDiv>
         {data?.reviewId && (
-          <Button onClick={handleDelete} status="error">{"리뷰 삭제"}</Button>
+          <Button onClick={handleDelete} status="error" disabled={deleteReviewState.status.loading}>{"리뷰 삭제"}</Button>
         )}
       </DeleteButtonContainerDiv>
     </Modal>

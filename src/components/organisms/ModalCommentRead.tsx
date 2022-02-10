@@ -54,12 +54,12 @@ export const ModalCommentRead:React.FunctionComponent<ModalCommentReadProps> = (
 
   return (
     <Modal
-      //isOpen={true}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={"댓글"}
       confirmTitle={ isAuthor ? "수정하기" : ""}
       onClickConfirm={handleConfirmClick}
+      confirmStatus={"neutral"}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <CommentParagraph>{content}</CommentParagraph>

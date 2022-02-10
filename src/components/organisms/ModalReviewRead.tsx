@@ -166,6 +166,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         title={"리뷰"}
         confirmTitle={isAuthor ? "수정하기" : ""}
         onClickConfirm={handleConfirmClick}
+        confirmStatus={"neutral"}
       >
         <ReviewMetaInfoDiv>
           <ReviewAuthorSpan>{data.userId}</ReviewAuthorSpan>
@@ -201,8 +202,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
             </CommentCollectionDiv>
           )
         }
-        <CommentUpsertButton 
-          status={"primary"}
+        <CommentUpsertButton
           onClick={handleCommentCreateClick}
         >
           코멘트 작성

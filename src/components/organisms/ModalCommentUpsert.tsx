@@ -123,6 +123,14 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
     }))
   },[data?.commentId, dispatch])
 
+  const confirmDisabled = useMemo(()=>{
+    return (
+      postCommentState.status.loading ||
+      putCommentState.status.loading ||
+      deleteCommentState.status.loading
+    ) 
+  }, [deleteCommentState.status.loading, postCommentState.status.loading, putCommentState.status.loading])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -130,12 +138,13 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       title={data ? "댓글 수정" : "댓글 등록"}
       confirmTitle={ data ? "수정" : "등록"}
       onClickConfirm={handleConfirmClick}
+      confirmDisabled={confirmDisabled}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
       <DeleteButtonContainerDiv>
         {data?.commentId && (
-          <Button onClick={handleDelete} status="error">{"코멘트 삭제"}</Button>
+          <Button onClick={handleDelete} status="error" disabled={deleteCommentState.status.loading}>{"코멘트 삭제"}</Button>
         )}
       </DeleteButtonContainerDiv>
     </Modal>
