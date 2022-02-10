@@ -86,27 +86,25 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
       (state: RootState) => state.reaction.getComments.allComments
     );
 
-    const newAllComments = [...(prevAllComments || [])]
-    if (
-      (prevPageNo === undefined && payload.pageNo !== undefined) || // first render
-      (prevPageNo !== undefined && prevPageNo < payload.pageNo)
+    if (payload.pageNo === 0 ){ // first render
+      yield put(
+        actions.return__REPLACE({
+          keyList: ["getComments", "allComments"],
+          replacement: response.data.data.comments || []
+        })
+      )
+    }
+    else if (
+      (prevPageNo !== undefined && prevPageNo < payload.pageNo) // normal next page
     ){
-      newAllComments.push(...response.data.data.comments)
       yield put(
         actions.return__REPLACE({
           keyList: ["getComments", "allComments"],
-          replacement: newAllComments
+          replacement: [...(prevAllComments || []), ...response.data.data.comments]
         })
       )
     }
-    else if (prevPageNo !== undefined && prevPageNo > payload.pageNo){ // after editing commens
-      yield put(
-        actions.return__REPLACE({
-          keyList: ["getComments", "allComments"],
-          replacement: newAllComments.slice(0, ( payload.pageNo+1)*PAGE_SIZE)
-        })
-      )
-    }
+    // 엉켜서  prevPageNo > payload.pageNo prevPageNo === payload.pageNo 인 경우는 나중에 생각하기
 
   } catch (error) {
     console.log(error);
