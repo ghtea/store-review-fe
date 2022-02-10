@@ -178,12 +178,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   useEffect(()=>{
     if (postReviewState.status.ready){
       setIsOpen(false)
+      setLocalImgUrl([])
+      setDraftImageFiles([])
     }
   },[postReviewState.status.ready, setIsOpen])
 
   useEffect(()=>{
     if (putReviewState.status.ready){
       setIsOpen(false)
+      setLocalImgUrl([])
+      setDraftImageFiles([])
     }
   },[putReviewState.status.ready, setIsOpen])
 
