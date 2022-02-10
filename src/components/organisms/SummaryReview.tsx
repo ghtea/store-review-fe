@@ -102,20 +102,20 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
   },[data.updatedAt])
 
   const additionalImageCount = useMemo(()=>{
-    if (false) { // TODO: replace it by data.images
+    if (!data.imgUrl || !data.imgUrl.length) { // TODO: replace it by data.images
       return 0
     }
     else {
       return (data.imgUrl.length - 1) // TODO: replace it by data.images
     }
-  },[data.imgUrl.length])
+  },[data.imgUrl])
 
   const content = useMemo(()=>{
     return decode(data.content)
   }, [data.content])
 
   const imgUrl = useMemo(()=>{
-    return data.imgUrl.map(decode)
+    return (data.imgUrl || []).map(decode)
   }, [data.imgUrl])
 
   useEffect(()=>{

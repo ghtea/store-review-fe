@@ -151,7 +151,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   }, [data.content])
 
   const imgUrl = useMemo(()=>{
-    return data.imgUrl.map(decode)
+    return (data.imgUrl || []).map(decode)
   }, [data.imgUrl])
 
   const onClickMore = useCallback(()=>{

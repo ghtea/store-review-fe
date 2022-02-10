@@ -93,7 +93,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     if (data){
       setDraftRating(data.stars)
       setDraftReview(decode(data.content))
-      setImgUrl(data.imgUrl.map(decode))
+      setImgUrl((data.imgUrl || []).map(decode))
     }
     else {
       resetDraft()

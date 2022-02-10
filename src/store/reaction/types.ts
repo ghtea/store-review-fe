@@ -7,7 +7,7 @@ export type Review = {
   content: string
   createdAt: Date
   updatedAt: Date
-  imgUrl: string[]
+  imgUrl?: string[]
   isDelete: number
   commentNum: number
 }
