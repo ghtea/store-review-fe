@@ -1,13 +1,20 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/reducers";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
-interface IPrivateProps {}
+interface IPrivateProps {
+}
 
 const Private: React.FunctionComponent<IPrivateProps> = ({ children }) => {
-  const auth = useSelector((state: RootState) => state.auth);
+  const auth = useSelector((state: RootState) => state.auth.authority);
 
-  return <>{auth.authority === "USER_ROLE" && <> {children} </>}</>;
+  return (
+    <>
+      {auth === "USER_ROLE" &&
+        <> {children} </>
+      }
+    </>
+  );
 };
 
 export default Private;

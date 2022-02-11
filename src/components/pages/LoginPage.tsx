@@ -10,7 +10,6 @@ import BackButton from "../atoms/BackButton";
 import Private from "../templates/Private";
 import { useDispatch, useSelector } from "react-redux";
 import { authStore } from "../../store";
-import AxiosInstance from "../../utils/AxiosInstance";
 
 const color1 = "#60a9f2";
 // input태그의 스타일과 gender에 div태그의 스타일을 일치시키기 위해 작성된 스타일 컴포넌트
@@ -66,30 +65,20 @@ const InputAlert = styled.div`
 const Button = styled.button`
   ${commonStyle}
   padding-left: 0px;
-  width: 100%;
+  width: 40%;
   height: 40px;
   border: 0px;
   margin: 10px 5% 0px;
   background-color: white;
   line-height: 40px;
 `;
-const LoginButton = styled.button`
-  ${commonStyle}
-  width: 100%;
-  height: 40px;
-  border: 0px;
-  background-color: white;
-  display: flex;
-  flex-flow: wrap column;
-  justify-content: center;
-`;
 const LoginMemberBtn = styled.div`
   width: 100%;
   display: flex;
   font-size: 14px;
   flex-flow: wrap row;
-  justify-content: right;
-  padding: 10px 10px 10px 0px;
+  justify-content: space-between;
+  padding: 10px 0px;
 `;
 
 export type LoginPageProps = {};
@@ -97,10 +86,12 @@ export type LoginPageProps = {};
 export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
   const [userData, setUserData] = useState({ userId: "", password: "" });
   const [errors, setErrors] = useState({ userId: "", password: "" });
-  const [isSubmit, setIsSubmit] = useState({ userId: false, password: true });
+  const [isSubmit, setIsSubmit] = useState({ userId: false, password: false });
   const [target, setTarget] = useState("");
+  const [auth, setAuth] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleValidation = (e: any) => {
     //포커스 되었을 때의 값으로 들어간다.
     const { name, value } = e.target;
@@ -110,12 +101,12 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
 
   useEffect(() => {
     switch (target) {
-      case "userId":
-        let isUseridRegex = /^[a-zA-Z0-9@\.]{5,20}$/g;
+      case "id":
+        let isUseridRegex = /^[a-zA-Z0-9]{5,12}$/g;
         if (!isUseridRegex.test(userData.userId)) {
           setErrors({
             ...errors,
-            userId: "영문,숫자 로 5~20자로 구성되야합니다.",
+            userId: "영문,숫자 로 5~12자로 구성되야합니다.",
           });
           setIsSubmit({ ...isSubmit, userId: false });
         } else {
@@ -143,66 +134,34 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
 
   useEffect(() => {}, [errors]);
 
-  //useEffect(() => {
-  //  const isRememberCheckbox = window.localStorage.getItem("rememberCheckbox");
-  //  if (isRememberCheckbox) {
-  //    let rememberCheckbox: any =
-  //      document.getElementsByName("rememberCheckbox")[0];
-  //    rememberCheckbox.checked = "checked";
-  //    let email: any = document.getElementsByName("email")[0];
-  //  }
-  //}, []);
-
-  //const rememberCheck = () => {
-  //  let rememberCheckbox: any =
-  //    document.getElementsByName("rememberCheckbox")[0];
-  //  if (rememberCheckbox.checked) {
-  //    console.log(rememberCheckbox.checked);
-  //    let email: any = document.getElementsByName("email")[0];
-  //    window.localStorage.setItem(
-  //      "rememberCheckbox",
-  //      JSON.stringify({
-  //        check: true,
-  //        id: email,
-  //      })
-  //    );
-  //  } else {
-  //    window.localStorage.removeItem("rememberCheckbox");
-  //  }
-  //};
-
   const handleSubmit = () => {
-    if (isSubmit.userId && isSubmit.password) {
+    //if (isSubmit.userId && isSubmit.password) {
+    if (true) {
       axios({
-        url: "https://person.jjhserverworld.pe.kr:18080/authenticate",
+        url: "http://person.jjhserverworld.pe.kr:18080/authenticate",
         method: "POST",
         data: {
           //test@review.com
           //9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08
-          //해시 256암호화가 필요? 불필요?
+          //해시 256암호화가 필요
           userId: userData.userId,
           password: userData.password,
         },
       })
         .then((res) => {
-          //1. 엑세스 토큰을 스토리지 저장
-          window.localStorage.setItem("accessToken", res.data.accessToken);
-          //2. 다음요청 보낼때 마다 헤더에 토큰을 넣어서 보내기
-          AxiosInstance.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${res.data.accessToken}`;
-          //3.
+          console.log(res);
+          let token = res.data.data.token;
+          console.log(res.data.data.token);
+          localStorage.setItem("accessToken", token);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          alert("로그인에 성공하였습니다.");
           dispatch(
             authStore.return__AUTH({
-              //상태값으로 인증 넣어주기
-              authorization: true,
-              //상태값으로 백엔드에서 보내준 권한 넣어주기
-              authority: JSON.parse(
-                window.atob(res.data.accessToken.split(".")[1])
-              ).auth,
+              //토큰 해제 필요
+              authority: "USER_ROLE",
+              nickname: "TEST",
             })
           );
-          alert("로그인에 성공하였습니다.");
           navigate("/");
         })
         .catch((error) => {
@@ -239,21 +198,24 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
             type="password"
             name="password"
             placeholder="비밀번호를 입력하세요"
-            //onBlur={handleValidation}
+            onBlur={handleValidation}
           />
-          {/*<input
-            type="checkbox"
-            name="rememberCheckbox"
-            onChange={rememberCheck}
-          />
-          아이디 기억하기*/}
           <InputAlert className="password"> {errors.password} </InputAlert>
         </InputDiv>
         <InputDiv>
-          <LoginButton onClick={handleSubmit}> 로그인 </LoginButton>
+          <Button onClick={handleSubmit}> 로그인 </Button>
+          <Button> 취소 </Button>
         </InputDiv>
         <LoginMemberBtn>
-          <Link to={"/signup"}>회원가입</Link>
+          <Link to={"/"} style={{ width: "100px" }}>
+            아이디찾기(x)
+          </Link>
+          <Link to={"/"} style={{ width: "100px" }}>
+            비밀번호찾기(x)
+          </Link>
+          <Link to={"/signup"} style={{ width: "100px" }}>
+            회원가입
+          </Link>
         </LoginMemberBtn>
       </Container>
     </TemplateFull>
