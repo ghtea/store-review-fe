@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RootState } from "../../store/reducers";
 import BackButton from "../atoms/BackButton";
-import Private from "../templates/Private";
+import Private from "../atoms/Private";
 import { useDispatch, useSelector } from "react-redux";
 import { authStore } from "../../store";
 
@@ -173,7 +173,7 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
   const handleSubmit = () => {
     if (isSubmit.userId && isSubmit.password) {
       axios({
-        url: "https://person.jjhserverworld.pe.kr:18080/authenticate",
+        url: `${process.env.REACT_APP_BACKEND_URL}/authenticate`,
         method: "POST",
         data: {
           //test@review.com
@@ -184,24 +184,19 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
         },
       })
         .then((res) => {
-          //1. 엑세스 토큰을 스토리지 저장
-          window.localStorage.setItem("accessToken", res.data.accessToken);
-          //2. 다음요청 보낼때 마다 헤더에 토큰을 넣어서 보내기
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${res.data.accessToken}`;
-          //3.
-          dispatch(
-            authStore.return__AUTH({
-              //상태값으로 인증 넣어주기
-              authorization: true,
-              //상태값으로 백엔드에서 보내준 권한 넣어주기
-              authority: JSON.parse(
-                window.atob(res.data.accessToken.split(".")[1])
-              ).auth,
-            })
-          );
+          console.log(res);
+          let token = res.data.data.token;
+          console.log(res.data.data.token);
+          localStorage.setItem("accessToken", token);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           alert("로그인에 성공하였습니다.");
+          if (token) {
+            dispatch(
+              authStore.return__AUTHENTICATE({
+                token,
+              })
+            );
+          }
           navigate("/");
         })
         .catch((error) => {

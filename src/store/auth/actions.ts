@@ -1,12 +1,32 @@
-export const AUTH = "auth/AUTH";
-type AUTH_Payload = {
-  authorization: boolean;
-  authority: string;
+export const REPLACE = "place/REPLACE";
+type REPLACE_Payload = {
+  keyList: (string | number)[];
+  replacement: unknown;
 };
-export const return__AUTH = (payload: AUTH_Payload) => {
+export const return__REPLACE = (payload: REPLACE_Payload) => {
   return {
-    type: AUTH,
+    type: REPLACE,
     payload: payload,
   };
 };
-export type AUTH__Instance = ReturnType<typeof return__AUTH>;
+export type REPLACE__Instance = ReturnType<typeof return__REPLACE>;
+
+export const AUTHENTICATE = "auth/AUTHENTICATE";
+type AUTHENTICATE_Payload = {
+  token: string;
+};
+export const return__AUTHENTICATE = (payload: AUTHENTICATE_Payload) => {
+  return {
+    type: AUTHENTICATE,
+    payload: payload,
+  };
+};
+export type AUTHENTICATE__Instance = ReturnType<typeof return__AUTHENTICATE>;
+
+export const LOG_OUT = "auth/LOG_OUT";
+export const return__LOG_OUT = () => {
+  return {
+    type: LOG_OUT,
+  };
+};
+export type LOG_OUT__Instance = ReturnType<typeof return__LOG_OUT>;

@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
+import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PutCommentData } from './types';
+import { RootState } from '../../../reducers';
 
 export function* putComment(action: actions.PUT_COMMENT_Instance) {
   const payload = action.payload
@@ -22,7 +24,8 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
       axios.put,
       `${process.env.REACT_APP_BACKEND_URL}/comment`,
       {
-        ...(payload.content ? { content: payload.content } : {}),
+        commentId: payload.commentId,
+        content: encode(payload.content),
       }
     );
 
@@ -42,6 +45,20 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
         },
       }),
     );
+
+    // refetch comments
+    const getCommentsReviewId: number | undefined = yield select(
+      (state: RootState) => state.reaction.getComments.reviewId
+    );
+
+    if (getCommentsReviewId){
+      yield put(
+        actions.return__GET_COMMENTS({
+          reviewId: getCommentsReviewId,
+          pageNo: 0,
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

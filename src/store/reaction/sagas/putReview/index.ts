@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
+import { encode } from 'js-base64';
 
 import * as actions from '../../actions';
 import { PutReviewData } from './types';
+import { RootState } from '../../../reducers';
 
 export function* putReview(action: actions.PUT_REVIEW_Instance) {
   const payload = action.payload
@@ -18,15 +20,39 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
   );
 
   try {
+    const formData = new FormData();
+    const keyValue = {
+      content: encode(payload.content),
+      stars: payload.stars,
+      imgUrl: payload.serverImgUrl.map(item => encode(item)) // WIP: check  
+    }
+
+    formData.append("key", JSON.stringify(keyValue));
+
+    (payload.imgFileList || []).forEach(item => {
+      formData.append("imgFileList", item);
+    })
+    // (payload.imgFileList || []).forEach((item, index) => {
+    //   formData.append(`imgFileList[${index}]`, item);
+    // })
     const response: AxiosResponse<PutReviewData> = yield call(
       axios.put,
-      `${process.env.REACT_APP_BACKEND_URL}/review`,
+      `${process.env.REACT_APP_BACKEND_URL}/reviews/${payload.reviewId}`,
+      formData,
       {
-        ...(payload.content ? { content: payload.content } : {}),
-        ...(payload.stars ? { stars: payload.stars } : {}),
-        ...(payload.imgUrl ? { imgUrl: payload.imgUrl } : {}),
+        headers: { "Content-Type": "multipart/form-data" }
       }
     );
+
+    // const response: AxiosResponse<PutReviewData> = yield call(
+    //   axios.put,
+    //   `${process.env.REACT_APP_BACKEND_URL}/review`,
+    //   {
+    //     ...(payload.content ? { content: payload.content } : {}),
+    //     ...(payload.stars ? { stars: payload.stars } : {}),
+    //     ...(payload.imgFileList ? { imgFileList: payload.imgFileList } : {}),
+    //   }
+    // );
 
     yield put(
       actions.return__REPLACE({
@@ -44,6 +70,19 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
         },
       }),
     );
+    
+    // refetch reviews
+    const getReviewsPlaceId: string | undefined = yield select(
+      (state: RootState) => state.reaction.getReviews.placeId
+    );
+
+    if (getReviewsPlaceId){
+      yield put(
+        actions.return__GET_REVIEWS({
+          placeId: getReviewsPlaceId
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

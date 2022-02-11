@@ -6,11 +6,11 @@ interface IPrivateProps {
 }
 
 const Private: React.FunctionComponent<IPrivateProps> = ({ children }) => {
-  const auth = useSelector((state: RootState) => state.auth.authority);
+  const authenticated = useSelector((state: RootState) => state.auth.status.authenticated);
 
   return (
     <>
-      {auth === "USER_ROLE" &&
+      {authenticated &&
         <> {children} </>
       }
     </>

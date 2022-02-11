@@ -54,5 +54,6 @@ export const GlobalStyle = createGlobalStyle`
 
   textarea {
     font-size: 1rem;
+    font-family: 'Noto Sans KR', sans-serif;
   }
 `

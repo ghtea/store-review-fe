@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
+import { RootState } from '../../../reducers';
 
 import * as actions from '../../actions';
 import { DeleteCommentData } from './types';
@@ -19,11 +20,8 @@ export function* deleteComment(action: actions.DELETE_COMMENT_Instance) {
 
   try {
     const response: AxiosResponse<DeleteCommentData> = yield call(
-      axios.put,
-      `${process.env.REACT_APP_BACKEND_URL}/comment`,
-      {
-        commentId: payload.commentId,
-      }
+      axios.delete,
+      `${process.env.REACT_APP_BACKEND_URL}/comment/${payload.commentId}`,
     );
 
     yield put(
@@ -42,6 +40,20 @@ export function* deleteComment(action: actions.DELETE_COMMENT_Instance) {
         },
       }),
     );
+
+    // refetch comments
+    const getCommentsReviewId: number | undefined = yield select(
+      (state: RootState) => state.reaction.getComments.reviewId
+    );
+
+    if (getCommentsReviewId){
+      yield put(
+        actions.return__GET_COMMENTS({
+          reviewId: getCommentsReviewId,
+          pageNo: 0,
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

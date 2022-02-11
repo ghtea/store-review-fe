@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
+import { RootState } from '../../../reducers';
 
 import * as actions from '../../actions';
 import { DeleteReviewData } from './types';
@@ -20,7 +21,7 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
   try {
     const response: AxiosResponse<DeleteReviewData> = yield call(
       axios.delete,
-      `${process.env.REACT_APP_BACKEND_URL}/review/${payload.reviewId}`
+      `${process.env.REACT_APP_BACKEND_URL}/reviews/${payload.reviewId}`
     );
 
     yield put(
@@ -39,6 +40,19 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
         },
       }),
     );
+
+    // refetch reviews
+    const getReviewsPlaceId: string | undefined = yield select(
+      (state: RootState) => state.reaction.getReviews.placeId
+    );
+
+    if (getReviewsPlaceId){
+      yield put(
+        actions.return__GET_REVIEWS({
+          placeId: getReviewsPlaceId
+        }),
+      )
+    }
   } catch (error) {
     console.log(error);
 

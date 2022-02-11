@@ -6,7 +6,6 @@ import { GetReviewsData } from './types';
 
 export function* getReviews(action: actions.GET_REVIEWS_Instance) {
   const payload = action.payload
-  console.log("yo"); // TODO: remove
 
   yield put(
     actions.return__REPLACE({
@@ -40,6 +39,13 @@ export function* getReviews(action: actions.GET_REVIEWS_Instance) {
         },
       }),
     );
+
+    yield put(
+      actions.return__REPLACE({
+        keyList: ["getReviews", "placeId"],
+        replacement: payload.placeId
+      })
+    )
   } catch (error) {
     console.log(error);
 

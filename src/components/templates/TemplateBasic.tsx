@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../atoms/Button";
-import Private from "./Private";
-import Public from "./Public";
-import { useDispatch, useSelector } from "react-redux";
+import Private from "../atoms/Private";
+import Public from "../atoms/Public";
+import { useDispatch } from "react-redux";
 import { authStore } from "../../store";
-import { RootState } from "../../store/reducers";
-import { AUTH } from "../../store/auth";
 
 export type TemplateBasicProps = {
   backgroundColor?: string;
@@ -118,13 +116,7 @@ export const TemplateBasic: React.FunctionComponent<TemplateBasicProps> = ({
     );
 
   const logoutHandler = () => {
-    localStorage.setItem("login", "false");
-    dispatch(
-      authStore.return__AUTH({
-        authorization: false,
-        authority: "",
-      })
-    );
+    dispatch(authStore.return__LOG_OUT());
   };
 
   return (

@@ -4,7 +4,8 @@
 const common = {
     
   colors: {
-    primary: "#258FFF" // #258FFF #ff792a
+    primary: "#258FFF", // #258FFF #ff792a,
+    error: "#ff1111"
   }
   ,media: {
     sm: 600, 

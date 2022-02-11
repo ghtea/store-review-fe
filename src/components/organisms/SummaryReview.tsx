@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
+import { decode } from 'js-base64';
 
 export type SummaryReviewProps = {
   onClick?: () => void
@@ -14,6 +15,7 @@ const SummaryReviewDiv = styled.div`
 	max-width: 640px;
 	height: 200px;
 	padding: 16px;
+  cursor: pointer;
 
 	&:nth-child(n+2){
 		border-width: 1px;
@@ -58,9 +60,11 @@ const BottomLeftDiv = styled.div`
 
 const ReviewParagraph = styled.p`
   flex: 1;
+  overflow: auto;
 `
 
 const CommentSpan = styled.span`
+  margin-top: 4px;
   color: ${props => props.theme.colors.textHint};
 `
 
@@ -96,38 +100,46 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
   },[onClick])
 
   const updatedAtText = useMemo(()=>{
-    return dayjs(data.updated_at).format("YYYY-M-D") 
-  },[data.updated_at])
+    return dayjs(data.updatedAt).format("YYYY-M-D") 
+  },[data.updatedAt])
 
   const additionalImageCount = useMemo(()=>{
-    if (false) { // TODO: replace it by data.images
+    if (!data.imgUrl || !data.imgUrl.length) { 
       return 0
     }
     else {
-      return ([1,3].length - 1) // TODO: replace it by data.images
+      return (data.imgUrl.length - 1) 
     }
-  },[])
+  },[data.imgUrl])
+
+  const content = useMemo(()=>{
+    return decode(data.content)
+  }, [data.content])
+
+  const imgUrl = useMemo(()=>{
+    return (data.imgUrl || []).map(decode)
+  }, [data.imgUrl])
 
   return (
     <SummaryReviewDiv onClick={handleClick}>
       <TopDiv>
-        <TopNameSpan>{data.said}</TopNameSpan>
+        <TopNameSpan>{data.userId}</TopNameSpan>
         <TopInfoDiv>
-          <Rating ratingValue={data.stars} size={24}/>
+          <Rating ratingValue={data.stars} size={24} readonly/>
           <TopInfoDateSpan>{updatedAtText}</TopInfoDateSpan>
         </TopInfoDiv>
       </TopDiv>
 													
       <BottomDiv>
         <BottomRightDiv>
-          <ReviewParagraph>{data.content}</ReviewParagraph>
-          <CommentSpan> 6 comments {/* TODO: data.commentIds */}</CommentSpan>
+          <ReviewParagraph>{content}</ReviewParagraph>
+          <CommentSpan>{`${data.commentNum} comments`}</CommentSpan>
         </BottomRightDiv>
 
         <BottomLeftDiv>
           <ImageDiv>
-            {["ddd"][0] && (
-              <Image src={["ddd"][0]} />
+            {imgUrl[0] && (
+              <Image src={imgUrl[0]} />
             )}
             {additionalImageCount > 0 && (
               <ImagePlusDiv>{`+${additionalImageCount}`}</ImagePlusDiv>

@@ -1,18 +1,19 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { reactionStore } from '../../store';
 import { Review } from '../../store/reaction';
+import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
+import { decode } from 'js-base64';
 
 export type ModalReviewUpsertProps = ModalProps & {
   data?: Review
   placeId: string
 }
-
 
 const UpdatedAtSpan = styled.span`
   color: ${props => props.theme.colors.textHint};
@@ -62,6 +63,10 @@ const ImageUploadDiv = styled.div`
   }
 `
 
+const DeleteButtonContainerDiv = styled.div`
+  margin-top: 16px;
+`
+
 export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> = ({
   data,
   isOpen,
@@ -69,28 +74,72 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   placeId,
 }) => {
   const dispatch = useDispatch()
+  const postReviewState = useSelector((state: RootState) => state.reaction.postReview);
+  const deleteReviewState = useSelector((state: RootState) => state.reaction.deleteReview);
+  const putReviewState = useSelector((state: RootState) => state.reaction.putReview);
+
   const [draftRating, setDraftRating] = useState(0)
   const [draftReview, setDraftReview] = useState("")
-  const [draftImages, setDraftImages] = useState<string[]>([])
+  const [localImgUrl, setLocalImgUrl] = useState<string[]>([])
+  const [serverImgUrl, setServerImgUrl] = useState<string[]>([])
+  const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
 
-  const handleClearButtonClick = useCallback((index: number)=>{
-    const newImages = [...draftImages]
-    newImages.splice(index, 1)
-    setDraftImages(newImages)
-  }, [draftImages])
+  const resetDraft = useCallback(()=>{
+    setDraftRating(0)
+    setDraftReview("")
+    setLocalImgUrl([])
+    setServerImgUrl([])
+  },[])
+
+  useEffect(()=>{
+    if (!isOpen) return;
+    if (data){
+      setDraftRating(data.stars)
+      setDraftReview(decode(data.content))
+      setServerImgUrl((data.imgUrl || []).map(item => decode(item)))
+    }
+    else {
+      resetDraft()
+    }
+  },[data, isOpen, resetDraft])
+
+  useEffect(()=>{
+    if (postReviewState.status.ready){
+      resetDraft()
+    }
+  },[postReviewState.status.ready, resetDraft])
+
+  useEffect(()=>{
+    if (deleteReviewState.status.ready){
+      resetDraft()
+    }
+  },[deleteReviewState.status.ready, resetDraft])
+
+  const handleLocalImageClear = useCallback((index: number)=>{
+    const newLocalImgUrl = [...localImgUrl]
+    newLocalImgUrl.splice(index, 1)
+    setLocalImgUrl(newLocalImgUrl)
+  }, [localImgUrl])
+
+  const handleServerImageClear = useCallback((index: number)=>{
+    const newServerImgUrl = [...serverImgUrl]
+    newServerImgUrl.splice(index, 1)
+    setServerImgUrl(newServerImgUrl)
+  }, [serverImgUrl])
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
     const files = event.currentTarget.files
-    const theFile = files?.[0];
-    if (theFile){
+    const file = files?.[0];
+    if (file){
       const reader = new FileReader();
       reader.onloadend = (readerEvent) => {
         const result = readerEvent?.target?.result;
         if (typeof result === "string"){
-          setDraftImages(prev => [...prev, result])
+          setLocalImgUrl(prev => [...prev, result])
         }
       };
-      reader.readAsDataURL(theFile);
+      setDraftImageFiles(prev => [...prev, file])
+      reader.readAsDataURL(file);
     }
   },[]);
 
@@ -107,23 +156,71 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[])
 
   const handleConfirmClick = useCallback(()=>{
-    console.log("yo111"); // TODO: remove
-    dispatch(reactionStore.return__POST_REVIEW({
-      placeId,
-      content: draftReview,
-      stars: draftRating,
-      imgUrl: draftImages,
+    if (data){
+      dispatch(reactionStore.return__PUT_REVIEW({
+        reviewId: data.reviewId,
+        content: draftReview,
+        stars: draftRating,
+        serverImgUrl: serverImgUrl,
+        imgFileList: draftImageFiles,
+      }))
+    }
+    else {
+      dispatch(reactionStore.return__POST_REVIEW({
+        placeId,
+        content: draftReview,
+        stars: draftRating,
+        imgFileList: draftImageFiles,
+      }))
+    }
+  },[data, dispatch, draftImageFiles, draftRating, draftReview, serverImgUrl, placeId])
+
+  useEffect(()=>{
+    if (postReviewState.status.ready){
+      setIsOpen(false)
+      setLocalImgUrl([])
+      setDraftImageFiles([])
+    }
+  },[postReviewState.status.ready, setIsOpen])
+
+  useEffect(()=>{
+    if (putReviewState.status.ready){
+      setIsOpen(false)
+      setLocalImgUrl([])
+      setDraftImageFiles([])
+    }
+  },[putReviewState.status.ready, setIsOpen])
+
+  useEffect(()=>{
+    if (deleteReviewState.status.ready){
+      setIsOpen(false)
+    }
+  },[deleteReviewState.status.ready, setIsOpen])
+
+  const handleDelete = useCallback(()=>{
+    if (!data?.reviewId) return;
+
+    dispatch(reactionStore.return__DELETE_REVIEW({
+      reviewId: data.reviewId,
     }))
-  },[dispatch, draftImages, draftRating, draftReview, placeId])
+  },[data?.reviewId, dispatch])
+
+  const confirmDisabled = useMemo(()=>{
+    return (
+      postReviewState.status.loading ||
+      putReviewState.status.loading ||
+      deleteReviewState.status.loading
+    ) 
+  }, [deleteReviewState.status.loading, postReviewState.status.loading, putReviewState.status.loading])
 
   return (
-    
     <Modal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={data ? "리뷰 수정" : "리뷰 등록"}
       confirmTitle={ data ? "수정" : "등록"}
       onClickConfirm={handleConfirmClick}
+      confirmDisabled={confirmDisabled}
     >
       <UpdatedAtSpan>{updatedAtText}</UpdatedAtSpan>
       <RatingWrapper>
@@ -131,10 +228,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       </RatingWrapper>
       <ReviewTextarea onChange={handleReviewTextareaChange} value={draftReview}/>
       <ImageCollectionDiv>
-        {draftImages.map((item, index) => (
+        {serverImgUrl.map((item, index) => (
           <ImageWrapper key={`image-${index}`}>
             <ReviewImage src={item} ></ReviewImage>
-            <Button onClick={()=>handleClearButtonClick(index)} status={"neutral"}>clear</Button>
+            <Button onClick={()=>handleServerImageClear(index)} status={"neutral"}>clear</Button>
+          </ImageWrapper>
+        ))}
+        {localImgUrl.map((item, index) => (
+          <ImageWrapper key={`image-${index}`}>
+            <ReviewImage src={item} ></ReviewImage>
+            <Button onClick={()=>handleLocalImageClear(index)} status={"neutral"}>clear</Button>
           </ImageWrapper>
         ))}
       </ImageCollectionDiv>
@@ -146,6 +249,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
           Upload Photo 
         </label>
       </ImageUploadDiv>
+      <DeleteButtonContainerDiv>
+        {data?.reviewId && (
+          <Button onClick={handleDelete} status="error" disabled={deleteReviewState.status.loading}>{"리뷰 삭제"}</Button>
+        )}
+      </DeleteButtonContainerDiv>
     </Modal>
   )
 }

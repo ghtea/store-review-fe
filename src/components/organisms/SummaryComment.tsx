@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import { decode } from 'js-base64';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Comment } from '../../store/reaction';
 
@@ -10,8 +11,10 @@ export type SummaryCommentProps = {
 
 const SummaryCommentDiv = styled.div`
 	width: 100%;
-	height: 80px;
 	padding: 16px;
+  max-height: 120px;
+  overflow: auto;
+  cursor: pointer;
 
 	&:nth-child(n+2){
 		border-width: 1px;
@@ -20,20 +23,20 @@ const SummaryCommentDiv = styled.div`
 	}
 `
 const CommentMetaInfoDiv = styled.div`
-  flex-direction: row;
-  align-items: flex-end;
+  flex-direction: column;
 `
 
 const CommentAuthorSpan = styled.span`
 	font-size: 1.125rem;
-	padding-left: 4px;
 `
 
 const CommentCreatedAtSpan = styled.span`
+  margin-top: 4px;
 	color: ${props => props.theme.colors.textHint};
 `
 
 const CommentParagraph = styled.p`
+  margin-top: 8px;
   flex: 1;
 `
 
@@ -49,13 +52,17 @@ export const SummaryComment:React.FunctionComponent<SummaryCommentProps> = ({
     return dayjs(data.updatedAt).format("YYYY-M-D") 
   },[data.updatedAt])
 
+  const content = useMemo(()=>{
+    return decode(data.content)
+  }, [data.content])
+
   return (
     <SummaryCommentDiv onClick={handleClick}>
       <CommentMetaInfoDiv>
-        <CommentAuthorSpan>{data.said/*TODO: replace by name of auther*/}</CommentAuthorSpan>
+        <CommentAuthorSpan>{data.userId}</CommentAuthorSpan>
         <CommentCreatedAtSpan>{updatedAtText}</CommentCreatedAtSpan>
       </CommentMetaInfoDiv>             
-      <CommentParagraph>{data.content}</CommentParagraph>
+      <CommentParagraph>{content}</CommentParagraph>
     </SummaryCommentDiv>
   )
 }

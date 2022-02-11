@@ -9,8 +9,10 @@ import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { ModalReviewUpsert } from '../organisms/ModalReviewUpsert';
 import { SummaryReview } from '../organisms/SummaryReview';
+import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
-import { DUMMY_REVIEW, Review } from '../../store/reaction';
+import { Loading } from '../atoms/Loading';
+import { decode } from 'js-base64';
 
 export type StorePageProps = {
 }
@@ -78,6 +80,7 @@ const ReviewGroupHeading = styled.h3`
 	font-size: 1.25rem;	
 	width: 100%;
 	padding-left: 16px;
+  font-weight: 700;
 `
 
 const ReviewMyDiv = styled.div`
@@ -96,6 +99,7 @@ const ReviewUpsertButton = styled(Button)`
 `
 
 const ReviewPeopleDiv = styled.div`
+  margin-top: 40px;
 	align-items: center;
 `
 
@@ -105,40 +109,23 @@ const ReviewPeopleReviewsSummaryDiv = styled.div`
 	align-items: center;
 `
 
-const PeopleImageCollectionDiv = styled.div`
-	flex-direction: row;
-	margin-top: 16px;
-	margin-bottom: 16px;
-	margin-left: 16px;
-	margin-right: 16px;
-`
-
-const PeopleImage = styled.img`
-  width: 80px;
-  height: 80px;
-`
-
 const ReviewPeopleReviewsListDiv = styled.div`
 	width: 100%;
 	margin-top: 16px;
 	align-items: center;
 `
 
-
-// /store/:storeId?lat=...&lon=...&name=... => 해당 search params 이용해서 검색!
 export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const dispatch = useDispatch();
   const { id } = useParams<"id">();
   const [searchParams] = useSearchParams();
   const pageStoreState = useSelector((state: RootState) => state.place.getPageStore);
   const getReviewsState = useSelector((state: RootState) => state.reaction.getReviews);
-  useEffect(()=>{
-    console.log("getReviewsState: ", getReviewsState); // TODO: remove 
-  },[getReviewsState])
+  const authStore = useSelector((state: RootState) => state.auth);
+  const [readingReviewData, setReadingReviewData] = useState<Review | undefined>(undefined)
+
   const [isModalReviewUpsertOpen , setIsModalReviewUpsertOpen] = useState(false)
   const [isModalReviewReadOpen , setIsModalReviewReadOpen] = useState(false)
-  // const [myReview, setMyReview] = useState<Review | undefined>(undefined) // TODO: uncomment
-  const [myReview, setMyReview] = useState<Review | undefined>(DUMMY_REVIEW)
 
   const placeId = useMemo(()=>id ? id : "", [id])
 
@@ -157,7 +144,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     }))
   },[dispatch, placeId, searchParams])
 
-  const getReviewData = useCallback(async (id: string)=>{
+  const getReviews = useCallback((id: string)=>{
     dispatch(reactionStore.return__GET_REVIEWS({
       placeId: id,
     }))
@@ -165,8 +152,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   useEffect(()=>{
     if (!placeId ) return
-    getReviewData(placeId)
-  },[getReviewData, placeId])
+    // if (!authStore.status.authenticated) return
+
+    getReviews(placeId)
+  },[getReviews, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
@@ -176,16 +165,39 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     setIsModalReviewUpsertOpen(true)
   },[])
 
-  const hanldeSummaryReviewClick = useCallback(()=>{
+  const hanldeSummaryReviewClick = useCallback((reviewData)=>{
     setIsModalReviewReadOpen(true)
+    setReadingReviewData(reviewData)
   },[])
+
+  const onClickConfirmModalReviewRead = useCallback(()=>{
+    setIsModalReviewUpsertOpen(true)
+    setIsModalReviewReadOpen(false)
+  },[])
+
+  const avgStars = useMemo (()=>{
+    if (getReviewsState.data?.data?.placeAvgStar) {
+      return Math.round(getReviewsState.data.data.placeAvgStar * 10)/10
+    } else {
+      return undefined
+    }
+  },[getReviewsState.data])
+
+  const myReview = useMemo(()=>{
+    const mySaid = authStore.data?.said
+    if (!mySaid) return undefined 
+    const newMyReview = (getReviewsState.data?.data?.reviewsResponseDtoList || []).find(item => item.said === mySaid)
+    return newMyReview ? newMyReview : undefined
+  },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
+
+
 
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>
         <MainDiv>
           {!pageStoreState.data && pageStoreState.status.loading && (
-            <div>loading</div>
+            <Loading/>
           )}
           {pageStoreState.data && (
             <ContentDiv>
@@ -209,20 +221,21 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                   <ReviewGroupHeading>{"내 리뷰"}</ReviewGroupHeading>
                   {myReview && (
                     <ReviewGroupContentDiv>
-                      <Rating ratingValue={myReview.stars} size={24}/>
-                      <p>{myReview.content}</p>                     
+                      <Rating ratingValue={myReview.stars} size={24} readonly/>
                       <ReviewUpsertButton 
                         status={"primary"}
                         onClick={handleReviewUpdateButton}
+                        disabled={!authStore.status.authenticated}
                       >
                         리뷰 수정
                       </ReviewUpsertButton>
                     </ReviewGroupContentDiv>
                   )}
-                  {true && (
+                  {!myReview && (
                     <ReviewUpsertButton 
                       status={"primary"}
                       onClick={handleReviewCreateButton}
+                      disabled={!authStore.status.authenticated}
                     >
                       리뷰 작성
                     </ReviewUpsertButton>
@@ -230,35 +243,54 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                 </ReviewMyDiv>
                 <ReviewPeopleDiv>
                   <ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
-                  <ReviewGroupContentDiv>
-                    <ReviewPeopleReviewsSummaryDiv>
-                      <span>{"전체 평점"}</span>
-                      <span>{"4.3/5"}</span>
-                      <Rating ratingValue={2.5} size={32}/>
-                      <PeopleImageCollectionDiv>
-                        <PeopleImage/>
-                        <PeopleImage/>
-                        <PeopleImage/>
-                      </PeopleImageCollectionDiv>
-                    </ReviewPeopleReviewsSummaryDiv>
-                    <ReviewPeopleReviewsListDiv>
-                      {(getReviewsState.data?.data.reviews || []).map((item, index)=>(
-                        <SummaryReview
-                          key={`review-${index}`}
-                          data={item}
-                          onClick={hanldeSummaryReviewClick}
-                        />
-                      ))}
-                    </ReviewPeopleReviewsListDiv>
-                  </ReviewGroupContentDiv>
+                  { getReviewsState.status.loading 
+                    ? <Loading/>
+                    : (
+                      <>
+                        <ReviewGroupContentDiv>
+                          {(avgStars === undefined) || isNaN(avgStars)
+                            ? ("평점이 없습니다")
+                            : (
+                              <ReviewPeopleReviewsSummaryDiv>
+                                <span>{"전체 평점"}</span>
+                                <span>{`${avgStars.toFixed(1)}/5`}</span>
+                              </ReviewPeopleReviewsSummaryDiv>
+                            )
+                          }
+                          <ReviewPeopleReviewsListDiv>
+                            {(getReviewsState.data?.data?.reviewsResponseDtoList || []).map((item, index)=>(
+                              <SummaryReview
+                                key={`review-${index}`}
+                                data={item}
+                                onClick={()=>hanldeSummaryReviewClick(item)}
+                              />
+                            ))}
+                          </ReviewPeopleReviewsListDiv>
+                        </ReviewGroupContentDiv>
+                      </>
+                    )
+                  }
                 </ReviewPeopleDiv>
               </ReviewInfoDiv>
             </ContentDiv>
           )}
         </MainDiv>
       </div>
-      <ModalReviewUpsert placeId={placeId} isOpen={isModalReviewUpsertOpen} setIsOpen={setIsModalReviewUpsertOpen}/>
-      <ModalReviewRead isOpen={isModalReviewReadOpen} setIsOpen={setIsModalReviewReadOpen} data={DUMMY_REVIEW}/>
+      {isModalReviewUpsertOpen }
+      <ModalReviewUpsert 
+        placeId={placeId} 
+        isOpen={isModalReviewUpsertOpen} 
+        setIsOpen={setIsModalReviewUpsertOpen}
+        data={myReview}
+      />
+      {readingReviewData && (
+        <ModalReviewRead 
+          isOpen={isModalReviewReadOpen} 
+          setIsOpen={setIsModalReviewReadOpen} 
+          data={readingReviewData}
+          onClickConfirm={onClickConfirmModalReviewRead}
+        />
+      )}
     </TemplateBasic>
   )
 }
