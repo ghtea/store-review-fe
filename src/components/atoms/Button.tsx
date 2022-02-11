@@ -22,7 +22,7 @@ const StyledButton = styled.button<ButtonProps>`
   ${props => props.status === "neutral" && css`
     background-color: #fff;
     color: ${props.theme.colors.textDefault};
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
   `}
 
   // override others

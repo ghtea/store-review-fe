@@ -34,6 +34,7 @@ const BackgroundDiv = styled.div`
 const ModalDiv = styled.div`
   position: absolute;
   width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
   margin-top: 16px;
   margin-bottom: 16px;
   flex: 1;
@@ -43,6 +44,7 @@ const ModalDiv = styled.div`
   background-color: #ffffff;
   align-items: center;
   padding: 16px;
+  overflow: auto;
 `
 
 const HeaderDiv = styled.div`
@@ -53,6 +55,8 @@ const ContentDiv = styled.div`
   width: 100%;
   margin-top: 32px;
   align-items: center;
+  flex: 1;
+  overflow: auto;
 `
 
 const FooterDiv = styled.div`

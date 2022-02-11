@@ -45,6 +45,7 @@ const ReviewParagraph = styled.p`
 	margin-top: 8px;
 	margin-left: 8px;
 	margin-right: 8px;
+  overflow: auto;
 `
 
 const ImageCollectionDiv = styled.div`
@@ -75,7 +76,7 @@ const CommentCollectionDiv = styled.div`
   margin-top: 16px;
   margin-bottom: 16px;
   max-height: 300px;
-  overflow: auto;
+  overflow-x: auto;
 `
 
 const SummaryCommentWrapper = styled.div`

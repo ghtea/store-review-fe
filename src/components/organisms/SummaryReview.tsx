@@ -60,9 +60,11 @@ const BottomLeftDiv = styled.div`
 
 const ReviewParagraph = styled.p`
   flex: 1;
+  overflow: auto;
 `
 
 const CommentSpan = styled.span`
+  margin-top: 4px;
   color: ${props => props.theme.colors.textHint};
 `
 

@@ -186,6 +186,13 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
   }, [dispatch])
 
   useEffect(()=>{
+    const isCurrentLocationSearchFromLocalStorage = localStorage.getItem("isCurrentLocationSearch");
+    if (isCurrentLocationSearchFromLocalStorage){
+      setIsCurrentLocationSearch(true)
+    }
+  },[])
+
+  useEffect(()=>{
     const newKeyword = searchParams.get("q") || ""
     if (mainMap && newKeyword){
       dispatch(placeStore.return__SEARCH_PLACES({
@@ -213,13 +220,18 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
   },[dispatch, isCurrentLocationSearch, searchValue])
 
   const handleCurrentLocationSearchCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
-    const newValue = Boolean(event.currentTarget.value)
-    setIsCurrentLocationSearch(newValue)
+    const shouldChecked = Boolean(event.currentTarget.checked)
+    setIsCurrentLocationSearch(shouldChecked)
+    if (shouldChecked){
+      localStorage.setItem("isCurrentLocationSearch", "true");
+    } else {
+      localStorage.removeItem("isCurrentLocationSearch");
+    }
 
     if (searchValue){
       dispatch(placeStore.return__SEARCH_PLACES({
         keyword: searchValue,
-        isCurrentLocation: newValue
+        isCurrentLocation: shouldChecked
       }))
     }
   },[dispatch, searchValue])
@@ -298,7 +310,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
               </SearchButton>
             </SearchInputButtonWrapper>
             <SearchOptionWrapper>
-              <input id={"current-location-search-checkbox"} type={"checkbox"} onChange={handleCurrentLocationSearchCheckboxChange} />
+              <input id={"current-location-search-checkbox"} type={"checkbox"} checked={isCurrentLocationSearch} onChange={handleCurrentLocationSearchCheckboxChange} />
               <label htmlFor={"current-location-search-checkbox"}>현재 위치 기준</label>
             </SearchOptionWrapper>
             <SearchResultDiv>

@@ -152,10 +152,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   useEffect(()=>{
     if (!placeId ) return
-    if (!authStore.status.authenticated) return
+    // if (!authStore.status.authenticated) return
 
     getReviews(placeId)
-  },[authStore.status.authenticated, getReviews, placeId])
+  },[getReviews, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
@@ -190,6 +190,8 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     return newMyReview ? newMyReview : undefined
   },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
 
+
+
   return (
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>
@@ -223,6 +225,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       <ReviewUpsertButton 
                         status={"primary"}
                         onClick={handleReviewUpdateButton}
+                        disabled={!authStore.status.authenticated}
                       >
                         리뷰 수정
                       </ReviewUpsertButton>
@@ -232,6 +235,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                     <ReviewUpsertButton 
                       status={"primary"}
                       onClick={handleReviewCreateButton}
+                      disabled={!authStore.status.authenticated}
                     >
                       리뷰 작성
                     </ReviewUpsertButton>
