@@ -40,7 +40,7 @@ const RatingWrapper = styled.div`
 
 const ReviewParagraph = styled.p`
 	width: 100%;
-	height: 140px;
+	height: 240px;
 	padding: 8px;
 	margin-top: 8px;
 	margin-left: 8px;
@@ -53,6 +53,7 @@ const ImageCollectionDiv = styled.div`
   overflow-x: auto;
   margin-top: 16px;
   margin-bottom: 16px;
+  flex-shrink: 0;
 `
 
 const ImageWrapper = styled.div`
@@ -73,8 +74,8 @@ const CommentCollectionDiv = styled.div`
   width: 100%;
   padding-left: 8px;
   padding-right: 8px;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   max-height: 300px;
   overflow-x: auto;
 `
@@ -205,6 +206,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         }
         <CommentUpsertButton
           onClick={handleCommentCreateClick}
+          disabled={!authStore.status.authenticated}
         >
           코멘트 작성
         </CommentUpsertButton>
