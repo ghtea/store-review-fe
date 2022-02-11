@@ -1,8 +1,8 @@
-export const AUTH = 'auth/AUTH';
+export const AUTH = "auth/AUTH";
 type AUTH_Payload = {
-  authority: string,
-  nickname: string
-}
+  authorization: boolean;
+  authority: string;
+};
 export const return__AUTH = (payload: AUTH_Payload) => {
   return {
     type: AUTH,
