@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Review } from '../../store/reaction';
 import { Rating } from '../atoms/Rating';
@@ -104,11 +104,11 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
   },[data.updatedAt])
 
   const additionalImageCount = useMemo(()=>{
-    if (!data.imgUrl || !data.imgUrl.length) { // TODO: replace it by data.images
+    if (!data.imgUrl || !data.imgUrl.length) { 
       return 0
     }
     else {
-      return (data.imgUrl.length - 1) // TODO: replace it by data.images
+      return (data.imgUrl.length - 1) 
     }
   },[data.imgUrl])
 
@@ -120,15 +120,12 @@ export const SummaryReview:React.FunctionComponent<SummaryReviewProps> = ({
     return (data.imgUrl || []).map(decode)
   }, [data.imgUrl])
 
-  useEffect(()=>{
-    console.log("data: ", data); // TODO: remove 
-  },[data])
   return (
     <SummaryReviewDiv onClick={handleClick}>
       <TopDiv>
         <TopNameSpan>{data.userId}</TopNameSpan>
         <TopInfoDiv>
-          <Rating ratingValue={4} size={24} readonly/>
+          <Rating ratingValue={data.stars} size={24} readonly/>
           <TopInfoDateSpan>{updatedAtText}</TopInfoDateSpan>
         </TopInfoDiv>
       </TopDiv>

@@ -254,7 +254,6 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                               <ReviewPeopleReviewsSummaryDiv>
                                 <span>{"전체 평점"}</span>
                                 <span>{`${avgStars.toFixed(1)}/5`}</span>
-                                <Rating ratingValue={avgStars} allowHalfIcon size={32} readonly/>
                               </ReviewPeopleReviewsSummaryDiv>
                             )
                           }
