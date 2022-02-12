@@ -8,6 +8,7 @@ export const AuthProvider: React.FunctionComponent = ({ children }) =>{
 
   useEffect(()=>{
     const token = localStorage.getItem("accessToken")
+
     if (token){
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       dispatch(

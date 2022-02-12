@@ -12,7 +12,6 @@ import { SummaryReview } from '../organisms/SummaryReview';
 import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { Loading } from '../atoms/Loading';
-import { decode } from 'js-base64';
 
 export type StorePageProps = {
 }
@@ -129,7 +128,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   const placeId = useMemo(()=>id ? id : "", [id])
 
-  useEffect(()=>{
+  useEffect(()=> {
     const name = searchParams.get("name")
     const latitude = parseFloat(searchParams.get("latitude") || "")
     const longitude = parseFloat(searchParams.get("longitude") || "")
@@ -152,10 +151,9 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   useEffect(()=>{
     if (!placeId ) return
-    if (!authStore.status.authenticated) return
 
     getReviews(placeId)
-  },[authStore.status.authenticated, getReviews, placeId])
+  },[getReviews, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)
