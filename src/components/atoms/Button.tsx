@@ -8,7 +8,6 @@ export type ButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTM
 }
 
 const StyledButton = styled.button<ButtonProps>`
-
   ${props => props.status === "primary" && css`
     background-color: ${props.theme.colors.primary};
     color: ${props.theme.colors.textAlternative};
@@ -33,6 +32,7 @@ const StyledButton = styled.button<ButtonProps>`
     cursor: default;
   `}
 
+  width: auto;
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 12px;

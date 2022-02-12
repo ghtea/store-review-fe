@@ -1,60 +1,59 @@
-/* eslint-disable indent */
 import * as React from "react";
+import sha256 from 'crypto-js/sha256';
 import { TemplateFull } from "../templates/TemplateFull";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { RootState } from "../../store/reducers";
 import BackButton from "../atoms/BackButton";
-import Private from "../atoms/Private";
-import { useDispatch, useSelector } from "react-redux";
+import { Button } from "../atoms/Button";
+import { useDispatch } from "react-redux";
 import { authStore } from "../../store";
 
 const color1 = "#60a9f2";
-// input태그의 스타일과 gender에 div태그의 스타일을 일치시키기 위해 작성된 스타일 컴포넌트
-const commonStyle = css`
-  width: 100%;
-  height: 30px;
-  border-radius: 5px;
-  padding-left: 10px;
-  border: 0px;
-  box-shadow: inset 2px 2px 3px 1px ${color1}, 2px 2px 3px 1px ${color1};
 
-  &:focus,
-  &:hover {
-    background-color: ${color1};
-    color: white;
-  }
-`;
 const ServiceLogoSpan = styled.span`
   margin: auto;
   color: ${(props) => props.theme.colors.primary};
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
 `;
-const InputDiv = styled.div`
+
+const InputContainer = styled.div`
   display: block;
   padding: 5px;
 `;
 
 const Container = styled.div`
   padding: 20px;
-  margin-top: 120px;
   width: 400px;
   border-radius: 5px;
   border: 0px;
-  box-shadow: 2px 2px 5px 3px ${color1}, 1px 1px 1px 1px ${color1};
+  // box-shadow: 2px 2px 5px 3px ${color1}, 1px 1px 1px 1px ${color1};
+  margin: auto;
 `;
 
-const InputTitlePtag = styled.p`
+const LogoContainer = styled.div`
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
+`
+
+const InputLabel = styled.p`
   padding-bottom: 5px;
   font-size: 14px;
 `;
+
 const Input = styled.input`
-  outline: 0px;
-  ${commonStyle}
+  width: 100%;
+	outline: 0px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 8px 8px 8px;
 `;
+
 // 유효하지 않은 값 알려주는 객체의 CSS
 const InputAlert = styled.div`
   height: 8px;
@@ -62,24 +61,21 @@ const InputAlert = styled.div`
   padding: 5px 0px 0px 5px;
   color: red;
 `;
-const Button = styled.button`
-  ${commonStyle}
-  padding-left: 0px;
-  width: 40%;
-  height: 40px;
-  border: 0px;
-  margin: 10px 5% 0px;
-  background-color: white;
-  line-height: 40px;
-`;
-const LoginMemberBtn = styled.div`
+
+const LinksContainer = styled.div`
   width: 100%;
   display: flex;
   font-size: 14px;
   flex-flow: wrap row;
-  justify-content: space-between;
-  padding: 10px 0px;
+  justify-content: flex-end;
+  margin-top: 16px;;
+  padding: 0 32px 0;
 `;
+
+const LogInButton = styled(Button)`
+margin-top: 16px;
+  width: 100%;
+`
 
 export type LoginPageProps = {};
 
@@ -88,7 +84,6 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
   const [errors, setErrors] = useState({ userId: "", password: "" });
   const [isSubmit, setIsSubmit] = useState({ userId: false, password: false });
   const [target, setTarget] = useState("");
-  const [auth, setAuth] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -101,57 +96,51 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
 
   useEffect(() => {
     switch (target) {
-      case "id":
-        let isUseridRegex = /^[a-zA-Z0-9]{5,12}$/g;
-        if (!isUseridRegex.test(userData.userId)) {
-          setErrors({
-            ...errors,
-            userId: "영문,숫자 로 5~12자로 구성되야합니다.",
-          });
-          setIsSubmit({ ...isSubmit, userId: false });
-        } else {
-          setErrors({ ...errors, userId: "" });
-          setIsSubmit({ ...isSubmit, userId: true });
-        }
-        break;
-      case "password":
-        let isPasswordRegex = /^[a-zA-Z0-9]{5,15}$/;
-        if (!isPasswordRegex.test(userData.password)) {
-          setErrors({
-            ...errors,
-            password: "영문,숫자 로 5~15자로 구성되야합니다.",
-          });
-          setIsSubmit({ ...isSubmit, password: false });
-        } else {
-          setErrors({ ...errors, password: "" });
-          setIsSubmit({ ...isSubmit, password: true });
-        }
-        break;
-      default:
-        break;
+    case "id":
+      let isUseridRegex = /^[a-zA-Z0-9]{5,12}$/g;
+      if (!isUseridRegex.test(userData.userId)) {
+        setErrors({
+          ...errors,
+          userId: "영문,숫자 로 5~12자로 구성되야합니다.",
+        });
+        setIsSubmit({ ...isSubmit, userId: false });
+      } else {
+        setErrors({ ...errors, userId: "" });
+        setIsSubmit({ ...isSubmit, userId: true });
+      }
+      break;
+    case "password":
+      let isPasswordRegex = /^[a-zA-Z0-9]{5,15}$/;
+      if (!isPasswordRegex.test(userData.password)) {
+        setErrors({
+          ...errors,
+          password: "영문,숫자 로 5~15자로 구성되야합니다.",
+        });
+        setIsSubmit({ ...isSubmit, password: false });
+      } else {
+        setErrors({ ...errors, password: "" });
+        setIsSubmit({ ...isSubmit, password: true });
+      }
+      break;
+    default:
+      break;
     }
   }, [userData]);
 
   useEffect(() => {}, [errors]);
 
   const handleSubmit = () => {
-    //if (isSubmit.userId && isSubmit.password) {
     if (true) {
       axios({
         url: `${process.env.REACT_APP_BACKEND_URL}/authenticate`,
         method: "POST",
         data: {
-          //test@review.com
-          //9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08
-          //해시 256암호화가 필요
           userId: userData.userId,
-          password: userData.password,
+          password: sha256(userData.password).toString().toUpperCase(),
         },
       })
         .then((res) => {
-          console.log(res);
           let token = res.data.data.token;
-          console.log(res.data.data.token);
           localStorage.setItem("accessToken", token);
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           alert("로그인에 성공하였습니다.");
@@ -175,15 +164,16 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
   return (
     <TemplateFull>
       <Container>
-        <span style={{ width: "40px" }}>
-          <BackButton> </BackButton>
-        </span>
-        <ServiceLogoSpan>
-          <Link to={"/"}>여기모아</Link>
-        </ServiceLogoSpan>
+        
+        <BackButton/>
+        <LogoContainer>
+          <Link to={"/"}>
+            <ServiceLogoSpan>여기모아</ServiceLogoSpan>
+          </Link>
+        </LogoContainer>
 
-        <InputDiv>
-          <InputTitlePtag> 아이디 : </InputTitlePtag>
+        <InputContainer>
+          <InputLabel>아이디</InputLabel>
           <Input
             type="text"
             name="userId"
@@ -191,9 +181,9 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
             onBlur={handleValidation}
           />
           <InputAlert className="userId"> {errors.userId} </InputAlert>
-        </InputDiv>
-        <InputDiv>
-          <InputTitlePtag> 비밀번호 : </InputTitlePtag>
+        </InputContainer>
+        <InputContainer>
+          <InputLabel> 비밀번호</InputLabel>
           <Input
             type="password"
             name="password"
@@ -201,22 +191,15 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
             onBlur={handleValidation}
           />
           <InputAlert className="password"> {errors.password} </InputAlert>
-        </InputDiv>
-        <InputDiv>
-          <Button onClick={handleSubmit}> 로그인 </Button>
-          <Button> 취소 </Button>
-        </InputDiv>
-        <LoginMemberBtn>
-          <Link to={"/"} style={{ width: "100px" }}>
-            아이디찾기(x)
-          </Link>
-          <Link to={"/"} style={{ width: "100px" }}>
-            비밀번호찾기(x)
-          </Link>
-          <Link to={"/signup"} style={{ width: "100px" }}>
+        </InputContainer>
+        <InputContainer>
+          <LogInButton status="primary" onClick={handleSubmit}> 로그인 </LogInButton>
+        </InputContainer>
+        <LinksContainer>
+          <Link to={"/signup"}>
             회원가입
           </Link>
-        </LoginMemberBtn>
+        </LinksContainer>
       </Container>
     </TemplateFull>
   );
