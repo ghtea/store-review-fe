@@ -26,7 +26,13 @@ export const return__SEARCH_PLACES = (payload: SEARCH_PLACES__Payload) => {
 };
 export type SEARCH_PLACES_Instance = ReturnType<typeof return__SEARCH_PLACES>;
 
-
+export const RESET_SEARCH_PLACES = 'place/RESET_SEARCH_PLACES';
+export const return__RESET_SEARCH_PLACES = () => {
+  return {
+    type: RESET_SEARCH_PLACES,
+  };
+};
+export type RESET_SEARCH_PLACES_Instance = ReturnType<typeof return__RESET_SEARCH_PLACES>;
 
 export const GET_PAGE_STORE = 'place/GET_PAGE_STORE';
 type GET_PAGE_STORE__Payload = {

@@ -24,7 +24,7 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
     const keyValue = {
       content: encode(payload.content),
       stars: payload.stars,
-      imgUrl: payload.serverImgUrl.map(item => encode(item)) // WIP: check  
+      imgUrl: payload.serverImgUrl.length === 0 ? undefined : payload.serverImgUrl.map(item => encode(item))  // TODO: check
     }
 
     formData.append("key", JSON.stringify(keyValue));
@@ -32,9 +32,7 @@ export function* putReview(action: actions.PUT_REVIEW_Instance) {
     (payload.imgFileList || []).forEach(item => {
       formData.append("imgFileList", item);
     })
-    // (payload.imgFileList || []).forEach((item, index) => {
-    //   formData.append(`imgFileList[${index}]`, item);
-    // })
+    
     const response: AxiosResponse<PutReviewData> = yield call(
       axios.put,
       `${process.env.REACT_APP_BACKEND_URL}/reviews/${payload.reviewId}`,

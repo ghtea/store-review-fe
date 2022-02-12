@@ -6,7 +6,7 @@ import { placeStore } from '../../store';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Place } from '../../store/place';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Router, useNavigate, useSearchParams } from 'react-router-dom';
 
 export type MapPageProps = {
 }
@@ -194,12 +194,17 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
 
   useEffect(()=>{
     const newKeyword = searchParams.get("q") || ""
-    if (mainMap && newKeyword){
+    if (!mainMap) return;
+    if (newKeyword){
       dispatch(placeStore.return__SEARCH_PLACES({
         keyword: newKeyword,
         isCurrentLocation: isCurrentLocationSearch
       }))
       setSearchValue(newKeyword)
+    }
+    else {
+      dispatch(placeStore.return__RESET_SEARCH_PLACES())
+      setSearchValue("")
     }
   },[dispatch, isCurrentLocationSearch, mainMap, searchParams])
 
@@ -217,7 +222,12 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
       keyword: searchValue,
       isCurrentLocation: isCurrentLocationSearch
     }))
-  },[dispatch, isCurrentLocationSearch, searchValue])
+   
+    const serachParams = new URLSearchParams();
+    serachParams.set("q", searchValue)
+
+    navigate({ search: serachParams.toString() })
+  },[dispatch, isCurrentLocationSearch, navigate, searchValue])
 
   const handleCurrentLocationSearchCheckboxChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((event)=>{
     const shouldChecked = Boolean(event.currentTarget.checked)

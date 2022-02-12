@@ -31,7 +31,7 @@ const initialState = {
     keyword: undefined,
     status: {
       loading: false,
-      ready: true,
+      ready: false,
     }
   },
   markers: [],
@@ -39,7 +39,7 @@ const initialState = {
     data: undefined,
     status: {
       loading: false,
-      ready: true,
+      ready: false,
     }
   },
 };

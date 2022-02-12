@@ -152,10 +152,10 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
   useEffect(()=>{
     if (!placeId ) return
-    // if (!authStore.status.authenticated) return
+    if (!authStore.status.authenticated) return
 
     getReviews(placeId)
-  },[getReviews, placeId])
+  },[authStore.status.authenticated, getReviews, placeId])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)

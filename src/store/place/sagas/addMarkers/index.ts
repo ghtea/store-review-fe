@@ -5,7 +5,6 @@ import * as actions from '../../actions';
 
 export function* addMarkers(action: actions.ADD_MARKERS_Instance) {
   const payload = action.payload
-
   const mainMap: kakao.maps.Map | undefined = yield select(
     (state: RootState) => state.place.mainMap
   );
@@ -25,7 +24,8 @@ export function* addMarkers(action: actions.ADD_MARKERS_Instance) {
   payload.items.forEach(item => {
     const mapLatLng = new kakao.maps.LatLng(item.coords.latitude, item.coords.longitude);
     const newMarker = new kakao.maps.Marker({
-      position: mapLatLng
+      position: mapLatLng,
+      opacity: 1,
     });
   
     newMarker.setMap(mainMap);
