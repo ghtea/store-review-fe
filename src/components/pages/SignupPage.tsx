@@ -107,9 +107,9 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
     const newValue = event.target.value
     setUserId(newValue)
 
-    const userIdRegex = /^[a-zA-Z0-9]{5,12}$/g;
+    const userIdRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!userIdRegex.test(newValue)) {
-      setUserIdError("영문,숫자 로 5~12자로 구성되야합니다.");
+      setUserIdError("유효한 이메일 형식이어야 합니다");
     } else {
       setUserIdError("")
     }
@@ -229,8 +229,8 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
           </Link>
         </LogoContainer>
         <InputContainer>
-          <InputLabel> 아이디 </InputLabel>
-          <Input type="text" name="userId" placeholder="아이디를 입력하세요" onChange={onChangeUserId} />
+          <InputLabel> 이메일 </InputLabel>
+          <Input type="text" name="userId" placeholder="이메일을 입력하세요" onChange={onChangeUserId} />
           <InputAlert className="userId"> {userIdError} </InputAlert>
         </InputContainer>
         <InputContainer>
