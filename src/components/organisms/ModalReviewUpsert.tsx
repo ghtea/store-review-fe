@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { reactionStore } from '../../store';
@@ -85,6 +85,12 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   const [serverImgUrl, setServerImgUrl] = useState<string[]>([])
   const [draftImageFiles, setDraftImageFiles] = useState<File[]>([])
 
+  const inputFileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(()=>{
+    console.log("localImgUrl: ", localImgUrl); // TODO: remove 
+  },[localImgUrl])
+
   const resetDraft = useCallback(()=>{
     setDraftRating(0)
     setDraftReview("")
@@ -120,7 +126,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
     const newLocalImgUrl = [...localImgUrl]
     newLocalImgUrl.splice(index, 1)
     setLocalImgUrl(newLocalImgUrl)
-  }, [localImgUrl])
+
+    const newDraftImageFiles = [...draftImageFiles]
+    newDraftImageFiles.splice(index, 1)
+    setDraftImageFiles(newDraftImageFiles)
+  }, [draftImageFiles, localImgUrl])
 
   const handleServerImageClear = useCallback((index: number)=>{
     const newServerImgUrl = [...serverImgUrl]
@@ -129,7 +139,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   }, [serverImgUrl])
 
   const handleReviewImageInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback( (event) => {
-    const files = event.currentTarget.files
+    const files = event.target.files
     const file = files?.[0];
     if (file){
       const reader = new FileReader();
@@ -138,6 +148,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         if (typeof result === "string"){
           setLocalImgUrl(prev => [...prev, result])
         }
+        event.target.value = ""
       };
       setDraftImageFiles(prev => [...prev, file])
       reader.readAsDataURL(file);
@@ -243,7 +254,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
         ))}
       </ImageCollectionDiv>
       <ImageUploadDiv>
-        <input type="file" accept="image/*" id='input-review-image' 
+        <input 
+          ref={inputFileRef}
+          type="file" 
+          accept="image/*" 
+          id='input-review-image' 
           onChange={handleReviewImageInputChange}
         />
         <label htmlFor='input-review-image' > 
