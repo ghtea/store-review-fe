@@ -12,8 +12,10 @@ import { SummaryReview } from '../organisms/SummaryReview';
 import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { Loading } from '../atoms/Loading';
+import { SagaStatus } from '../../store/type';
 
 export type StorePageProps = {
+  
 }
 
 const MainDiv = styled.div`
@@ -194,7 +196,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
     <TemplateBasic backgroundColor={"#f8f8f8"}>
       <div>
         <MainDiv>
-          {!pageStoreState.data && pageStoreState.status.loading && (
+          {!pageStoreState.data && pageStoreState.status === SagaStatus.LOADING && (
             <Loading/>
           )}
           {pageStoreState.data && (
@@ -241,7 +243,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                 </ReviewMyDiv>
                 <ReviewPeopleDiv>
                   <ReviewGroupHeading>{"전체 리뷰"}</ReviewGroupHeading>
-                  { getReviewsState.status.loading 
+                  { getReviewsState.status === SagaStatus.LOADING 
                     ? <Loading/>
                     : (
                       <>

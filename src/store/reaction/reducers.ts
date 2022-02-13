@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
+import { SagaStatus } from '../type';
 import * as actions from './actions';
 import { DeleteCommentData } from './sagas/deleteComment/types';
 import { DeleteReviewData } from './sagas/deleteReview/types';
@@ -17,38 +18,23 @@ export type State = {
   getReviews: {
     data: GetReviewsData | undefined,
     placeId: string | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
   getReview: {
     data: GetReviewData | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
   postReview: {
     data: PostReviewData | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
   putReview: {
     data: PutReviewData | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
   deleteReview: {
     data: DeleteReviewData | undefined
-    status: {
-      loading: boolean
-      ready: boolean
-    }
+    status: SagaStatus
   },
   getComments: {
     data: GetCommentsData | undefined
@@ -56,31 +42,19 @@ export type State = {
     allComments: Comment[] | undefined
     pageNo: number | undefined
     hasMore: boolean | undefined
-    status: {
-      loading: boolean
-      ready: boolean
-    }
+    status: SagaStatus
   },
   postComment: {
     data: PostCommentData | undefined
-    status: {
-      loading: boolean
-      ready: boolean
-    }
+    status: SagaStatus
   },
   putComment: {
     data: PutCommentData | undefined
-    status: {
-      loading: boolean
-      ready: boolean
-    }
+    status: SagaStatus
   },
   deleteComment: {
     data: DeleteCommentData | undefined
-    status: {
-      loading: boolean
-      ready: boolean
-    }
+    status: SagaStatus
   },
 }
 
@@ -88,38 +62,23 @@ const initialState = {
   getReviews: {
     data: undefined,
     placeId: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   getReview: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   postReview: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   putReview: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   deleteReview: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   getComments: {
     data: undefined,
@@ -127,31 +86,19 @@ const initialState = {
     allComments: undefined,
     pageNo: undefined,
     hasMore: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   postComment: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   putComment: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
   deleteComment: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: true,
-    }
+    status: SagaStatus.IDLE
   },
 };
 

@@ -8,6 +8,7 @@ import { Modal, ModalProps } from '../molecules/Modal';
 import { decode } from 'js-base64';
 import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
+import { SagaStatus } from '../../store/type';
 
 export type ModalCommentUpsertProps = ModalProps & {
   data?: Comment
@@ -67,16 +68,16 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
   },[data, isOpen, resetDraft])
 
   useEffect(()=>{
-    if (postCommentState.status.ready){
+    if (postCommentState.status === SagaStatus.SUCCESS){
       resetDraft()
     }
-  },[postCommentState.status.ready, resetDraft])
+  },[postCommentState.status, resetDraft])
 
   useEffect(()=>{
-    if (deleteCommentState.status.ready){
+    if (deleteCommentState.status  === SagaStatus.SUCCESS){
       resetDraft()
     }
-  },[deleteCommentState.status.ready, resetDraft])
+  },[deleteCommentState.status, resetDraft])
 
   const handleTextAreaChange: React.ChangeEventHandler<HTMLTextAreaElement> = useCallback((event)=>{
     setDraftComment(event.currentTarget.value || "")
@@ -98,22 +99,22 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
   },[data, dispatch, draftComment, reviewId])
 
   useEffect(()=>{
-    if (postCommentState.status.ready){
+    if (postCommentState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
     }
-  },[postCommentState.status.ready, setIsOpen])
+  },[postCommentState.status, setIsOpen])
 
   useEffect(()=>{
-    if (putCommentState.status.ready){
+    if (putCommentState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
     }
-  },[putCommentState.status.ready, setIsOpen])
+  },[putCommentState.status, setIsOpen])
 
   useEffect(()=>{
-    if (deleteCommentState.status.ready){
+    if (deleteCommentState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
     }
-  },[deleteCommentState.status.ready, setIsOpen])
+  },[deleteCommentState.status, setIsOpen])
 
   const handleDelete = useCallback(()=>{
     if (!data?.commentId) return;
@@ -125,11 +126,11 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
 
   const confirmDisabled = useMemo(()=>{
     return (
-      postCommentState.status.loading ||
-      putCommentState.status.loading ||
-      deleteCommentState.status.loading
+      postCommentState.status === SagaStatus.LOADING ||
+      putCommentState.status === SagaStatus.LOADING ||
+      deleteCommentState.status === SagaStatus.LOADING
     ) 
-  }, [deleteCommentState.status.loading, postCommentState.status.loading, putCommentState.status.loading])
+  }, [deleteCommentState.status, postCommentState.status, putCommentState.status])
 
   return (
     <Modal
@@ -144,7 +145,7 @@ export const ModalCommentUpsert:React.FunctionComponent<ModalCommentUpsertProps>
       <CommentTextarea onChange={handleTextAreaChange} value={draftComment}/>
       <DeleteButtonContainerDiv>
         {data?.commentId && (
-          <Button onClick={handleDelete} status="error" disabled={deleteCommentState.status.loading}>{"코멘트 삭제"}</Button>
+          <Button onClick={handleDelete} status="error" disabled={deleteCommentState.status === SagaStatus.LOADING}>{"코멘트 삭제"}</Button>
         )}
       </DeleteButtonContainerDiv>
     </Modal>

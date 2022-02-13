@@ -9,6 +9,7 @@ import { Button } from '../atoms/Button';
 import { Rating } from '../atoms/Rating';
 import { Modal, ModalProps } from '../molecules/Modal';
 import { decode } from 'js-base64';
+import { SagaStatus } from '../../store/type';
 
 export type ModalReviewUpsertProps = ModalProps & {
   data?: Review
@@ -104,16 +105,16 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[data, isOpen, resetDraft])
 
   useEffect(()=>{
-    if (postReviewState.status.ready){
+    if (postReviewState.status  === SagaStatus.SUCCESS){
       resetDraft()
     }
-  },[postReviewState.status.ready, resetDraft])
+  },[postReviewState.status, resetDraft])
 
   useEffect(()=>{
-    if (deleteReviewState.status.ready){
+    if (deleteReviewState.status  === SagaStatus.SUCCESS){
       resetDraft()
     }
-  },[deleteReviewState.status.ready, resetDraft])
+  },[deleteReviewState.status, resetDraft])
 
   const handleLocalImageClear = useCallback((index: number)=>{
     const newLocalImgUrl = [...localImgUrl]
@@ -176,26 +177,26 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
   },[data, dispatch, draftImageFiles, draftRating, draftReview, serverImgUrl, placeId])
 
   useEffect(()=>{
-    if (postReviewState.status.ready){
+    if (postReviewState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
       setLocalImgUrl([])
       setDraftImageFiles([])
     }
-  },[postReviewState.status.ready, setIsOpen])
+  },[postReviewState.status, setIsOpen])
 
   useEffect(()=>{
-    if (putReviewState.status.ready){
+    if (putReviewState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
       setLocalImgUrl([])
       setDraftImageFiles([])
     }
-  },[putReviewState.status.ready, setIsOpen])
+  },[putReviewState.status, setIsOpen])
 
   useEffect(()=>{
-    if (deleteReviewState.status.ready){
+    if (deleteReviewState.status  === SagaStatus.SUCCESS){
       setIsOpen(false)
     }
-  },[deleteReviewState.status.ready, setIsOpen])
+  },[deleteReviewState.status, setIsOpen])
 
   const handleDelete = useCallback(()=>{
     if (!data?.reviewId) return;
@@ -207,11 +208,11 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
 
   const confirmDisabled = useMemo(()=>{
     return (
-      postReviewState.status.loading ||
-      putReviewState.status.loading ||
-      deleteReviewState.status.loading
+      postReviewState.status === SagaStatus.LOADING ||
+      putReviewState.status === SagaStatus.LOADING ||
+      deleteReviewState.status === SagaStatus.LOADING
     ) 
-  }, [deleteReviewState.status.loading, postReviewState.status.loading, putReviewState.status.loading])
+  }, [deleteReviewState.status, postReviewState.status, putReviewState.status])
 
   return (
     <Modal
@@ -251,7 +252,7 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
       </ImageUploadDiv>
       <DeleteButtonContainerDiv>
         {data?.reviewId && (
-          <Button onClick={handleDelete} status="error" disabled={deleteReviewState.status.loading}>{"리뷰 삭제"}</Button>
+          <Button onClick={handleDelete} status="error" disabled={deleteReviewState.status === SagaStatus.LOADING}>{"리뷰 삭제"}</Button>
         )}
       </DeleteButtonContainerDiv>
     </Modal>

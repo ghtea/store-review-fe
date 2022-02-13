@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { handleActions } from 'redux-actions';
 import { putValueInNestedObject } from '../../utils/others/putValueInNestedObject';
+import { SagaStatus } from '../type';
 import * as actions from './actions';
 import { Place } from './types';
 
@@ -9,18 +10,12 @@ export type State = {
   searchedPlaces: {
     data: Place[] | undefined,
     keyword: string | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
   markers: kakao.maps.Marker[],
   getPageStore: {
     data: Place | undefined,
-    status: {
-      loading: boolean,
-      ready: boolean,
-    }
+    status: SagaStatus
   },
 }
 
@@ -29,18 +24,12 @@ const initialState = {
   searchedPlaces: {
     data: undefined,
     keyword: undefined,
-    status: {
-      loading: false,
-      ready: false,
-    }
+    status: SagaStatus.IDLE
   },
   markers: [],
   getPageStore: {
     data: undefined,
-    status: {
-      loading: false,
-      ready: false,
-    }
+    status: SagaStatus.IDLE
   },
 };
 

@@ -7,6 +7,7 @@ import { RootState } from '../../store/reducers';
 import { Button } from '../atoms/Button';
 import { Place } from '../../store/place';
 import { Router, useNavigate, useSearchParams } from 'react-router-dom';
+import { SagaStatus } from '../../store/type';
 
 export type MapPageProps = {
 }
@@ -297,8 +298,8 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
   },[dispatch, displayingPlaces])
 
   const isNoSearchResult = useMemo(()=>{
-    return searchedPlacesState.keyword && searchedPlacesState.data?.length === 0 && !searchedPlacesState.status.loading
-  },[searchedPlacesState.data?.length, searchedPlacesState.keyword, searchedPlacesState.status.loading])
+    return searchedPlacesState.keyword && searchedPlacesState.data?.length === 0 && (searchedPlacesState.status !== SagaStatus.LOADING)
+  },[searchedPlacesState.data?.length, searchedPlacesState.keyword, searchedPlacesState.status])
 
   return (
     <TemplateBasic>
@@ -338,7 +339,7 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
               ))}
             </SearchResultDiv>
 
-            {searchedPlacesState.status.loading && (
+            {searchedPlacesState.status === SagaStatus.LOADING && (
               <LoadingWrapper> 
                 <LoadingDiv>loading</LoadingDiv>
               </LoadingWrapper>

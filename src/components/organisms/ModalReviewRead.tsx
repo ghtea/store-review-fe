@@ -14,6 +14,7 @@ import { ModalCommentRead } from './ModalCommentRead';
 import { Comment } from '../../store/reaction';
 import { reactionStore } from '../../store';
 import { Loading } from '../atoms/Loading';
+import { SagaStatus } from '../../store/type';
 
 export type ModalReviewReadProps = ModalProps & {
   data: Review,
@@ -186,7 +187,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
             </ImageWrapper>
           ))}
         </ImageCollectionDiv>
-        { (getCommentsState.status.loading && (getCommentsState.allComments || []).length === 0)
+        { (getCommentsState.status === SagaStatus.LOADING && (getCommentsState.allComments || []).length === 0)
           ? <Loading/>
           : (
             <CommentCollectionDiv>
