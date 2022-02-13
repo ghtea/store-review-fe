@@ -81,8 +81,8 @@ const GenderLabel = styled.label`
 `;
 
 enum Gender {
-  MALE = "male",
-  FEMALE = "female"
+  MALE = "M",
+  FEMALE = "W"
 }
 
 export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
@@ -195,7 +195,7 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
   const handleSubmit = useCallback(() => {
     if (isEnabledSubmit) {
       axios({
-        url: `${process.env.REACT_APP_BACKEND_URL}/signup`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/api/signup`,
         method: 'POST',
         data: {
           "userId": userId,
@@ -256,8 +256,8 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
         <InputContainer>
           <InputLabel> 성별 </InputLabel>
           <GenderStyleDiv >
-            <GenderLabel htmlFor="male"> 남성 </GenderLabel> <input id="male" type="radio" name="gender" value="male" onChange={onChangeGender} />
-            <GenderLabel htmlFor="female"> 여성 </GenderLabel> <input id="female" type="radio" name="gender" value="female" onChange={onChangeGender} />
+            <GenderLabel htmlFor="male"> 남성 </GenderLabel> <input id="male" type="radio" name="gender" value="M" onChange={onChangeGender} />
+            <GenderLabel htmlFor="female"> 여성 </GenderLabel> <input id="female" type="radio" name="gender" value="W" onChange={onChangeGender} />
           </GenderStyleDiv>
           <InputAlert className="gender"> {genderError} </InputAlert>
         </InputContainer>
