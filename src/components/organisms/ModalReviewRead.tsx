@@ -40,7 +40,7 @@ const RatingWrapper = styled.div`
 `
 
 const ReviewParagraph = styled.p`
-	width: 100%;
+	width: 90%;
 	height: 240px;
 	padding: 8px;
 	margin-top: 8px;
@@ -124,10 +124,9 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
 
   useEffect(()=>{
     if (!data.reviewId ) return
-    if (!authStore.authenticated) return
 
     getComments(data.reviewId, 0)
-  },[authStore.authenticated, data.reviewId, getComments])
+  },[data.reviewId, getComments])
 
   // reset commnets
   useEffect(()=>{
