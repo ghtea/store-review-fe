@@ -23,14 +23,14 @@ export function* authenticate(action: actions.AUTHENTICATE__Instance) {
         keyList: ['data'],
         replacement: {
           ...data,
-          said: aes.decrypt(data.said, process.env.REACT_APP_AES_KEY || "").toString(),
-          suid: aes.decrypt(data.suid, process.env.REACT_APP_AES_KEY || "").toString(),
+          // said: aes.decrypt(data.said, process.env.REACT_APP_AES_KEY || "").toString(),
+          // suid: aes.decrypt(data.suid, process.env.REACT_APP_AES_KEY || "").toString(),
         }
       }),
     );
     yield put(
       actions.return__REPLACE({
-        keyList: ['status', "authenticated"],
+        keyList: ["authenticated"],
         replacement: true
       }),
     );

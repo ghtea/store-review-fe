@@ -5,6 +5,7 @@ import { RootState } from '../../../reducers';
 import * as actions from '../../actions';
 import { GetCommentsData } from './types';
 import { Comment } from '../../types';
+import { SagaStatus } from '../../../type';
 
 export const PAGE_SIZE = 5
 
@@ -14,10 +15,7 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['getComments', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -37,10 +35,7 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['getComments', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
 
@@ -112,10 +107,7 @@ export function* getComments(action: actions.GET_COMMENTS_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['getComments', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
+        replacement: SagaStatus.ERROR
       }),
     );
     

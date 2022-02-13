@@ -3,6 +3,7 @@ import { call, put, select } from 'redux-saga/effects';
 import * as actions from '../../actions';
 import { RootState } from '../../../reducers';
 import { DEFAULT_COORDS, getCurrentPosition } from '../initMainMap/getCurrentPosition';
+import { SagaStatus } from '../../../type';
 
 export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   const payload = action.payload
@@ -16,10 +17,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['searchedPlaces', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -77,10 +75,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['searchedPlaces', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
   } catch (error) {
@@ -89,10 +84,7 @@ export function* searchPlaces(action: actions.SEARCH_PLACES_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['searchedPlaces', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
+        replacement: SagaStatus.ERROR
       }),
     );
     

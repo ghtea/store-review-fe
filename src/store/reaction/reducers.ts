@@ -6,7 +6,6 @@ import * as actions from './actions';
 import { DeleteCommentData } from './sagas/deleteComment/types';
 import { DeleteReviewData } from './sagas/deleteReview/types';
 import { GetCommentsData } from './sagas/getComments/types';
-import { GetReviewData } from './sagas/getReview/types';
 import { GetReviewsData } from './sagas/getReviews/types';
 import { PostCommentData } from './sagas/postComment/types';
 import { PostReviewData } from './sagas/postReview/types';
@@ -18,10 +17,6 @@ export type State = {
   getReviews: {
     data: GetReviewsData | undefined,
     placeId: string | undefined,
-    status: SagaStatus
-  },
-  getReview: {
-    data: GetReviewData | undefined,
     status: SagaStatus
   },
   postReview: {

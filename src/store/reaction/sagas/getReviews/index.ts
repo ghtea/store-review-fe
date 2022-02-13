@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { call, put } from 'redux-saga/effects';
+import { SagaStatus } from '../../../type';
 
 import * as actions from '../../actions';
 import { GetReviewsData } from './types';
@@ -10,10 +11,7 @@ export function* getReviews(action: actions.GET_REVIEWS_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['getReviews', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -33,10 +31,7 @@ export function* getReviews(action: actions.GET_REVIEWS_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['getReviews', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
 
@@ -52,10 +47,7 @@ export function* getReviews(action: actions.GET_REVIEWS_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['getReviews', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
+        replacement: SagaStatus.ERROR
       }),
     );
     

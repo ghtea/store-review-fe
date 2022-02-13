@@ -11,16 +11,12 @@ export type State = {
     sub: string // email
     suid: string
   } | undefined
-  status: {
-    authenticated: boolean
-  }
+  authenticated: boolean
 };
 
 const initialState: State = {
   data: undefined,
-  status: {
-    authenticated: false
-  }
+  authenticated: false
 };
 
 export const authReducer = handleActions<State, any>(

@@ -5,6 +5,7 @@ import { encode } from 'js-base64';
 import * as actions from '../../actions';
 import { PutCommentData } from './types';
 import { RootState } from '../../../reducers';
+import { SagaStatus } from '../../../type';
 
 export function* putComment(action: actions.PUT_COMMENT_Instance) {
   const payload = action.payload
@@ -12,10 +13,7 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['putComment', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -39,10 +37,7 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['putComment', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
 
@@ -65,12 +60,9 @@ export function* putComment(action: actions.PUT_COMMENT_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['putComment', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
-      }),
-    );
+        replacement: SagaStatus.ERROR
+      })
+    )
     
   }
 }

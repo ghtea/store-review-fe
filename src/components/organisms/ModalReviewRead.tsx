@@ -124,10 +124,10 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
 
   useEffect(()=>{
     if (!data.reviewId ) return
-    if (!authStore.status.authenticated) return
+    if (!authStore.authenticated) return
 
     getComments(data.reviewId, 0)
-  },[authStore.status.authenticated, data.reviewId, getComments])
+  },[authStore.authenticated, data.reviewId, getComments])
 
   // reset commnets
   useEffect(()=>{
@@ -214,7 +214,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
         }
         <CommentUpsertButton
           onClick={handleCommentCreateClick}
-          disabled={!authStore.status.authenticated}
+          disabled={!authStore.authenticated}
         >
           코멘트 작성
         </CommentUpsertButton>

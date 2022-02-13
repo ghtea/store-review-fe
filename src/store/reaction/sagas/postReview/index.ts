@@ -5,6 +5,7 @@ import { encode } from 'js-base64';
 import * as actions from '../../actions';
 import { PostReviewData } from './types';
 import { RootState } from '../../../reducers';
+import { SagaStatus } from '../../../type';
 
 export function* postReview(action: actions.POST_REVIEW_Instance) {
   const payload = action.payload
@@ -12,10 +13,7 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['postReview', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -62,10 +60,7 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['postReview', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
 
@@ -87,10 +82,7 @@ export function* postReview(action: actions.POST_REVIEW_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['postReview', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
+        replacement: SagaStatus.ERROR
       }),
     );
     

@@ -232,7 +232,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                       <ReviewUpsertButton 
                         status={"primary"}
                         onClick={handleReviewUpdateButton}
-                        disabled={!authStore.status.authenticated}
+                        disabled={!authStore.authenticated}
                       >
                         리뷰 수정
                       </ReviewUpsertButton>
@@ -242,7 +242,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
                     <ReviewUpsertButton 
                       status={"primary"}
                       onClick={handleReviewCreateButton}
-                      disabled={!authStore.status.authenticated}
+                      disabled={!authStore.authenticated}
                     >
                       리뷰 작성
                     </ReviewUpsertButton>

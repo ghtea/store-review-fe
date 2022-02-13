@@ -6,7 +6,7 @@ interface IPublicProps {
 }
 
 const Public: React.FunctionComponent<IPublicProps> = ({ children }) => {
-  const authenticated = useSelector((state: RootState) => state.auth.status.authenticated);
+  const authenticated = useSelector((state: RootState) => state.auth.authenticated);
 
   return (
     <>

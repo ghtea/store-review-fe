@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { call, put, select } from 'redux-saga/effects';
 import { RootState } from '../../../reducers';
+import { SagaStatus } from '../../../type';
 
 import * as actions from '../../actions';
 import { DeleteReviewData } from './types';
@@ -11,10 +12,7 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
   yield put(
     actions.return__REPLACE({
       keyList: ['deleteReview', 'status'],
-      replacement: {
-        loading: true,
-        ready: false,
-      },
+      replacement: SagaStatus.LOADING
     }),
   );
 
@@ -34,10 +32,7 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['deleteReview', 'status'],
-        replacement: {
-          loading: false,
-          ready: true,
-        },
+        replacement: SagaStatus.SUCCESS
       }),
     );
 
@@ -59,10 +54,7 @@ export function* deleteReview(action: actions.DELETE_REVIEW_Instance) {
     yield put(
       actions.return__REPLACE({
         keyList: ['deleteReview', 'status'],
-        replacement: {
-          loading: false,
-          ready: false,
-        },
+        replacement: SagaStatus.ERROR
       }),
     );
     

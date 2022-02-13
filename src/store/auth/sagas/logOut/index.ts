@@ -13,7 +13,7 @@ export function* logOut(action: actions.LOG_OUT__Instance) {
   );
   yield put(
     actions.return__REPLACE({
-      keyList: ['status', "authenticated"],
+      keyList: ["authenticated"],
       replacement: false
     }),
   );
