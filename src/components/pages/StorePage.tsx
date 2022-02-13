@@ -15,7 +15,7 @@ import { Loading } from '../atoms/Loading';
 import { SagaStatus } from '../../store/type';
 
 export type StorePageProps = {
-  
+
 }
 
 const MainDiv = styled.div`
@@ -156,6 +156,13 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
 
     getReviews(placeId)
   },[getReviews, placeId])
+
+  // reset review
+  useEffect(()=>{
+    return () => {
+      dispatch(reactionStore.return__RESET_GET_REVIEWS());
+    }
+  },[dispatch])
 
   const handleReviewUpdateButton = useCallback(()=>{
     setIsModalReviewUpsertOpen(true)

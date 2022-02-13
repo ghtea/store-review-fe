@@ -129,6 +129,13 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
     getComments(data.reviewId, 0)
   },[authStore.status.authenticated, data.reviewId, getComments])
 
+  // reset commnets
+  useEffect(()=>{
+    if (!isOpen){
+      dispatch(reactionStore.return__RESET_GET_COMMENTS());
+    }
+  },[dispatch, isOpen])
+
   const handleConfirmClick = useCallback(()=>{
     onClickConfirm?.();
   },[onClickConfirm])
