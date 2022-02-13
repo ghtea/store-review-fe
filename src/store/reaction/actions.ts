@@ -25,6 +25,14 @@ export const return__GET_COMMENTS = (payload: GET_COMMENTS__Payload) => {
 };
 export type GET_COMMENTS_Instance = ReturnType<typeof return__GET_COMMENTS>;
 
+export const RESET_GET_COMMENTS = 'reaction/RESET_GET_COMMENTS';
+export const return__RESET_GET_COMMENTS = () => {
+  return {
+    type: RESET_GET_COMMENTS,
+  };
+};
+export type RESET_GET_COMMENTS_Instance = ReturnType<typeof return__RESET_GET_COMMENTS>;
+
 export const POST_COMMENT = 'reaction/POST_COMMENT';
 type POST_COMMENT__Payload = {
   reviewId: number
@@ -75,6 +83,14 @@ export const return__GET_REVIEWS = (payload: GET_REVIEWS__Payload) => {
   };
 };
 export type GET_REVIEWS_Instance = ReturnType<typeof return__GET_REVIEWS>;
+
+export const RESET_GET_REVIEWS = 'reaction/RESET_GET_REVIEWS';
+export const return__RESET_GET_REVIEWS = () => {
+  return {
+    type: RESET_GET_REVIEWS,
+  };
+};
+export type RESET_GET_REVIEWS_Instance = ReturnType<typeof return__RESET_GET_REVIEWS>;
 
 export const GET_REVIEW = 'reaction/GET_REVIEW';
 type GET_REVIEW__Payload = {

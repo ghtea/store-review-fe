@@ -9,6 +9,7 @@ import { postComment } from "./postComment";
 import { postReview } from "./postReview";
 import { putComment } from "./putComment";
 import { putReview } from "./putReview";
+import { resetGetReviews } from "./resetGetReviews";
 
 export function* reactionSaga() {
   yield takeEvery(actions.GET_COMMENTS, getComments);  
@@ -16,6 +17,7 @@ export function* reactionSaga() {
   yield takeEvery(actions.PUT_COMMENT, putComment);  
   yield takeEvery(actions.DELETE_COMMENT, deleteComment);  
   yield takeEvery(actions.GET_REVIEWS, getReviews);  
+  yield takeEvery(actions.RESET_GET_REVIEWS, resetGetReviews);  
   yield takeEvery(actions.GET_REVIEW, getReview);  
   yield takeEvery(actions.POST_REVIEW, postReview);  
   yield takeEvery(actions.PUT_REVIEW, putReview);  

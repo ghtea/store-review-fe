@@ -11,8 +11,6 @@ export const return__REPLACE = (payload: REPLACE_Payload) => {
 };
 export type REPLACE__Instance = ReturnType<typeof return__REPLACE>;
 
-
-
 export const SEARCH_PLACES = 'place/SEARCH_PLACES';
 type SEARCH_PLACES__Payload = {
   keyword: string,
