@@ -13,6 +13,7 @@ import { Review } from '../../store/reaction';
 import { ModalReviewRead } from '../organisms/ModalReviewRead';
 import { Loading } from '../atoms/Loading';
 import { SagaStatus } from '../../store/type';
+import { decryptAes } from '../../utils/crypto';
 
 export type StorePageProps = {
 
@@ -193,7 +194,7 @@ export const StorePage:React.FunctionComponent<StorePageProps> = () => {
   const myReview = useMemo(()=>{
     const mySaid = authStore.data?.said
     if (!mySaid) return undefined 
-    const newMyReview = (getReviewsState.data?.data?.reviewsResponseDtoList || []).find(item => item.said === mySaid)
+    const newMyReview = (getReviewsState.data?.data?.reviewsResponseDtoList || []).find(item => decryptAes(item.said) === mySaid)
     return newMyReview ? newMyReview : undefined
   },[authStore.data?.said, getReviewsState.data?.data?.reviewsResponseDtoList])
 

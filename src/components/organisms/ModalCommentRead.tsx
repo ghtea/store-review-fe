@@ -1,17 +1,17 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Comment } from '../../store/reaction';
 import { RootState } from '../../store/reducers';
 import { Modal, ModalProps } from '../molecules/Modal';
 import { decode } from 'js-base64';
+import { decryptAes } from '../../utils/crypto';
 
 export type ModalCommentReadProps = ModalProps & {
   data: Comment
   onClickConfirm: () => void
 }
-
 
 const UpdatedAtSpan = styled.span`
   color: ${props => props.theme.colors.textHint};
@@ -36,7 +36,7 @@ export const ModalCommentRead:React.FunctionComponent<ModalCommentReadProps> = (
   const authStore = useSelector((state: RootState) => state.auth);
 
   const isAuthor = useMemo(()=>{
-    return authStore.data?.said && authStore.data?.said === data.said
+    return authStore.data?.said && authStore.data?.said === decryptAes(data.said)
   },[authStore.data?.said, data.said])
 
 

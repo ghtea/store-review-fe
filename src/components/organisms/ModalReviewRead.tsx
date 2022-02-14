@@ -15,6 +15,7 @@ import { Comment } from '../../store/reaction';
 import { reactionStore } from '../../store';
 import { Loading } from '../atoms/Loading';
 import { SagaStatus } from '../../store/type';
+import { decryptAes } from '../../utils/crypto';
 
 export type ModalReviewReadProps = ModalProps & {
   data: Review,
@@ -108,7 +109,7 @@ export const ModalReviewRead:React.FunctionComponent<ModalReviewReadProps> = ({
   const [isModalCommentReadOpen , setIsModalCommentReadOpen] = useState(false)
 
   const isAuthor = useMemo(()=>{
-    return authStore.data?.said && authStore.data?.said === data.said
+    return authStore.data?.said && authStore.data?.said === decryptAes(data.said)
   },[authStore.data?.said, data.said])
 
   const updatedAtText = useMemo(()=>{
