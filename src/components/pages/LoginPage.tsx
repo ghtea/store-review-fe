@@ -167,6 +167,8 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
             name="userId"
             placeholder="아이디를 입력하세요"
             onChange={onChangeUserId}
+            autoCapitalize="off" 
+            autoCorrect="off" 
           />
           <InputAlert className="userId"> {userIdError} </InputAlert>
         </InputContainer>
@@ -177,6 +179,8 @@ export const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
             name="password"
             placeholder="비밀번호를 입력하세요"
             onChange={onChangePassword}
+            autoCapitalize="off" 
+            autoCorrect="off" 
           />
           <InputAlert className="password"> {passwordError} </InputAlert>
         </InputContainer>

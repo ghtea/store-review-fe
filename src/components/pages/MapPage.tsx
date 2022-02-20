@@ -321,7 +321,14 @@ export const MapPage:React.FunctionComponent<MapPageProps> = () => {
               </SearchButton>
             </SearchInputButtonWrapper>
             <SearchOptionWrapper>
-              <input id={"current-location-search-checkbox"} type={"checkbox"} checked={isCurrentLocationSearch} onChange={handleCurrentLocationSearchCheckboxChange} />
+              <input 
+                id={"current-location-search-checkbox"} 
+                type={"checkbox"} 
+                checked={isCurrentLocationSearch} 
+                onChange={handleCurrentLocationSearchCheckboxChange} 
+                autoCapitalize="off" 
+                autoCorrect="off" 
+              />
               <label htmlFor={"current-location-search-checkbox"}>현재 위치 기준</label>
             </SearchOptionWrapper>
             <SearchResultDiv>

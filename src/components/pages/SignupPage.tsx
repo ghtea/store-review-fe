@@ -230,27 +230,55 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
         </LogoContainer>
         <InputContainer>
           <InputLabel> 이메일 </InputLabel>
-          <Input type="text" name="userId" placeholder="이메일을 입력하세요" onChange={onChangeUserId} />
+          <Input 
+            type="text" 
+            name="userId" 
+            placeholder="이메일을 입력하세요" 
+            onChange={onChangeUserId} 
+            autoCapitalize="off" 
+            autoCorrect="off" 
+          />
           <InputAlert className="userId"> {userIdError} </InputAlert>
         </InputContainer>
         <InputContainer>
           <InputLabel> 비밀번호 </InputLabel>
-          <Input type="password" name="password" placeholder="비밀번호를 입력하세요" onChange={onChangePassword} />
+          <Input 
+            type="password" 
+            name="password" 
+            placeholder="비밀번호를 입력하세요" 
+            onChange={onChangePassword} 
+            autoCapitalize="off" 
+            autoCorrect="off" 
+          />
           <InputAlert className="password"> {passwordError} </InputAlert>
         </InputContainer>
         <InputContainer>
           <InputLabel> 이름 </InputLabel>
-          <Input type="text" name="name" placeholder="사용자 이름" onChange={onChangeName} />
+          <Input 
+            type="text" 
+            name="name" 
+            placeholder="사용자 이름" 
+            onChange={onChangeName} 
+            autoCapitalize="off" 
+            autoCorrect="off" 
+          />
           <InputAlert className="name"> {nameError} </InputAlert>
         </InputContainer>
         <InputContainer>
           <InputLabel> 닉네임 </InputLabel>
-          <Input type="text" name="nickname" placeholder="사용자 닉네임" onChange={onChangeNickname} />
+          <Input 
+            type="text" 
+            name="nickname" 
+            placeholder="사용자 닉네임" 
+            onChange={onChangeNickname} />
           <InputAlert className="nickname"> {nicknameError} </InputAlert>
         </InputContainer>
         <InputContainer>
           <InputLabel> 생년월일 </InputLabel>
-          <Input type="date" name="birthDate" onChange={onChangeBirthDate} />
+          <Input 
+            type="date" 
+            name="birthDate" 
+            onChange={onChangeBirthDate} />
           <InputAlert className="birthDate"> {birthDateError} </InputAlert>
         </InputContainer>
         <InputContainer>
@@ -263,7 +291,14 @@ export const SignupPage: React.FunctionComponent<SignupPageProps> = () => {
         </InputContainer>
         <InputContainer>
           <InputLabel> 휴대폰 번호</InputLabel>
-          <Input type="text" name="phone" placeholder=" '-' 는 빼고서 입력해주세요" onChange={onChangePhone} />
+          <Input 
+            type="text" 
+            name="phone" 
+            placeholder=" '-' 는 빼고서 입력해주세요" 
+            onChange={onChangePhone} 
+            autoCapitalize="off" 
+            autoCorrect="off" 
+          />
           <InputAlert className="phone"> {phoneError} </InputAlert>
         </InputContainer>
         <SignUpButotn status='primary' onClick={handleSubmit} disabled={!isEnabledSubmit}> 회원가입 </SignUpButotn>

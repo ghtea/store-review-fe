@@ -87,10 +87,6 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
 
   const inputFileRef = useRef<HTMLInputElement>(null)
 
-  useEffect(()=>{
-    console.log("localImgUrl: ", localImgUrl); // TODO: remove 
-  },[localImgUrl])
-
   const resetDraft = useCallback(()=>{
     setDraftRating(0)
     setDraftReview("")
@@ -260,6 +256,8 @@ export const ModalReviewUpsert:React.FunctionComponent<ModalReviewUpsertProps> =
           accept="image/*" 
           id='input-review-image' 
           onChange={handleReviewImageInputChange}
+          autoCapitalize="off" 
+          autoCorrect="off" 
         />
         <label htmlFor='input-review-image' > 
           Upload Photo 
